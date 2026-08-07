@@ -1,0 +1,25 @@
+{
+  "name": "forzex-construction-pwa",
+  "version": "1.0.0",
+  "description": "Forzex Construction — Professional Construction Management PWA",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "node server/index.js",
+    "dev:all": "concurrently \"npm run dev\" \"npm run server\""
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "firebase": "^10.7.1",
+    "firebase-admin": "^12.0.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0",
+    "vite-plugin-pwa": "^0.20.0",
+    "concurrently": "^8.2.2"
+  }
+}

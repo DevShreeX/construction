@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Forzex Construction — Professional construction management platform with AI-powered insights, site analysis, and project tracking.">
+    <meta name="theme-color" content="#071021">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Forzex">
+
+    <title>Forzex Construction</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32.png">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Leaflet.js (Open Source Interactive Maps) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/src/styles/index.css">
+</head>
+<body>
+    <!-- App Shell -->
+    <div id="app">
+        <nav id="navbar"></nav>
+        <main id="page-content">
+            <div class="page-loader">
+                <div class="loader-spinner"></div>
+                <p>Loading Forzex...</p>
+            </div>
+        </main>
+        <footer id="app-footer"></footer>
+        <nav id="bottom-nav"></nav>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- PWA Install Banner -->
+    <div id="pwa-install-banner" class="pwa-banner hidden">
+        <div class="pwa-banner-content">
+            <i class="fas fa-hard-hat" style="color:#6ee7ff;font-size:1.5rem"></i>
+            <div>
+                <strong>Install Forzex</strong>
+                <p>Add to your home screen for quick access</p>
+            </div>
+            <button id="pwa-install-btn" class="btn btn-accent btn-sm">Install</button>
+            <button id="pwa-dismiss-btn" class="btn-icon"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+
+    <!-- Main Script -->
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>

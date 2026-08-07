@@ -1,0 +1,81 @@
+// ==================== Navbar Component ====================
+export function renderNavbar() {
+  const el = document.getElementById('navbar');
+  el.className = 'navbar';
+  el.innerHTML = `
+    <div class="container flex-between">
+      <div class="nav-logo" data-route="/">
+        <i class="fas fa-hard-hat"></i>
+        <span>Forzex Construction</span>
+      </div>
+      <div class="nav-links" id="navLinks">
+        <a data-route="/">Home</a>
+        <a data-route="/workspace">Workspace</a>
+        <a data-route="/vision">Vision</a>
+        <a data-route="/insights">Insights</a>
+        <a data-route="/resources">Resources</a>
+        <a data-route="/report">Report</a>
+        <a data-route="/more">More</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>`;
+
+  // Mobile toggle
+  document.getElementById('navToggle').addEventListener('click', () => {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  // Close menu on nav
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-route]') && e.target.closest('.nav-links')) {
+      document.getElementById('navLinks').classList.remove('open');
+    }
+  });
+}
+
+// ==================== Bottom Nav Component ====================
+export function renderBottomNav() {
+  const el = document.getElementById('bottom-nav');
+  el.className = 'bottom-nav';
+  el.innerHTML = `
+    <a data-route="/"><i class="fas fa-home"></i><span>Home</span></a>
+    <a data-route="/workspace"><i class="fas fa-briefcase"></i><span>Work</span></a>
+    <a data-route="/vision"><i class="fas fa-camera"></i><span>Vision</span></a>
+    <a data-route="/insights"><i class="fas fa-chart-line"></i><span>Insights</span></a>
+    <a data-route="/more"><i class="fas fa-ellipsis-h"></i><span>More</span></a>`;
+}
+
+// ==================== Footer Component ====================
+export function renderFooter() {
+  const el = document.getElementById('app-footer');
+  el.className = 'app-footer';
+  el.innerHTML = `
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <strong><i class="fas fa-hard-hat" style="color:var(--accent);margin-right:6px"></i>Forzex Construction</strong>
+          <p>Professional construction management delivering safe, efficient projects across residential, commercial and infrastructure sectors.</p>
+        </div>
+        <div>
+          <div class="footer-links">
+            <a data-route="/">Home</a>
+            <a data-route="/projects">Projects</a>
+            <a data-route="/about">About</a>
+            <a data-route="/contact">Contact</a>
+            <a data-route="/feedback">Feedback</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Forzex Construction. All rights reserved.</span>
+        <div class="footer-social">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>`;
+}
