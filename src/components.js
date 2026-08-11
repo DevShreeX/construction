@@ -5,7 +5,7 @@ export function renderNavbar() {
   el.innerHTML = `
     <div class="container flex-between">
       <div class="nav-logo" data-route="/">
-        <i class="fas fa-hard-hat"></i>
+        <img src="/images/logo.png" alt="Forzex Logo" style="height: 40px; width: auto; border-radius: 50%; box-shadow: 0 0 10px rgba(245,197,24,0.3);">
         <span>Forzex Construction</span>
       </div>
       <div class="nav-links" id="navLinks">
@@ -55,7 +55,10 @@ export function renderFooter() {
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <strong><i class="fas fa-hard-hat" style="color:var(--accent);margin-right:6px"></i>Forzex Construction</strong>
+          <strong style="display: flex; align-items: center; gap: 8px;">
+            <img src="/images/logo.png" alt="Forzex Logo" style="height: 28px; width: auto; border-radius: 50%;">
+            Forzex Construction
+          </strong>
           <p>Professional construction management delivering safe, efficient projects across residential, commercial and infrastructure sectors.</p>
         </div>
         <div>

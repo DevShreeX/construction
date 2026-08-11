@@ -51,9 +51,9 @@ body {
 body[data-page="about"],
 body[data-page="projects"] {
   background: 
-    linear-gradient(180deg, rgba(5, 8, 20, 0.7) 0%, rgba(5, 8, 20, 0.98) 100%),
-    radial-gradient(circle at 50% 30%, rgba(77, 171, 247, 0.15) 0%, transparent 60%),
-    url('/images/bg_city.png') center/cover fixed no-repeat;
+    linear-gradient(180deg, rgba(5, 8, 20, 0.35) 0%, rgba(5, 8, 20, 0.9) 100%),
+    radial-gradient(circle at 50% 30%, rgba(77, 171, 247, 0.2) 0%, transparent 60%),
+    url('/images/bg_city.png') center top / cover fixed no-repeat;
 }
 
 /* Residential & Workspace Pages (Home, Resources, Workspace) */
@@ -61,19 +61,26 @@ body[data-page="home"],
 body[data-page="resources"],
 body[data-page="workspace"] {
   background: 
-    linear-gradient(180deg, rgba(7, 14, 30, 0.7) 0%, rgba(7, 14, 30, 0.98) 100%),
-    radial-gradient(ellipse at 80% 20%, rgba(245, 197, 24, 0.15) 0%, transparent 60%),
-    url('/images/bg_residential.png') center/cover fixed no-repeat;
+    linear-gradient(180deg, rgba(7, 14, 30, 0.35) 0%, rgba(7, 14, 30, 0.9) 100%),
+    radial-gradient(ellipse at 80% 20%, rgba(245, 197, 24, 0.2) 0%, transparent 60%),
+    url('/images/bg_residential.png') center top / cover fixed no-repeat;
 }
 
-/* AI & Tech Pages (Vision, Insights, Weather) */
-body[data-page="vision"],
-body[data-page="insights"],
+/* AI & Tech Pages — each with its own bright background */
+body[data-page="vision"] {
+  background: 
+    linear-gradient(180deg, rgba(4, 18, 35, 0.45) 0%, rgba(4, 12, 28, 0.85) 100%),
+    url('/images/bg_vision.png') center top / cover fixed no-repeat;
+}
+body[data-page="insights"] {
+  background: 
+    linear-gradient(180deg, rgba(8, 20, 30, 0.4) 0%, rgba(5, 14, 26, 0.85) 100%),
+    url('/images/bg_insights.png') center top / cover fixed no-repeat;
+}
 body[data-page="more"] {
   background: 
-    linear-gradient(180deg, rgba(4, 9, 22, 0.75) 0%, rgba(4, 9, 22, 0.98) 100%),
-    radial-gradient(circle at 50% 10%, rgba(110, 231, 255, 0.2) 0%, transparent 50%),
-    url('/images/bg_tech.png') center/cover fixed no-repeat;
+    linear-gradient(180deg, rgba(10, 18, 28, 0.35) 0%, rgba(6, 12, 24, 0.82) 100%),
+    url('/images/bg_weather.png') center top / cover fixed no-repeat;
 }
 
 /* Corporate & Office Pages (Admin, Client, Contact, Report) */
@@ -86,9 +93,9 @@ body[data-page="client-dashboard"],
 body[data-page="contact"],
 body[data-page="feedback"] {
   background: 
-    linear-gradient(180deg, rgba(8, 11, 26, 0.7) 0%, rgba(8, 11, 26, 0.98) 100%),
-    radial-gradient(ellipse at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 60%),
-    url('/images/bg_office.png') center/cover fixed no-repeat;
+    linear-gradient(180deg, rgba(8, 11, 26, 0.35) 0%, rgba(8, 11, 26, 0.9) 100%),
+    radial-gradient(ellipse at 20% 30%, rgba(99, 102, 241, 0.2) 0%, transparent 60%),
+    url('/images/bg_office.png') center top / cover fixed no-repeat;
 }
 a { color: var(--primary); text-decoration: none; transition: color var(--transition); }
 a:hover { color: var(--primary-soft); }
@@ -510,6 +517,7 @@ p { color: var(--text-secondary); line-height: 1.75; }
 .delay-2 { animation-delay: 0.2s; }
 .delay-3 { animation-delay: 0.3s; }
 .delay-4 { animation-delay: 0.4s; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
 /* ==================== Responsive ==================== */
 @media (max-width: 768px) {

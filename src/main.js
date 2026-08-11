@@ -4,7 +4,7 @@ import { showToast } from './utils.js';
 import { homePage } from './pages/home.js';
 import { aboutPage, projectsPage, contactPage, feedbackPage } from './pages/public.js';
 import { visionPage, insightsPage, resourcesPage, reportPage, morePage } from './pages/features.js';
-import { adminLoginPage, clientLoginPage, clientRegisterPage, adminDashPage, clientDashPage, workspacePage } from '../auth.js';
+import { adminLoginPage, clientLoginPage, clientRegisterPage, adminDashPage, clientDashPage, workspacePage } from './pages/auth.js';
 import { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from './firebase.js';
 
 // ==================== Global State ====================

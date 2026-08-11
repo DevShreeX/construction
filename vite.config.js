@@ -16,8 +16,12 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    target: 'es2022',
     rollupOptions: {
       input: './index.html'
     }
+  },
+  esbuild: {
+    target: 'es2022'
   }
 });
