@@ -1,64 +1,53 @@
-const PROJECTS = [
-  { id: '1', name: 'Skyline Office Complex', status: 'completed', location: 'Dubai, UAE', budget: 5200000 },
-  { id: '2', name: 'Harbor Residential Village', status: 'in-progress', location: 'Nairobi, Kenya', budget: 8500000 },
-  { id: '3', name: 'Industrial Logistics Park', status: 'planning', location: 'Addis Ababa, Ethiopia', budget: 15000000 }
-];
-
-function json(res, statusCode, body) {
-  res.writeHead(statusCode, { 'Content-Type': 'application/json; charset=utf-8' });
-  res.end(JSON.stringify(body));
-}
-
 export default function handler(req, res) {
+  // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
-    res.writeHead(204);
-    return res.end();
+    return res.status(204).end();
   }
 
-  let pathname;
-  try {
-    pathname = new URL(req.url, `http://${req.headers.host || 'localhost'}`).pathname;
-  } catch {
-    pathname = req.url || '/';
+  const url = req.url || '';
+  const pathname = url.split('?')[0];
+
+  // Health Check
+  if (pathname.endsWith('/health') || pathname === '/api/health') {
+    return res.status(200).json({
+      status: 'ok',
+      service: 'Forzex Construction API',
+      timestamp: new Date().toISOString()
+    });
   }
 
-  // On Vercel the catch-all function receives the path relative to the /api
-  // mount point (e.g. /health), while the local server uses /api/health.
-  // Normalize both forms so the route handling below stays identical.
-  if (!pathname.startsWith('/api')) {
-    pathname = pathname.startsWith('/') ? `/api${pathname}` : `/api/${pathname}`;
+  // Auth Routes
+  if (pathname.includes('/auth/admin/login')) {
+    return res.status(200).json({ success: true, role: 'admin', message: 'Admin authenticated successfully' });
+  }
+  if (pathname.includes('/auth/client/login')) {
+    return res.status(200).json({ success: true, role: 'client', message: 'Client authenticated successfully' });
+  }
+  if (pathname.includes('/auth/client/register')) {
+    return res.status(200).json({ success: true, message: 'Client registration completed' });
   }
 
-  if (pathname === '/api/health' && req.method === 'GET') {
-    return json(res, 200, { status: 'ok', service: 'Forzex Construction API', timestamp: new Date().toISOString() });
+  // Projects Routes
+  if (pathname.endsWith('/projects') || pathname === '/api/projects') {
+    if (req.method === 'GET') {
+      return res.status(200).json([
+        { id: '1', name: 'Skyline Office Complex', status: 'completed', location: 'Dubai, UAE', budget: 5200000 },
+        { id: '2', name: 'Harbor Residential Village', status: 'in-progress', location: 'Nairobi, Kenya', budget: 8500000 },
+        { id: '3', name: 'Industrial Logistics Park', status: 'planning', location: 'Addis Ababa, Ethiopia', budget: 15000000 }
+      ]);
+    }
+    if (req.method === 'POST') {
+      return res.status(200).json({ success: true, id: Date.now().toString(36), message: 'Project created successfully' });
+    }
   }
 
-  if (pathname === '/api/auth/admin/login' && req.method === 'POST') {
-    return json(res, 200, { success: true, role: 'admin', message: 'Admin authenticated successfully' });
-  }
-
-  if (pathname === '/api/auth/client/login' && req.method === 'POST') {
-    return json(res, 200, { success: true, role: 'client', message: 'Client authenticated successfully' });
-  }
-
-  if (pathname === '/api/auth/client/register' && req.method === 'POST') {
-    return json(res, 200, { success: true, message: 'Client registration completed' });
-  }
-
-  if (pathname === '/api/projects' && req.method === 'GET') {
-    return json(res, 200, PROJECTS);
-  }
-
-  if (pathname === '/api/projects' && req.method === 'POST') {
-    return json(res, 200, { success: true, id: Date.now().toString(36), message: 'Project created successfully' });
-  }
-
-  if (pathname === '/api/ai/analyze' && req.method === 'POST') {
-    return json(res, 200, {
+  // AI Routes
+  if (pathname.includes('/ai/analyze')) {
+    return res.status(200).json({
       safety: [{ label: 'Hard hats', status: 'pass' }, { label: 'Scaffolding', status: 'warning' }],
       objects: ['Crane', 'Excavator', 'Concrete Mixer', 'Steel Beams', 'Workers'],
       progress: { phase: 'Structure', completion: 45 },
@@ -66,8 +55,8 @@ export default function handler(req, res) {
     });
   }
 
-  if (pathname === '/api/ai/estimate' && req.method === 'POST') {
-    return json(res, 200, {
+  if (pathname.includes('/ai/estimate')) {
+    return res.status(200).json({
       breakdown: [
         { category: 'Foundation', cost: 85000 },
         { category: 'Structure', cost: 120000 },
@@ -80,8 +69,8 @@ export default function handler(req, res) {
     });
   }
 
-  if (pathname === '/api/ai/recommend' && req.method === 'POST') {
-    return json(res, 200, {
+  if (pathname.includes('/ai/recommend')) {
+    return res.status(200).json({
       products: [
         { name: 'Portland Cement', spec: 'Grade 53 OPC', price: '$8/bag' },
         { name: 'TMT Steel Bars', spec: 'Fe-500', price: '$650/ton' },
@@ -91,13 +80,14 @@ export default function handler(req, res) {
     });
   }
 
-  if (pathname === '/api/ai/report' && req.method === 'POST') {
-    return json(res, 200, { success: true, reportUrl: '#', note: 'Project Report Generated' });
+  if (pathname.includes('/ai/report')) {
+    return res.status(200).json({ success: true, reportUrl: '#', note: 'Project Report Generated' });
   }
 
-  if ((pathname === '/api/contact' || pathname === '/api/feedback') && req.method === 'POST') {
-    return json(res, 200, { success: true, message: 'Received successfully' });
+  // Contact & Feedback
+  if (pathname.includes('/contact') || pathname.includes('/feedback')) {
+    return res.status(200).json({ success: true, message: 'Received successfully' });
   }
 
-  return json(res, 404, { error: 'API endpoint not found' });
+  return res.status(404).json({ error: 'API endpoint not found' });
 }
