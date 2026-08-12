@@ -18,7 +18,11 @@ export default defineConfig({
     assetsDir: 'assets',
     target: 'es2022',
     rollupOptions: {
-      input: './index.html'
+      input: {
+        main: './index.html',
+        studentRecord: './student-record.html',
+        studentRecordIndex: './student record/index.html'
+      }
     }
   },
   esbuild: {

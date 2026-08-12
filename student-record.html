@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSG Polytechnic College - Student Record System</title>
+    <meta name="description" content="Digital Student Record System for PSG Polytechnic College, Coimbatore - Academic, Internship, Placement & Extra-Curricular Portal.">
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="./student record/style.css">
+</head>
+<body class="light-theme">
+
+    <!-- Top Navigation / Admin Toolbar Header -->
+    <header class="admin-header">
+        <div class="header-container">
+            <div class="brand-title">
+                <div class="college-logo" title="PSG Polytechnic College Logo">
+                    <svg class="psgptc-logo-svg" viewBox="0 0 100 100" width="46" height="46">
+                        <circle cx="50" cy="50" r="48" fill="#1e3a8a" stroke="#fbbf24" stroke-width="3"/>
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3,2"/>
+                        <path d="M50 18 L63 26 L63 42 L50 50 L37 42 L37 26 Z" fill="#fbbf24"/>
+                        <text x="50" y="37" font-family="'Outfit', sans-serif" font-weight="900" font-size="13" fill="#0f172a" text-anchor="middle">PSG</text>
+                        <path d="M28 58 L50 48 L72 58 L50 68 Z" fill="#ffffff"/>
+                        <path d="M50 68 L50 78" stroke="#ffffff" stroke-width="2"/>
+                        <circle cx="50" cy="80" r="3" fill="#fbbf24"/>
+                        <text x="50" y="91" font-family="'Outfit', sans-serif" font-weight="800" font-size="7.5" fill="#fbbf24" text-anchor="middle" letter-spacing="1">PTC</text>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>PSG POLYTECHNIC COLLEGE</h1>
+                    <span>(Autonomous Institution) • COIMBATORE 641 004, TAMILNADU</span>
+                </div>
+            </div>
+
+            <!-- Admin Roll No Search Bar -->
+            <div class="admin-search-wrapper">
+                <div class="search-box">
+                    <i class="fa-solid fa-id-card search-icon"></i>
+                    <input type="text" id="rollNoSearchInput" placeholder="Enter Roll No (e.g. 25CH07)..." autocomplete="off" value="25CH07">
+                    <button id="searchBtn" class="btn btn-primary" title="Search Student Record">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>Lookup Record</span>
+                    </button>
+                </div>
+                <div id="quickSearchChips" class="quick-chips">
+                    <span class="chip-label">Quick Select:</span>
+                    <button class="chip active" onclick="loadStudentByRoll('25CH07')">25CH07 (Jyothiprabha)</button>
+                    <button class="chip" onclick="loadStudentByRoll('25CH01')">25CH01 (Arun Kumar)</button>
+                    <button class="chip" onclick="loadStudentByRoll('25CH02')">25CH02 (Deepika M)</button>
+                    <button class="chip" onclick="loadStudentByRoll('25CH15')">25CH15 (Siddharth S)</button>
+                </div>
+            </div>
+
+            <div class="admin-actions">
+                <button class="btn btn-outline" id="addNewBtn" onclick="openNewStudentModal()">
+                    <i class="fa-solid fa-user-plus"></i> New Student
+                </button>
+                <button class="btn btn-accent" id="printBtn" onclick="printStudentRecord()">
+                    <i class="fa-solid fa-print"></i> Print Record
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar / Student Summary Card -->
+        <aside class="student-sidebar">
+            <div class="card student-profile-card">
+                <!-- Family & Student Photos Strip in Sidebar -->
+                <div class="family-photos-strip">
+                    <div class="photo-box">
+                        <img id="sidebarMotherPhoto" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80" alt="Mother Photo">
+                        <span class="photo-lbl">Mother</span>
+                    </div>
+                    <div class="photo-box">
+                        <img id="sidebarFatherPhoto" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Father Photo">
+                        <span class="photo-lbl">Father</span>
+                    </div>
+                    <div class="photo-box main-student-photo">
+                        <img id="sidebarStudentPhoto" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Student Photo">
+                        <span class="photo-lbl student-lbl">Student</span>
+                        <span class="status-badge active" id="sidebarStatus">Enrolled</span>
+                    </div>
+                </div>
+                <h2 id="sidebarName" class="mt-xs">Jyothiprabha V.K.</h2>
+                <div class="roll-badge" id="sidebarRollNo">ROLL NO: 25CH07</div>
+                
+                <div class="profile-details-grid">
+                    <div class="detail-item">
+                        <span class="lbl"><i class="fa-solid fa-book-bookmark"></i> Course</span>
+                        <span class="val" id="sidebarCourse">Diploma</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="lbl"><i class="fa-solid fa-code-branch"></i> Branch</span>
+                        <span class="val" id="sidebarBranch">DCN</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="lbl"><i class="fa-solid fa-calendar"></i> Period</span>
+                        <span class="val" id="sidebarPeriod">2025 - 2027</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="lbl"><i class="fa-solid fa-cake-candles"></i> DOB</span>
+                        <span class="val" id="sidebarDob">10.01.2008</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="lbl"><i class="fa-solid fa-phone"></i> Mobile</span>
+                        <span class="val" id="sidebarMobile">8122359816</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="lbl"><i class="fa-solid fa-chart-line"></i> Overall CGPA</span>
+                        <span class="val highlight" id="sidebarCgpa">9.80</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-buttons">
+                    <button class="btn btn-block btn-secondary" onclick="editCurrentStudent()">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit Details
+                    </button>
+                </div>
+            </div>
+
+            <div class="card quick-info-card">
+                <h3><i class="fa-solid fa-circle-info"></i> Official Info</h3>
+                <ul class="info-list">
+                    <li><strong>EMIS ID:</strong> <span id="sidebarEmis">2012860630</span></li>
+                    <li><strong>UMIS ID:</strong> <span id="sidebarUmis">-</span></li>
+                    <li><strong>AC Ref:</strong> <span>AC / 06 (01) / 16.05.2025</span></li>
+                    <li><strong>Blood Group:</strong> <span id="sidebarBlood">O+ve</span></li>
+                    <li><strong>Category:</strong> <span id="sidebarCategory">BC</span></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content Area with Dynamic Tabs -->
+        <main class="content-area">
+            <!-- Navigation Tabs -->
+            <nav class="tabs-nav">
+                <button class="tab-btn active" data-tab="tab-personal">
+                    <i class="fa-solid fa-address-card"></i> Student Record Header & Details
+                </button>
+                <button class="tab-btn" data-tab="tab-academics">
+                    <i class="fa-solid fa-graduation-cap"></i> Academic Marks (Sem 1-6)
+                </button>
+                <button class="tab-btn" data-tab="tab-annexure1">
+                    <i class="fa-solid fa-briefcase"></i> Annexure - I (Internship & Placement)
+                </button>
+                <button class="tab-btn" data-tab="tab-annexure2">
+                    <i class="fa-solid fa-trophy"></i> Annexure - II (Extra Curricular)
+                </button>
+            </nav>
+
+            <!-- TAB 1: Student Record & Personal Details (Matching Image 4) -->
+            <div id="tab-personal" class="tab-pane active">
+                <div class="card doc-card">
+                    <div class="doc-header text-center">
+                        <h2>PSG POLYTECHNIC COLLEGE</h2>
+                        <p class="sub-hdr">(Autonomous Institution) COIMBATORE 641 004, TAMILNADU</p>
+                        <h1 class="main-doc-title">STUDENT RECORD</h1>
+                    </div>
+
+                    <div class="record-top-meta grid-4">
+                        <div class="meta-field">
+                            <label>Course:</label>
+                            <span id="recCourse" class="field-value">Diploma</span>
+                        </div>
+                        <div class="meta-field">
+                            <label>Branch:</label>
+                            <span id="recBranch" class="field-value">DCN</span>
+                        </div>
+                        <div class="meta-field">
+                            <label>Period of Study:</label>
+                            <span id="recPeriod" class="field-value">2025 - 2027</span>
+                        </div>
+                        <div class="meta-field highlight-field">
+                            <label>Roll No:</label>
+                            <span id="recRollNo" class="field-value bold">25CH07</span>
+                        </div>
+                    </div>
+
+                    <!-- Personal Information Grid -->
+                    <div class="section-block">
+                        <h3 class="section-title"><i class="fa-solid fa-user"></i> Personal & Parent Details</h3>
+                        <div class="grid-2 gap-lg">
+                            <table class="info-table">
+                                <tr>
+                                    <th>Name of Student:</th>
+                                    <td id="recName">Jyothiprabha V.K.</td>
+                                </tr>
+                                <tr>
+                                    <th>Date of Birth:</th>
+                                    <td id="recDob">10.01.2008</td>
+                                </tr>
+                                <tr>
+                                    <th>Religion:</th>
+                                    <td id="recReligion">Hindu</td>
+                                </tr>
+                                <tr>
+                                    <th>Blood Group:</th>
+                                    <td id="recBloodGroup">O+ve</td>
+                                </tr>
+                                <tr>
+                                    <th>Community Category:</th>
+                                    <td><span id="recCommunity" class="pill">BC</span> (OC / BC / BCM / MBC / DNC / SC / SCA / ST)</td>
+                                </tr>
+                                <tr>
+                                    <th>Differently Abled:</th>
+                                    <td id="recDifferentlyAbled">No</td>
+                                </tr>
+                            </table>
+
+                            <table class="info-table">
+                                <tr>
+                                    <th>Father / Guardian Name:</th>
+                                    <td id="recFatherName">VIJAYAKUMAR</td>
+                                </tr>
+                                <tr>
+                                    <th>Mother Name:</th>
+                                    <td id="recMotherName">KRISHNA PRIYA V</td>
+                                </tr>
+                                <tr>
+                                    <th>Father's Mobile No:</th>
+                                    <td id="recFatherMobile">9865911633</td>
+                                </tr>
+                                <tr>
+                                    <th>Mother's Mobile No:</th>
+                                    <td id="recMotherMobile">9578808816</td>
+                                </tr>
+                                <tr>
+                                    <th>Student's Mobile No:</th>
+                                    <td id="recStudentMobile">8122359816</td>
+                                </tr>
+                                <tr>
+                                    <th>Parent Occupation & Income:</th>
+                                    <td id="recIncome">Business and ₹ 2,48,000 / annum</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="address-box-container grid-2 mt-md">
+                            <div class="address-card">
+                                <h4><i class="fa-solid fa-location-dot"></i> Residential Address</h4>
+                                <p id="recResAddress">3/76 A, Narayana Naicken Pudur, Kattampatti (P.O), Kinathukaduvu, Coimbatore</p>
+                                <span class="pin">Pin Code: <strong id="recResPin">642202</strong></span>
+                            </div>
+                            <div class="address-card">
+                                <h4><i class="fa-solid fa-house"></i> Permanent Address</h4>
+                                <p id="recPermAddress">3/76 A, Narayana Naicken Pudur, Kattampatti (P.O), Kinathukaduvu, Coimbatore</p>
+                                <span class="pin">Pin Code: <strong id="recPermPin">642202</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="bank-emis-grid grid-3 mt-md">
+                            <div class="info-pill-box">
+                                <span><i class="fa-solid fa-id-card"></i> EMIS ID:</span>
+                                <strong id="recEmis">2012860630</strong>
+                            </div>
+                            <div class="info-pill-box">
+                                <span><i class="fa-solid fa-hashtag"></i> UMIS ID:</span>
+                                <strong id="recUmis">-</strong>
+                            </div>
+                            <div class="info-pill-box">
+                                <span><i class="fa-solid fa-building-columns"></i> Bank & Branch:</span>
+                                <strong id="recBank">Indian Bank / Kattampatti</strong>
+                            </div>
+                        </div>
+
+                        <!-- Family Photos Section (Matching Image 4 Paper Record) -->
+                        <div class="family-photos-block mt-lg">
+                            <h4 class="sub-section-title"><i class="fa-solid fa-id-badge"></i> Family Photos (Parents & Student)</h4>
+                            <div class="family-photos-grid grid-3">
+                                <div class="family-photo-card">
+                                    <div class="photo-frame">
+                                        <img id="recMotherPhoto" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&auto=format&fit=crop&q=80" alt="Mother Photo">
+                                    </div>
+                                    <span class="photo-title"><i class="fa-solid fa-user-female"></i> Mother's Photo</span>
+                                    <small id="recMotherPhotoName">KRISHNA PRIYA V</small>
+                                </div>
+                                <div class="family-photo-card">
+                                    <div class="photo-frame">
+                                        <img id="recFatherPhoto" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80" alt="Father Photo">
+                                    </div>
+                                    <span class="photo-title"><i class="fa-solid fa-user-tie"></i> Father's Photo</span>
+                                    <small id="recFatherPhotoName">VIJAYAKUMAR</small>
+                                </div>
+                                <div class="family-photo-card highlight-photo">
+                                    <div class="photo-frame">
+                                        <img id="recStudentTabPhoto" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&auto=format&fit=crop&q=80" alt="Student Photo">
+                                    </div>
+                                    <span class="photo-title"><i class="fa-solid fa-graduation-cap"></i> Student's Photo</span>
+                                    <small id="recStudentPhotoName">Jyothiprabha V.K.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Details of Studies Table -->
+                    <div class="section-block mt-lg">
+                        <h3 class="section-title"><i class="fa-solid fa-school"></i> Details of Studies (Prior Qualification)</h3>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Class</th>
+                                        <th>Period of Study</th>
+                                        <th>Name of School / Institute</th>
+                                        <th>Total Marks</th>
+                                        <th>Overall %</th>
+                                        <th>Reg. No.</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studiesTableBody">
+                                    <!-- Dynamic rows loaded from JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: Academic Details (Semester Marks - Image 3) -->
+            <div id="tab-academics" class="tab-pane">
+                <div class="card doc-card">
+                    <div class="doc-header flex-between">
+                        <div>
+                            <h2>Academic Marks & Attendance Record</h2>
+                            <p class="sub-hdr">Semester 1 to Semester 6 Examination Results</p>
+                        </div>
+                        <div class="cgpa-summary-badge">
+                            <span>Cumulative GPA:</span>
+                            <h2 id="academicsCgpaBadge">9.80</h2>
+                        </div>
+                    </div>
+
+                    <!-- Semester Select Filter -->
+                    <div class="semester-tabs-bar">
+                        <button class="sem-btn active" onclick="switchSemester(1)">Sem 1</button>
+                        <button class="sem-btn" onclick="switchSemester(2)">Sem 2</button>
+                        <button class="sem-btn" onclick="switchSemester(3)">Sem 3</button>
+                        <button class="sem-btn" onclick="switchSemester(4)">Sem 4</button>
+                        <button class="sem-btn" onclick="switchSemester(5)">Sem 5</button>
+                        <button class="sem-btn" onclick="switchSemester(6)">Sem 6</button>
+                    </div>
+
+                    <div class="semester-content-box">
+                        <div class="sem-meta-bar">
+                            <h3 id="currentSemTitle">Semester 3 - Course Performance</h3>
+                            <div class="sem-tags">
+                                <span class="tag"><i class="fa-solid fa-house-user"></i> Status: <strong id="semHostelStatus">Day Scholar</strong></span>
+                                <span class="tag"><i class="fa-solid fa-award"></i> Scholarship: <strong id="semScholarship">None</strong></span>
+                                <span class="tag"><i class="fa-solid fa-chart-simple"></i> Sem CGPA: <strong id="semCgpa">9.85</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="data-table marks-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 5%;">#</th>
+                                        <th style="width: 40%;">Course Name</th>
+                                        <th style="width: 15%;">% of Attendance</th>
+                                        <th style="width: 20%;">CA Mark (Max 30)</th>
+                                        <th style="width: 20%;">Final Exam Grade / Month & Year</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="marksTableBody">
+                                    <!-- Populated dynamically via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: Annexure I (Integrated Learning, Internship, Project & Placement - Image 1) -->
+            <div id="tab-annexure1" class="tab-pane">
+                <div class="card doc-card">
+                    <div class="doc-header">
+                        <h2>Annexure - I</h2>
+                        <p class="sub-hdr">Integrated Learning, Internship, Final Project, Placement & Results</p>
+                    </div>
+
+                    <!-- I. Integrated Learning -->
+                    <div class="section-block">
+                        <h3 class="section-title">I. Integrated Learning Experience</h3>
+                        <div class="grid-2 gap-md">
+                            <div>
+                                <h4>Mandatory Courses</h4>
+                                <table class="data-table compact-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Sem</th>
+                                            <th>Course Name</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="mandatoryCoursesBody"></tbody>
+                                </table>
+                            </div>
+                            <div>
+                                <h4>Additional Courses</h4>
+                                <table class="data-table compact-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Sem</th>
+                                            <th>Course Name</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="additionalCoursesBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- II. Internship -->
+                    <div class="section-block mt-lg">
+                        <h3 class="section-title">II. Internship Details</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Company Name & Address</th>
+                                    <th>Description of Work</th>
+                                    <th>Duration (From - To)</th>
+                                    <th>Skills Developed</th>
+                                </tr>
+                            </thead>
+                            <tbody id="internshipBody"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- III. Final Year Project -->
+                    <div class="section-block mt-lg">
+                        <h3 class="section-title">III. Final Year Project</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Project Title & Description</th>
+                                    <th>Name of Guide</th>
+                                    <th>Domain / Field</th>
+                                    <th>Technologies / Tools Used</th>
+                                </tr>
+                            </thead>
+                            <tbody id="projectBody"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- IV. Placement Details -->
+                    <div class="section-block mt-lg">
+                        <h3 class="section-title">IV. Placement Details</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Company Name</th>
+                                    <th>Designation</th>
+                                    <th>Salary</th>
+                                    <th>Joining Date</th>
+                                    <th>Location</th>
+                                </tr>
+                            </thead>
+                            <tbody id="placementBody"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- V. Final Results -->
+                    <div class="section-block mt-lg">
+                        <h3 class="section-title">V. Final Results</h3>
+                        <div class="grid-3 gap-md result-box">
+                            <div class="res-item">
+                                <span class="lbl">Month & Year of Graduation:</span>
+                                <strong id="resGraduation">April 2027</strong>
+                            </div>
+                            <div class="res-item">
+                                <span class="lbl">Overall Percentage:</span>
+                                <strong id="resPercentage" class="highlight">94.5%</strong>
+                            </div>
+                            <div class="res-item">
+                                <span class="lbl">Award of Diploma:</span>
+                                <span id="resAward" class="pill pill-success">First Class with Distinction</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: Annexure II (Extra Curricular & Competitions - Image 2) -->
+            <div id="tab-annexure2" class="tab-pane">
+                <div class="card doc-card">
+                    <div class="doc-header">
+                        <h2>Annexure - II</h2>
+                        <p class="sub-hdr">Extra Curricular Activities, Competitions & Conduct Record</p>
+                    </div>
+
+                    <!-- 1. Sports -->
+                    <div class="section-block">
+                        <h3 class="section-title">1. Sports</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Sport(s) Played</th>
+                                    <th>Level of Participation</th>
+                                    <th>Positions Played / Role</th>
+                                    <th>Achievements</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sportsBody"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- 2. Students Union Activities -->
+                    <div class="section-block mt-lg">
+                        <h3 class="section-title">2. Students Union Activities</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name of Club / Association / Service Wing</th>
+                                    <th>Role / Position</th>
+                                    <th>Activities Participated</th>
+                                    <th>Achievements</th>
+                                </tr>
+                            </thead>
+                            <tbody id="unionBody"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- 3. Competitions -->
+                    <div class="section-block mt-lg">
+                        <h3 class="section-title">3. Competitions (Paper presentation / Expo / Quiz / Technical)</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name of Event</th>
+                                    <th>Conducted By</th>
+                                    <th>Team / Individual</th>
+                                    <th>Achievements</th>
+                                </tr>
+                            </thead>
+                            <tbody id="competitionsBody"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- 4. Remarks & Official Signatures -->
+                    <div class="section-block mt-lg">
+                        <h3 class="section-title">4. Remarks & Verification Signatures</h3>
+                        <div class="remarks-box">
+                            <label>Faculty Remarks:</label>
+                            <p id="facultyRemarks">Exemplary academic record, active participant in departmental technical symposiums and paper presentations. Highly disciplined student.</p>
+                        </div>
+
+                        <div class="signatures-grid grid-3 mt-xl">
+                            <div class="sig-card">
+                                <div class="sig-line"></div>
+                                <span>Signature of the Tutor</span>
+                            </div>
+                            <div class="sig-card photo-card">
+                                <div class="leaving-photo-slot">
+                                    <i class="fa-solid fa-camera"></i>
+                                    <span>Student Photo at time of Leaving</span>
+                                </div>
+                            </div>
+                            <div class="sig-card">
+                                <div class="sig-line"></div>
+                                <span>Signature of the HoD</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Student Edit / Add Modal Form -->
+    <div id="studentModal" class="modal-backdrop hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Edit Student Record</h3>
+                <button class="modal-close" onclick="closeStudentModal()">&times;</button>
+            </div>
+            <form id="studentForm" onsubmit="saveStudentForm(event)">
+                <div class="modal-body">
+                    <div class="form-grid grid-3">
+                        <div class="form-group">
+                            <label>Roll No *</label>
+                            <input type="text" id="formRollNo" required placeholder="e.g. 25EH07">
+                        </div>
+                        <div class="form-group">
+                            <label>Student Full Name *</label>
+                            <input type="text" id="formName" required placeholder="Full Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Branch *</label>
+                            <input type="text" id="formBranch" required placeholder="e.g. DCN">
+                        </div>
+                        <div class="form-group">
+                            <label>Period of Study</label>
+                            <input type="text" id="formPeriod" placeholder="2025 - 2027">
+                        </div>
+                        <div class="form-group">
+                            <label>Date of Birth</label>
+                            <input type="text" id="formDob" placeholder="DD.MM.YYYY">
+                        </div>
+                        <div class="form-group">
+                            <label>Blood Group</label>
+                            <input type="text" id="formBlood" placeholder="e.g. O+ve">
+                        </div>
+                        <div class="form-group">
+                            <label>Father's Name</label>
+                            <input type="text" id="formFather" placeholder="Father Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Mother's Name</label>
+                            <input type="text" id="formMother" placeholder="Mother Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Student Mobile</label>
+                            <input type="text" id="formMobile" placeholder="10-digit Mobile">
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-md">
+                        <label>Residential Address</label>
+                        <textarea id="formAddress" rows="2" placeholder="Full Address"></textarea>
+                    </div>
+
+                    <div class="form-grid grid-2 mt-md">
+                        <div class="form-group">
+                            <label>EMIS ID</label>
+                            <input type="text" id="formEmis" placeholder="EMIS Number">
+                        </div>
+                        <div class="form-group">
+                            <label>Overall CGPA</label>
+                            <input type="number" step="0.01" id="formCgpa" placeholder="e.g. 9.80">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeStudentModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Student Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="./student record/sample_data.js"></script>
+    <script type="module" src="./student record/app.js"></script>
+</body>
+</html>
