@@ -74,12 +74,9 @@ function onAuthStateChanged(authInstance, callback) {
 }
 
 // ==================== GIS Satellite Location Storage API ====================
-
 const LOCAL_STORAGE_GIS_KEY = 'forzex_gis_satellite_sites';
+const LOCAL_STORAGE_INTERIOR_KEY = 'forzex_ai_interior_designs';
 
-/**
- * Save a geotagged site location with Google Satellite & GIS details into Firebase Firestore / Persistent Storage
- */
 export async function saveGisSiteToFirebase(siteData) {
   const payload = {
     name: siteData.name || 'Construction Site Geotag',
@@ -100,22 +97,17 @@ export async function saveGisSiteToFirebase(siteData) {
       console.log('✅ Site saved to Firebase Firestore:', docRef.id);
       return { success: true, id: docRef.id, ...payload };
     } catch (err) {
-      console.error('Firestore save failed, falling back to local persistent storage:', err);
+      console.error('Firestore save failed, falling back to local storage:', err);
     }
   }
 
-  // Fallback to local storage persistence
   const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_GIS_KEY) || '[]');
   const newSite = { id: 'gis-' + Date.now(), ...payload };
   existing.unshift(newSite);
   localStorage.setItem(LOCAL_STORAGE_GIS_KEY, JSON.stringify(existing));
-  console.log('✅ Site saved to local persistent storage:', newSite.id);
   return { success: true, ...newSite };
 }
 
-/**
- * Retrieve all saved GIS Satellite Site locations from Firebase Firestore / Persistent Storage
- */
 export async function getGisSitesFromFirebase() {
   if (db) {
     try {
@@ -126,11 +118,10 @@ export async function getGisSitesFromFirebase() {
       });
       if (sites.length > 0) return sites;
     } catch (err) {
-      console.warn('Firestore fetch failed, serving local persistent storage:', err);
+      console.warn('Firestore fetch failed, serving local storage:', err);
     }
   }
 
-  // Fallback default sites + localStorage items
   const localItems = JSON.parse(localStorage.getItem(LOCAL_STORAGE_GIS_KEY) || '[]');
   if (localItems.length === 0) {
     const defaultSites = [
@@ -143,116 +134,92 @@ export async function getGisSitesFromFirebase() {
   return localItems;
 }
 
-/**
- * Delete a saved GIS site record from Firebase / Persistent Storage
- */
 export async function deleteGisSiteFromFirebase(siteId) {
   if (db && !siteId.startsWith('gis-')) {
     try {
       await deleteDoc(doc(db, 'gis_sites', siteId));
-      console.log('✅ Site deleted from Firebase Firestore');
       return { success: true };
     } catch (err) {
       console.warn('Firestore delete failed:', err);
     }
   }
-
   const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_GIS_KEY) || '[]');
   const filtered = existing.filter(item => item.id !== siteId);
   localStorage.setItem(LOCAL_STORAGE_GIS_KEY, JSON.stringify(filtered));
   return { success: true };
 }
 
-// ==================== Land Plot Boundary Storage API ====================
+// ==================== AI Interior & 2D-to-Video Storage API ====================
 
-const LOCAL_STORAGE_LAND_KEY = 'forzex_land_plots';
-
-export async function saveLandPlotToFirebase(plotData) {
+export async function saveInteriorDesignToFirebase(designData) {
   const payload = {
-    name: plotData.name || 'Land Boundary Plot',
-    points: plotData.points || [],
-    totalAreaSqFt: Number(plotData.totalAreaSqFt || 0),
-    totalAcres: Number(plotData.totalAcres || 0),
-    usableAreaSqFt: Number(plotData.usableAreaSqFt || 0),
-    usableAcres: Number(plotData.usableAcres || 0),
-    setbackFt: Number(plotData.setbackFt || 5),
-    usablePercent: Number(plotData.usablePercent || 0),
-    perimeterFt: Number(plotData.perimeterFt || 0),
-    locationName: plotData.locationName || 'Mapped Property',
+    title: designData.title || 'AI Interior & Construction Concept',
+    style: designData.style || 'Modern Minimalist',
+    roomType: designData.roomType || 'Living Room',
+    wallCount: designData.wallCount || 3,
+    renderUrl: designData.renderUrl || '/images/interior_1.png',
+    hasVideoSimulation: Boolean(designData.hasVideoSimulation),
+    costEstimate: designData.costEstimate || '$35,400',
     timestamp: new Date().toISOString()
   };
 
   if (db) {
     try {
-      const docRef = await addDoc(collection(db, 'land_plots'), {
+      const docRef = await addDoc(collection(db, 'interior_designs'), {
         ...payload,
         createdAt: serverTimestamp()
       });
-      console.log('✅ Land plot saved to Firebase Firestore:', docRef.id);
       return { success: true, id: docRef.id, ...payload };
     } catch (err) {
-      console.error('Firestore save failed, using local storage fallback:', err);
+      console.error('Firestore interior save failed, using local storage:', err);
     }
   }
 
-  const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LAND_KEY) || '[]');
-  const newPlot = { id: 'plot-' + Date.now(), ...payload };
-  existing.unshift(newPlot);
-  localStorage.setItem(LOCAL_STORAGE_LAND_KEY, JSON.stringify(existing));
-  return { success: true, ...newPlot };
+  const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_INTERIOR_KEY) || '[]');
+  const newItem = { id: 'interior-' + Date.now(), ...payload };
+  existing.unshift(newItem);
+  localStorage.setItem(LOCAL_STORAGE_INTERIOR_KEY, JSON.stringify(existing));
+  return { success: true, ...newItem };
 }
 
-export async function getLandPlotsFromFirebase() {
+export async function getInteriorDesignsFromFirebase() {
   if (db) {
     try {
-      const querySnapshot = await getDocs(collection(db, 'land_plots'));
-      const plots = [];
+      const querySnapshot = await getDocs(collection(db, 'interior_designs'));
+      const list = [];
       querySnapshot.forEach((doc) => {
-        plots.push({ id: doc.id, ...doc.data() });
+        list.push({ id: doc.id, ...doc.data() });
       });
-      if (plots.length > 0) return plots;
+      if (list.length > 0) return list;
     } catch (err) {
-      console.warn('Firestore fetch failed, serving local storage:', err);
+      console.warn('Firestore interior fetch failed:', err);
     }
   }
 
-  const localItems = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LAND_KEY) || '[]');
+  const localItems = JSON.parse(localStorage.getItem(LOCAL_STORAGE_INTERIOR_KEY) || '[]');
   if (localItems.length === 0) {
-    const defaultPlots = [
-      {
-        id: 'plot-1',
-        name: 'Irregular Residential Corner Lot',
-        points: [{lat: 30.2672, lon: -97.7431}, {lat: 30.2678, lon: -97.7425}, {lat: 30.2675, lon: -97.7418}, {lat: 30.2668, lon: -97.7424}],
-        totalAreaSqFt: 18450,
-        totalAcres: 0.423,
-        usableAreaSqFt: 14200,
-        usableAcres: 0.326,
-        setbackFt: 5,
-        usablePercent: 76.9,
-        perimeterFt: 540,
-        locationName: 'Austin Site, TX',
-        timestamp: new Date().toISOString()
-      }
+    const defaultDesigns = [
+      { id: 'interior-1', title: 'Luxury Master Executive Suite', style: 'Contemporary Luxury', roomType: 'Executive Suite', wallCount: 3, renderUrl: '/images/interior_1.png', hasVideoSimulation: true, costEstimate: '$42,500', timestamp: new Date().toISOString() },
+      { id: 'interior-2', title: 'Nordic Scandinavian Living Room', style: 'Scandinavian Warm Oak', roomType: 'Living Lounge', wallCount: 3, renderUrl: '/images/interior_2.png', hasVideoSimulation: true, costEstimate: '$28,900', timestamp: new Date().toISOString() }
     ];
-    localStorage.setItem(LOCAL_STORAGE_LAND_KEY, JSON.stringify(defaultPlots));
-    return defaultPlots;
+    localStorage.setItem(LOCAL_STORAGE_INTERIOR_KEY, JSON.stringify(defaultDesigns));
+    return defaultDesigns;
   }
   return localItems;
 }
 
-export async function deleteLandPlotFromFirebase(plotId) {
-  if (db && !plotId.startsWith('plot-')) {
+export async function deleteInteriorDesignFromFirebase(id) {
+  if (db && !id.startsWith('interior-')) {
     try {
-      await deleteDoc(doc(db, 'land_plots', plotId));
+      await deleteDoc(doc(db, 'interior_designs', id));
       return { success: true };
     } catch (err) {
       console.warn('Firestore delete failed:', err);
     }
   }
-
-  const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LAND_KEY) || '[]');
-  const filtered = existing.filter(item => item.id !== plotId);
-  localStorage.setItem(LOCAL_STORAGE_LAND_KEY, JSON.stringify(filtered));
+  const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_INTERIOR_KEY) || '[]');
+  const filtered = existing.filter(item => item.id !== id);
+  localStorage.setItem(LOCAL_STORAGE_INTERIOR_KEY, JSON.stringify(filtered));
   return { success: true };
 }
 

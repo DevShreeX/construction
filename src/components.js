@@ -11,6 +11,7 @@ export function renderNavbar() {
       <div class="nav-links" id="navLinks">
         <a data-route="/">Home</a>
         <a data-route="/workspace">Workspace</a>
+        <a data-route="/interior"><i class="fas fa-couch" style="margin-right:4px;color:var(--accent)"></i> AI Interior</a>
         <a data-route="/land-analyzer"><i class="fas fa-draw-polygon" style="margin-right:4px;color:var(--gold)"></i> Land Plot</a>
         <a data-route="/vision">Vision</a>
         <a data-route="/insights">Insights</a>
@@ -43,9 +44,9 @@ export function renderBottomNav() {
   el.innerHTML = `
     <a data-route="/"><i class="fas fa-home"></i><span>Home</span></a>
     <a data-route="/workspace"><i class="fas fa-briefcase"></i><span>Work</span></a>
+    <a data-route="/interior"><i class="fas fa-couch"></i><span>Interior</span></a>
     <a data-route="/land-analyzer"><i class="fas fa-draw-polygon"></i><span>Land</span></a>
     <a data-route="/vision"><i class="fas fa-camera"></i><span>Vision</span></a>
-    <a data-route="/insights"><i class="fas fa-chart-line"></i><span>Insights</span></a>
     <a data-route="/more"><i class="fas fa-ellipsis-h"></i><span>More</span></a>`;
 }
 
@@ -66,6 +67,7 @@ export function renderFooter() {
         <div>
           <div class="footer-links">
             <a data-route="/">Home</a>
+            <a data-route="/interior">AI Interior & Video</a>
             <a data-route="/projects">Projects</a>
             <a data-route="/about">About</a>
             <a data-route="/contact">Contact</a>
