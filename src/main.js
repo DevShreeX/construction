@@ -4,11 +4,25 @@ import { showToast } from './utils.js';
 import { homePage } from './pages/home.js';
 import { aboutPage, projectsPage, contactPage, feedbackPage } from './pages/public.js';
 import { visionPage, insightsPage, resourcesPage, reportPage, morePage } from './pages/features.js';
+import { landAnalyzerPage } from './pages/landAnalyzer.js';
 import { adminLoginPage, clientLoginPage, clientRegisterPage, adminDashPage, clientDashPage, workspacePage } from './pages/auth.js';
-import { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from './firebase.js';
+import { 
+  auth, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged,
+  saveGisSiteToFirebase,
+  getGisSitesFromFirebase,
+  deleteGisSiteFromFirebase,
+  saveLandPlotToFirebase,
+  getLandPlotsFromFirebase,
+  deleteLandPlotFromFirebase
+} from './firebase.js';
 
 // ==================== Global State ====================
 let currentUser = null;
+let currentSiteCoords = { lat: -1.286389, lon: 36.817223, label: 'Nairobi Construction Site' };
 
 // ==================== Register All Routes ====================
 registerRoute('/', homePage);
@@ -16,6 +30,7 @@ registerRoute('/about', aboutPage);
 registerRoute('/projects', projectsPage);
 registerRoute('/contact', contactPage);
 registerRoute('/feedback', feedbackPage);
+registerRoute('/land-analyzer', landAnalyzerPage);
 registerRoute('/vision', visionPage);
 registerRoute('/insights', insightsPage);
 registerRoute('/resources', resourcesPage);
@@ -47,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  console.log('✅ Forzex Construction PWA ready with Open-Meteo Weather & Geolocation Maps & Firebase Auth');
+  console.log('✅ Forzex Construction PWA ready with Google Satellite GIS API & Firebase Storage');
 });
 
 // ==================== Service Worker ====================
@@ -215,9 +230,19 @@ function setupGlobalListeners() {
     // Vision Camera & Geotagging
     setupVisionPageHandlers();
 
-    // Weather & Geolocation Page Handlers (/more)
+    // Load Firebase GIS persistent site locations on vision & more page
+    if (path === '/vision') {
+      renderFirebaseGisList('firebaseGisSitesContainer');
+    }
+
+    if (path === '/land-analyzer') {
+      initLandAnalyzerMap();
+      renderFirebaseLandPlotsList();
+    }
+
     if (path === '/more') {
       initWeatherAndMapHub();
+      renderFirebaseGisList('moreFirebaseGisContainer');
     }
   });
 }
@@ -226,6 +251,7 @@ function setupGlobalListeners() {
 let visionGpsCoords = null;
 let activeCameraStream = null;
 let currentFacingMode = 'environment';
+let visionMapInstance = null;
 
 function setupVisionPageHandlers() {
   const uploadInput = document.getElementById('uploadInput');
@@ -235,6 +261,8 @@ function setupVisionPageHandlers() {
   const switchCamBtn = document.getElementById('switchCamBtn');
   const cameraViewfinder = document.getElementById('cameraViewfinder');
   const cameraVideo = document.getElementById('cameraStream');
+  const saveFirebaseSiteBtn = document.getElementById('saveFirebaseSiteBtn');
+  const refreshFirebaseGisBtn = document.getElementById('refreshFirebaseGisBtn');
 
   // Stop active camera helper
   const stopCameraStream = () => {
@@ -274,11 +302,8 @@ function setupVisionPageHandlers() {
     } catch (err) {
       console.error('Camera access error:', err);
       if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-        showToast('Camera permission denied. Please allow camera access in browser settings.', 'error');
-      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
-        showToast('No camera hardware found on this device.', 'error');
+        showToast('Camera permission denied. Allow camera access in browser settings.', 'error');
       } else {
-        // Fallback attempt without facingMode constraints
         try {
           const fallbackStream = await navigator.mediaDevices.getUserMedia({ video: true });
           activeCameraStream = fallbackStream;
@@ -295,24 +320,16 @@ function setupVisionPageHandlers() {
     }
   };
 
-  // Start Live Camera Button
-  startCamBtn?.addEventListener('click', () => {
-    startCamera(currentFacingMode);
-  });
-
-  // Stop Camera Button
+  startCamBtn?.addEventListener('click', () => startCamera(currentFacingMode));
   stopCamBtn?.addEventListener('click', () => {
     stopCameraStream();
     showToast('Camera closed.', 'info');
   });
-
-  // Switch Camera Button
   switchCamBtn?.addEventListener('click', () => {
     currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
     startCamera(currentFacingMode);
   });
 
-  // Capture Photo Snapshot from Live Stream
   snapPhotoBtn?.addEventListener('click', () => {
     if (!cameraVideo || !activeCameraStream) return;
     const canvas = document.getElementById('cameraCanvas') || document.createElement('canvas');
@@ -334,7 +351,6 @@ function setupVisionPageHandlers() {
     showToast('Site photo captured from live feed!', 'success');
   });
 
-  // File Inputs
   const handleImage = (input) => {
     input?.addEventListener('change', (ev) => {
       stopCameraStream();
@@ -354,6 +370,32 @@ function setupVisionPageHandlers() {
   };
   handleImage(uploadInput);
 
+  // Save Site to Firebase
+  saveFirebaseSiteBtn?.addEventListener('click', async () => {
+    const lat = visionGpsCoords ? visionGpsCoords.lat : currentSiteCoords.lat;
+    const lon = visionGpsCoords ? visionGpsCoords.lon : currentSiteCoords.lon;
+    showToast('Saving site location to Firebase...', 'info');
+
+    const result = await saveGisSiteToFirebase({
+      name: 'AI Inspection Site Geotag',
+      lat,
+      lon,
+      locationName: currentSiteCoords.label || 'Geotagged Site',
+      satelliteBasemap: 'Google Satellite Hybrid',
+      notes: 'Inspected with AI Site Vision & Google Satellite GIS API.'
+    });
+
+    if (result.success) {
+      showToast('✅ Geotagged site saved to Firebase backend storage!', 'success');
+      renderFirebaseGisList('firebaseGisSitesContainer');
+    }
+  });
+
+  refreshFirebaseGisBtn?.addEventListener('click', () => {
+    showToast('Refreshing Firebase records...', 'info');
+    renderFirebaseGisList('firebaseGisSitesContainer');
+  });
+
   // Run AI Analysis
   document.getElementById('analyzeBtn')?.addEventListener('click', () => {
     const results = document.getElementById('analysisResults');
@@ -363,32 +405,104 @@ function setupVisionPageHandlers() {
     if (objRes) objRes.innerHTML = '<p>Tower Crane, Hydraulic Excavator, Concrete Mixer, Structural Steel Beams, 6 Workers on Site</p>';
     if (results) results.style.display = 'block';
 
-    // Render Leaflet map for site vision location
-    if (window.L && document.getElementById('visionMap')) {
-      const lat = visionGpsCoords ? visionGpsCoords.lat : -1.286389;
-      const lon = visionGpsCoords ? visionGpsCoords.lon : 36.817223;
-      setTimeout(() => {
-        const map = L.map('visionMap').setView([lat, lon], 15);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-        L.marker([lat, lon]).addTo(map).bindPopup('<b>Inspection Site Geotag</b><br>Lat: ' + lat + '<br>Lon: ' + lon).openPopup();
-      }, 200);
-    }
+    // Render Google Satellite GIS Leaflet Map
+    renderGoogleSatelliteMap('visionMap', visionGpsCoords ? visionGpsCoords.lat : currentSiteCoords.lat, visionGpsCoords ? visionGpsCoords.lon : currentSiteCoords.lon, 'Inspection Site Geotag');
+
     showToast('Site AI inspection complete!', 'success');
   });
+}
+
+// ==================== Google Satellite & GIS Map Layer Engine ====================
+function renderGoogleSatelliteMap(elementId, lat, lon, label) {
+  const mapEl = document.getElementById(elementId);
+  if (!mapEl || !window.L) return;
+
+  // Clean up previous instance
+  if (elementId === 'visionMap' && visionMapInstance) {
+    visionMapInstance.remove();
+    visionMapInstance = null;
+  }
+  if (elementId === 'siteMap' && siteMapInstance) {
+    siteMapInstance.remove();
+    siteMapInstance = null;
+  }
+
+  setTimeout(() => {
+    const map = L.map(elementId, { zoomControl: true }).setView([lat, lon], 16);
+    if (elementId === 'visionMap') visionMapInstance = map;
+    if (elementId === 'siteMap') siteMapInstance = map;
+
+    // Define Google Satellite & GIS Open-Source Layers
+    const googleSatelliteHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+      maxZoom: 20,
+      attribution: '&copy; Google Maps Satellite'
+    });
+
+    const googleSatelliteAerial = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+      maxZoom: 20,
+      attribution: '&copy; Google Earth High-Res'
+    });
+
+    const googleGisTerrain = L.tileLayer('https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+      maxZoom: 20,
+      attribution: '&copy; Google GIS Topographic'
+    });
+
+    const openStreetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap'
+    });
+
+    // Default to Google Satellite Hybrid basemap
+    googleSatelliteHybrid.addTo(map);
+
+    // Layer control selector for Satellite / GIS / Terrain
+    const baseLayers = {
+      '🛰️ Google Satellite Hybrid': googleSatelliteHybrid,
+      '📷 Google High-Res Aerial': googleSatelliteAerial,
+      '⛰️ Google GIS Terrain': googleGisTerrain,
+      '🗺️ OpenStreetMap': openStreetMap
+    };
+    L.control.layers(baseLayers, null, { position: 'topright' }).addTo(map);
+
+    // Add marker
+    const marker = L.marker([lat, lon]).addTo(map);
+    marker.bindPopup(`
+      <div style="font-family:sans-serif">
+        <strong style="color:#0f172a">${label}</strong><br>
+        <span style="font-size:0.8rem">Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)}</span><br>
+        <small style="color:#2563eb">Google Satellite GIS Geotag</small>
+      </div>
+    `).openPopup();
+
+  }, 100);
 }
 
 // ==================== Weather & Map Hub Handlers ====================
 let siteMapInstance = null;
 
 function initWeatherAndMapHub() {
-  const defaultLat = -1.286389;
-  const defaultLon = 36.817223;
-  const defaultCity = 'Nairobi, Kenya';
+  const defaultLat = currentSiteCoords.lat;
+  const defaultLon = currentSiteCoords.lon;
+  const defaultCity = currentSiteCoords.label;
 
-  // Load default weather & map
   fetchOpenMeteoWeather(defaultLat, defaultLon, defaultCity);
+
+  document.getElementById('saveMoreSiteFirebaseBtn')?.addEventListener('click', async () => {
+    showToast('Saving current site geotag to Firebase backend...', 'info');
+    const res = await saveGisSiteToFirebase({
+      name: currentSiteCoords.label + ' Site',
+      lat: currentSiteCoords.lat,
+      lon: currentSiteCoords.lon,
+      locationName: currentSiteCoords.label,
+      satelliteBasemap: 'Google Satellite Hybrid',
+      notes: 'Logged via Google Satellite GIS & Weather Hub.'
+    });
+
+    if (res.success) {
+      showToast('✅ Saved site location to Firebase!', 'success');
+      renderFirebaseGisList('moreFirebaseGisContainer');
+    }
+  });
 
   // GPS Button
   document.getElementById('weatherGpsBtn')?.addEventListener('click', () => {
@@ -401,7 +515,6 @@ function initWeatherAndMapHub() {
       async (pos) => {
         const lat = pos.coords.latitude;
         const lon = pos.coords.longitude;
-        // Reverse Geocode city using OpenStreetMap Nominatim
         let cityName = `GPS Site (${lat.toFixed(3)}, ${lon.toFixed(3)})`;
         try {
           const revRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
@@ -411,12 +524,11 @@ function initWeatherAndMapHub() {
           }
         } catch (e) { console.warn('Reverse geocode error:', e); }
 
+        currentSiteCoords = { lat, lon, label: cityName };
         fetchOpenMeteoWeather(lat, lon, cityName);
         showToast(`Located site at ${cityName}!`, 'success');
       },
-      (err) => {
-        showToast(`Geolocation error: ${err.message}`, 'error');
-      },
+      (err) => { showToast(`Geolocation error: ${err.message}`, 'error'); },
       { enableHighAccuracy: true }
     );
   });
@@ -433,6 +545,7 @@ function initWeatherAndMapHub() {
         if (data && data.length > 0) {
           const lat = parseFloat(data[0].lat);
           const lon = parseFloat(data[0].lon);
+          currentSiteCoords = { lat, lon, label: data[0].display_name.split(',')[0] };
           fetchOpenMeteoWeather(lat, lon, data[0].display_name);
           showToast(`Found weather for ${data[0].display_name.split(',')[0]}`, 'success');
         } else {
@@ -452,7 +565,7 @@ async function fetchOpenMeteoWeather(lat, lon, locationLabel) {
 
   container.innerHTML = `
     <div class="flex-center" style="padding:24px;background:rgba(255,255,255,0.02);border-radius:var(--radius-md);border:1px solid var(--border)">
-      <p class="text-muted"><i class="fas fa-spinner fa-spin" style="margin-right:6px"></i> Fetching real-time site weather for ${locationLabel.split(',')[0]}...</p>
+      <p class="text-muted"><i class="fas fa-spinner fa-spin" style="margin-right:6px"></i> Fetching site weather for ${locationLabel.split(',')[0]}...</p>
     </div>`;
 
   try {
@@ -463,12 +576,9 @@ async function fetchOpenMeteoWeather(lat, lon, locationLabel) {
 
     const curr = data.current;
     const daily = data.daily;
-
-    // Determine Weather Condition & Icon
     const weatherInfo = parseWmoCode(curr.weather_code);
     const windKm = Math.round(curr.wind_speed_10m);
 
-    // Site Safety Impact Advisory
     let siteAdvisory = '<span class="badge badge-success"><i class="fas fa-circle-check"></i> Optimal Construction Conditions</span> Heavy lifting, concrete pouring, and outdoor work permitted.';
     if (windKm > 35) {
       siteAdvisory = '<span class="badge badge-danger"><i class="fas fa-wind"></i> High Wind Warning (' + windKm + ' km/h)</span> Crane & elevated scaffolding operations must be halted for site safety.';
@@ -522,8 +632,8 @@ async function fetchOpenMeteoWeather(lat, lon, locationLabel) {
         </div>
       </div>`;
 
-    // Render Leaflet Map
-    renderSiteMap(lat, lon, locationLabel);
+    // Render Google Satellite GIS Leaflet Map
+    renderGoogleSatelliteMap('siteMap', lat, lon, locationLabel);
 
   } catch (err) {
     container.innerHTML = `
@@ -545,24 +655,640 @@ function parseWmoCode(code) {
   return { label: 'Overcast', icon: '<i class="fas fa-cloud" style="color:#9db4d8"></i>' };
 }
 
-// Leaflet Map Rendering
-function renderSiteMap(lat, lon, label) {
-  const mapEl = document.getElementById('siteMap');
-  if (!mapEl || !window.L) return;
+// ==================== Firebase GIS Locations Renderer ====================
+async function renderFirebaseGisList(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
 
-  if (siteMapInstance) {
-    siteMapInstance.remove();
-    siteMapInstance = null;
+  const sites = await getGisSitesFromFirebase();
+  if (!sites || sites.length === 0) {
+    container.innerHTML = '<p class="text-muted">No saved GIS site records found in Firebase.</p>';
+    return;
   }
 
-  setTimeout(() => {
-    siteMapInstance = L.map('siteMap').setView([lat, lon], 14);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(siteMapInstance);
+  let html = '<div class="grid grid-2">';
+  sites.forEach(site => {
+    html += `
+      <div class="card card-flat" style="padding:16px;position:relative">
+        <div class="flex-between" style="margin-bottom:6px">
+          <h4 style="color:var(--primary);margin:0"><i class="fas fa-map-pin" style="color:var(--accent);margin-right:6px"></i> ${site.name}</h4>
+          <span class="badge badge-primary" style="font-size:0.7rem">${site.satelliteBasemap || 'Google Satellite'}</span>
+        </div>
+        <p style="font-size:0.85rem;color:var(--text-primary);margin-bottom:4px"><strong>Location:</strong> ${site.locationName || 'Geotagged'}</p>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px"><strong>Coords:</strong> Lat: ${site.lat}, Lon: ${site.lon}</p>
+        <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:12px"><em>"${site.notes || 'Inspection logged.'}"</em></p>
+        <div class="flex-between">
+          <span class="text-muted" style="font-size:0.75rem">${new Date(site.timestamp).toLocaleDateString()}</span>
+          <button class="btn btn-ghost btn-sm delete-gis-btn" data-id="${site.id}" style="color:var(--danger);padding:4px 8px">
+            <i class="fas fa-trash-can"></i> Delete
+          </button>
+        </div>
+      </div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
 
-    L.marker([lat, lon]).addTo(siteMapInstance)
-      .bindPopup(`<b>${label.split(',')[0]} Construction Site</b><br>Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)}`)
-      .openPopup();
+  // Attach delete handlers
+  container.querySelectorAll('.delete-gis-btn').forEach(btn => {
+    btn.addEventListener('click', async (ev) => {
+      const id = ev.currentTarget.getAttribute('data-id');
+      showToast('Deleting site record from Firebase...', 'info');
+      await deleteGisSiteFromFirebase(id);
+      showToast('Record removed from Firebase', 'success');
+      renderFirebaseGisList(containerId);
+    });
+  });
+}
+
+// ==================== Irregular Land Border & Usable Construction Area Engine ====================
+let landMapInstance = null;
+let landBorderPoints = []; // [{ lat, lon }]
+let landPointMarkers = []; // [L.Marker]
+let landOuterPolygon = null; // L.Polygon (Gold property border)
+let landUsablePolygon = null; // L.Polygon (Emerald green usable construction zone)
+let landSetbackFt = 5; // Default 5 ft setback
+
+function initLandAnalyzerMap() {
+  const mapEl = document.getElementById('landAnalyzerMap');
+  if (!mapEl || !window.L) return;
+
+  // Clean up previous instance
+  if (landMapInstance) {
+    landMapInstance.remove();
+    landMapInstance = null;
+  }
+
+  landBorderPoints = [];
+  landPointMarkers = [];
+  landOuterPolygon = null;
+  landUsablePolygon = null;
+  landSetbackFt = parseInt(document.getElementById('setbackRange')?.value || '5', 10);
+
+  setTimeout(() => {
+    // Center initially on Austin TX / default site lat/lon
+    const defaultCenter = [30.2672, -97.7431];
+    const map = L.map('landAnalyzerMap', { zoomControl: true }).setView(defaultCenter, 18);
+    landMapInstance = map;
+
+    // High-Resolution Google Satellite Hybrid Layer
+    const googleSatHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+      maxZoom: 21,
+      attribution: '&copy; Google Maps Satellite'
+    });
+
+    const googleSatAerial = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+      maxZoom: 21,
+      attribution: '&copy; Google Earth High-Res'
+    });
+
+    const openStreetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap'
+    });
+
+    googleSatHybrid.addTo(map);
+
+    L.control.layers({
+      '🛰️ Google Satellite Hybrid': googleSatHybrid,
+      '📷 Google High-Res Aerial': googleSatAerial,
+      '🗺️ OpenStreetMap': openStreetMap
+    }, null, { position: 'topright' }).addTo(map);
+
+    // Map Click Listener to add land border points
+    map.on('click', (e) => {
+      addLandBorderPoint(e.latlng.lat, e.latlng.lng);
+    });
+
+    // Attach Event Listeners to Toolbar Controls
+    const setbackRange = document.getElementById('setbackRange');
+    const setbackValText = document.getElementById('setbackValText');
+    setbackRange?.addEventListener('input', (ev) => {
+      landSetbackFt = parseInt(ev.target.value, 10);
+      if (setbackValText) setbackValText.textContent = `${landSetbackFt} ft`;
+      recalculateLandPlotGeometry();
+    });
+
+    document.getElementById('landUndoBtn')?.addEventListener('click', () => {
+      undoLastLandBorderPoint();
+    });
+
+    document.getElementById('landClearBtn')?.addEventListener('click', () => {
+      resetLandPlotMap();
+      showToast('Map reset. Ready to mark new land border.', 'info');
+    });
+
+    document.getElementById('presetShapeSelect')?.addEventListener('change', (ev) => {
+      loadLandPresetShape(ev.target.value);
+    });
+
+    document.getElementById('landCitySearchBtn')?.addEventListener('click', async () => {
+      const city = document.getElementById('landCityInput')?.value.trim();
+      if (!city) return;
+      try {
+        showToast(`Searching location "${city}"...`, 'info');
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) {
+            const lat = parseFloat(data[0].lat);
+            const lon = parseFloat(data[0].lon);
+            map.setView([lat, lon], 18);
+            showToast(`Centered map on ${data[0].display_name.split(',')[0]}`, 'success');
+          } else {
+            showToast('Location not found', 'error');
+          }
+        }
+      } catch (err) {
+        showToast('Location search failed', 'error');
+      }
+    });
+
+    document.getElementById('saveLandFirebaseBtn')?.addEventListener('click', async () => {
+      if (landBorderPoints.length < 3) {
+        showToast('Mark at least 3 border points to save land plot.', 'error');
+        return;
+      }
+      showToast('Saving land plot boundary to Firebase...', 'info');
+
+      const stats = computePlotStats();
+      const res = await saveLandPlotToFirebase({
+        name: `Land Plot (${landBorderPoints.length} Vertices, ${landSetbackFt}ft Setback)`,
+        points: landBorderPoints,
+        totalAreaSqFt: stats.totalSqFt,
+        totalAcres: stats.totalAcres,
+        usableAreaSqFt: stats.usableSqFt,
+        usableAcres: stats.usableAcres,
+        setbackFt: landSetbackFt,
+        usablePercent: stats.usablePercent,
+        perimeterFt: stats.perimeterFt,
+        locationName: `Lat ${landBorderPoints[0].lat.toFixed(4)}, Lon ${landBorderPoints[0].lon.toFixed(4)}`
+      });
+
+      if (res.success) {
+        showToast('✅ Land plot boundary saved to Firebase!', 'success');
+        renderFirebaseLandPlotsList();
+      }
+    });
+
+    document.getElementById('refreshLandFirebaseBtn')?.addEventListener('click', () => {
+      showToast('Refreshing saved land plots...', 'info');
+      renderFirebaseLandPlotsList();
+    });
+
+    // Default: Load sample Irregular L-Shaped Parcel so the user immediately sees a live demonstration!
+    loadLandPresetShape('lshape');
+
   }, 100);
+}
+
+function addLandBorderPoint(lat, lon) {
+  if (!landMapInstance) return;
+
+  const ptIndex = landBorderPoints.length + 1;
+  landBorderPoints.push({ lat, lon });
+
+  // Create custom DivIcon marker showing vertex number (P1, P2, P3...)
+  const icon = L.divIcon({
+    className: 'land-vertex-marker',
+    html: `<div style="background:#f5c518;color:#050814;font-weight:800;font-size:11px;padding:3px 7px;border-radius:12px;border:2px solid #ffffff;box-shadow:0 2px 10px rgba(0,0,0,0.6);white-space:nowrap">P${ptIndex}</div>`,
+    iconSize: [30, 30],
+    iconAnchor: [15, 15]
+  });
+
+  const marker = L.marker([lat, lon], { icon, draggable: true }).addTo(landMapInstance);
+
+  marker.on('dragend', (e) => {
+    const newPos = e.target.getLatLng();
+    const idx = landPointMarkers.indexOf(marker);
+    if (idx !== -1) {
+      landBorderPoints[idx] = { lat: newPos.lat, lon: newPos.lng };
+      recalculateLandPlotGeometry();
+    }
+  });
+
+  landPointMarkers.push(marker);
+  recalculateLandPlotGeometry();
+}
+
+function undoLastLandBorderPoint() {
+  if (landBorderPoints.length === 0) return;
+  landBorderPoints.pop();
+  const lastMarker = landPointMarkers.pop();
+  if (lastMarker && landMapInstance) {
+    landMapInstance.removeLayer(lastMarker);
+  }
+  recalculateLandPlotGeometry();
+  showToast('Removed last border point.', 'info');
+}
+
+function resetLandPlotMap() {
+  landBorderPoints = [];
+  if (landPointMarkers.length > 0 && landMapInstance) {
+    landPointMarkers.forEach(m => landMapInstance.removeLayer(m));
+  }
+  landPointMarkers = [];
+
+  if (landOuterPolygon && landMapInstance) {
+    landMapInstance.removeLayer(landOuterPolygon);
+    landOuterPolygon = null;
+  }
+  if (landUsablePolygon && landMapInstance) {
+    landMapInstance.removeLayer(landUsablePolygon);
+    landUsablePolygon = null;
+  }
+
+  updateMetricsUI({ totalSqFt: 0, totalAcres: 0, totalSqM: 0, usableSqFt: 0, usableAcres: 0, usableSqM: 0, setbackAreaSqFt: 0, setbackPercent: 0, usablePercent: 0, perimeterFt: 0 }, []);
+}
+
+function loadLandPresetShape(type) {
+  if (type === 'custom') {
+    resetLandPlotMap();
+    showToast('Click anywhere on map to draw custom land borders.', 'info');
+    return;
+  }
+
+  resetLandPlotMap();
+
+  let center = [30.2672, -97.7431];
+  if (landMapInstance) {
+    const c = landMapInstance.getCenter();
+    center = [c.lat, c.lng];
+  }
+
+  const d = 0.0006; // Approx offset step in degrees (~65-70 meters)
+  let pts = [];
+
+  if (type === 'lshape') {
+    // Irregular L-Shaped Lot (6 vertices)
+    pts = [
+      { lat: center[0] + d*1.2, lon: center[1] - d*1.0 },
+      { lat: center[0] + d*1.2, lon: center[1] + d*0.4 },
+      { lat: center[0] - d*0.2, lon: center[1] + d*0.4 },
+      { lat: center[0] - d*0.2, lon: center[1] + d*1.2 },
+      { lat: center[0] - d*1.2, lon: center[1] + d*1.2 },
+      { lat: center[0] - d*1.2, lon: center[1] - d*1.0 }
+    ];
+  } else if (type === 'trapezoid') {
+    // Irregular Trapezoid Lot (4 vertices)
+    pts = [
+      { lat: center[0] + d*1.0, lon: center[1] - d*0.6 },
+      { lat: center[0] + d*1.0, lon: center[1] + d*1.2 },
+      { lat: center[0] - d*1.0, lon: center[1] + d*0.8 },
+      { lat: center[0] - d*1.0, lon: center[1] - d*1.0 }
+    ];
+  } else if (type === 'corner') {
+    // Triangular Corner Lot (3 vertices)
+    pts = [
+      { lat: center[0] + d*1.2, lon: center[1] - d*0.8 },
+      { lat: center[0] - d*1.0, lon: center[1] + d*1.2 },
+      { lat: center[0] - d*1.0, lon: center[1] - d*1.0 }
+    ];
+  } else if (type === 'pentagon') {
+    // Irregular 5-sided polygon
+    pts = [
+      { lat: center[0] + d*1.2, lon: center[1] },
+      { lat: center[0] + d*0.5, lon: center[1] + d*1.1 },
+      { lat: center[0] - d*1.0, lon: center[1] + d*0.7 },
+      { lat: center[0] - d*1.1, lon: center[1] - d*0.8 },
+      { lat: center[0] + d*0.2, lon: center[1] - d*1.2 }
+    ];
+  }
+
+  pts.forEach(p => addLandBorderPoint(p.lat, p.lon));
+  showToast(`Loaded preset shape: ${type.toUpperCase()}`, 'success');
+}
+
+function recalculateLandPlotGeometry() {
+  if (!landMapInstance) return;
+
+  // Remove existing polygon overlays
+  if (landOuterPolygon) landMapInstance.removeLayer(landOuterPolygon);
+  if (landUsablePolygon) landMapInstance.removeLayer(landUsablePolygon);
+  landOuterPolygon = null;
+  landUsablePolygon = null;
+
+  if (landBorderPoints.length < 3) {
+    updateMetricsUI({ totalSqFt: 0, totalAcres: 0, totalSqM: 0, usableSqFt: 0, usableAcres: 0, usableSqM: 0, setbackAreaSqFt: 0, setbackPercent: 0, usablePercent: 0, perimeterFt: 0 }, []);
+    return;
+  }
+
+  const latLngs = landBorderPoints.map(p => [p.lat, p.lon]);
+
+  // 1. Draw Outer Property Border (Gold solid line + transparent blue fill)
+  landOuterPolygon = L.polygon(latLngs, {
+    color: '#f5c518',
+    weight: 3,
+    fillColor: '#3b82f6',
+    fillOpacity: 0.15
+  }).addTo(landMapInstance);
+
+  const stats = computePlotStats();
+  const sideLengths = computeSideLengths();
+
+  // 2. Compute Usable Construction Area Polygon via Turf.js Buffer / Inward Contraction
+  if (window.turf && landSetbackFt > 0) {
+    try {
+      // Build Turf closed polygon coordinates [lon, lat]
+      const closedCoords = landBorderPoints.map(p => [p.lon, p.lat]);
+      closedCoords.push([landBorderPoints[0].lon, landBorderPoints[0].lat]); // close ring
+      const turfOuterPoly = turf.polygon([closedCoords]);
+
+      // Calculate negative buffer distance in kilometers for inward contraction
+      const setbackMeters = landSetbackFt * 0.3048;
+      const bufferDistKm = -(setbackMeters / 1000);
+
+      const bufferedTurf = turf.buffer(turfOuterPoly, bufferDistKm, { units: 'kilometers' });
+
+      if (bufferedTurf && bufferedTurf.geometry && bufferedTurf.geometry.coordinates.length > 0) {
+        // Handle Polygon or MultiPolygon
+        let innerRing = bufferedTurf.geometry.coordinates[0];
+        if (bufferedTurf.geometry.type === 'MultiPolygon') {
+          innerRing = bufferedTurf.geometry.coordinates[0][0];
+        }
+
+        // Turf coordinates are [lon, lat], convert to Leaflet [lat, lon]
+        const usableLatLngs = innerRing.map(coord => [coord[1], coord[0]]);
+
+        // Render Inner Usable Construction Polygon (Emerald Green fill & dashed border)
+        landUsablePolygon = L.polygon(usableLatLngs, {
+          color: '#10b981',
+          weight: 3,
+          fillColor: '#10b981',
+          fillOpacity: 0.38,
+          dashArray: '6, 6'
+        }).addTo(landMapInstance);
+
+        // Recalculate exact usable area from Turf inner polygon
+        const usableAreaSqM = turf.area(bufferedTurf);
+        const usableSqFt = usableAreaSqM * 10.7639;
+        const usableAcres = usableSqFt / 43560;
+
+        stats.usableSqM = Math.round(usableAreaSqM);
+        stats.usableSqFt = Math.round(usableSqFt);
+        stats.usableAcres = Number(usableAcres.toFixed(3));
+        stats.setbackAreaSqFt = Math.max(0, stats.totalSqFt - stats.usableSqFt);
+        stats.setbackPercent = Number(((stats.setbackAreaSqFt / (stats.totalSqFt || 1)) * 100).toFixed(1));
+        stats.usablePercent = Number(((stats.usableSqFt / (stats.totalSqFt || 1)) * 100).toFixed(1));
+      } else {
+        // Setback exceeds plot bounds
+        stats.usableSqFt = 0;
+        stats.usableAcres = 0;
+        stats.usablePercent = 0;
+        stats.setbackPercent = 100;
+        stats.setbackAreaSqFt = stats.totalSqFt;
+      }
+    } catch (err) {
+      console.warn('Turf polygon buffer calculation note:', err.message);
+    }
+  } else if (landSetbackFt === 0) {
+    // 0 Setback -> Usable Area equals Total Area
+    stats.usableSqFt = stats.totalSqFt;
+    stats.usableAcres = stats.totalAcres;
+    stats.usableSqM = stats.totalSqM;
+    stats.setbackAreaSqFt = 0;
+    stats.setbackPercent = 0;
+    stats.usablePercent = 100;
+  }
+
+  updateMetricsUI(stats, sideLengths);
+}
+
+function computePlotStats() {
+  if (landBorderPoints.length < 3) {
+    return { totalSqFt: 0, totalAcres: 0, totalSqM: 0, usableSqFt: 0, usableAcres: 0, usableSqM: 0, setbackAreaSqFt: 0, setbackPercent: 0, usablePercent: 0, perimeterFt: 0 };
+  }
+
+  let totalSqM = 0;
+  let perimeterM = 0;
+
+  if (window.turf) {
+    const closedCoords = landBorderPoints.map(p => [p.lon, p.lat]);
+    closedCoords.push([landBorderPoints[0].lon, landBorderPoints[0].lat]);
+    const turfPoly = turf.polygon([closedCoords]);
+    totalSqM = turf.area(turfPoly);
+    perimeterM = turf.length(turfPoly, { units: 'meters' });
+  } else {
+    // Geodesic Shoelace fallback formula
+    totalSqM = calculateShoelaceArea(landBorderPoints);
+    perimeterM = calculatePerimeterMeters(landBorderPoints);
+  }
+
+  const totalSqFt = Math.round(totalSqM * 10.7639);
+  const totalAcres = Number((totalSqFt / 43560).toFixed(3));
+  const perimeterFt = Math.round(perimeterM * 3.28084);
+
+  // Default setback ratio estimate if Turf buffer hasn't run
+  const defaultUsableRatio = Math.max(0.4, 1 - (landSetbackFt * 0.035));
+  const usableSqFt = Math.round(totalSqFt * defaultUsableRatio);
+  const usableAcres = Number((usableSqFt / 43560).toFixed(3));
+  const setbackAreaSqFt = totalSqFt - usableSqFt;
+
+  return {
+    totalSqFt,
+    totalAcres,
+    totalSqM: Math.round(totalSqM),
+    usableSqFt,
+    usableAcres,
+    usableSqM: Math.round(usableSqFt / 10.7639),
+    setbackAreaSqFt,
+    setbackPercent: Number(((setbackAreaSqFt / totalSqFt) * 100).toFixed(1)),
+    usablePercent: Number(((usableSqFt / totalSqFt) * 100).toFixed(1)),
+    perimeterFt
+  };
+}
+
+function computeSideLengths() {
+  const sides = [];
+  const count = landBorderPoints.length;
+  if (count < 2) return sides;
+
+  for (let i = 0; i < count; i++) {
+    const p1 = landBorderPoints[i];
+    const p2 = landBorderPoints[(i + 1) % count]; // wrap around to first point
+    let distMeters = 0;
+
+    if (window.turf) {
+      distMeters = turf.distance([p1.lon, p1.lat], [p2.lon, p2.lat], { units: 'meters' });
+    } else {
+      distMeters = haversineDistanceMeters(p1.lat, p1.lon, p2.lat, p2.lon);
+    }
+
+    const distFt = distMeters * 3.28084;
+    sides.push({
+      segment: `Side P${i + 1} → P${(i + 1) % count + 1}`,
+      fromTo: `P${i + 1} (${p1.lat.toFixed(4)}, ${p1.lon.toFixed(4)}) → P${(i + 1) % count + 1}`,
+      distFt: distFt.toFixed(1),
+      distM: distMeters.toFixed(1)
+    });
+  }
+  return sides;
+}
+
+function updateMetricsUI(stats, sideLengths) {
+  const totalAreaVal = document.getElementById('totalAreaVal');
+  const totalAcresVal = document.getElementById('totalAcresVal');
+  const usableAreaVal = document.getElementById('usableAreaVal');
+  const usableAcresVal = document.getElementById('usableAcresVal');
+  const setbackAreaVal = document.getElementById('setbackAreaVal');
+  const setbackPercentVal = document.getElementById('setbackPercentVal');
+  const buildRatioVal = document.getElementById('buildRatioVal');
+  const perimeterVal = document.getElementById('perimeterVal');
+  const pointCountBadge = document.getElementById('pointCountBadge');
+
+  if (totalAreaVal) totalAreaVal.textContent = `${stats.totalSqFt.toLocaleString()} sq ft`;
+  if (totalAcresVal) totalAcresVal.textContent = `${stats.totalAcres} Acres (${stats.totalSqM.toLocaleString()} m²)`;
+  if (usableAreaVal) usableAreaVal.textContent = `${stats.usableSqFt.toLocaleString()} sq ft`;
+  if (usableAcresVal) usableAcresVal.textContent = `${stats.usableAcres} Acres (${stats.usableSqM.toLocaleString()} m²)`;
+  if (setbackAreaVal) setbackAreaVal.textContent = `${stats.setbackAreaSqFt.toLocaleString()} sq ft`;
+  if (setbackPercentVal) setbackPercentVal.textContent = `${stats.setbackPercent}% of total land`;
+  if (buildRatioVal) buildRatioVal.textContent = `${stats.usablePercent}%`;
+  if (perimeterVal) perimeterVal.textContent = `Perimeter: ${stats.perimeterFt.toLocaleString()} ft`;
+  if (pointCountBadge) pointCountBadge.textContent = `${landBorderPoints.length} Points Marked`;
+
+  const tableBody = document.getElementById('sideLengthsTableBody');
+  if (tableBody) {
+    if (sideLengths.length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="4" class="text-muted" style="padding:16px;text-align:center">Click on the map to add border points and calculate side lengths.</td></tr>';
+    } else {
+      let html = '';
+      sideLengths.forEach(s => {
+        html += `
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+            <td style="padding:8px;font-weight:700;color:var(--gold)">${s.segment}</td>
+            <td style="padding:8px;font-size:0.75rem;color:var(--text-muted)">${s.fromTo}</td>
+            <td style="padding:8px;font-weight:700;color:var(--text-primary)">${s.distFt} ft</td>
+            <td style="padding:8px;color:var(--text-secondary)">${s.distM} m</td>
+          </tr>`;
+      });
+      tableBody.innerHTML = html;
+    }
+  }
+
+  const aiAdviceBox = document.getElementById('landAiAdviceContent');
+  if (aiAdviceBox) {
+    if (landBorderPoints.length < 3) {
+      aiAdviceBox.innerHTML = '<p class="text-muted" style="font-size:0.9rem">Mark at least 3 points on the map to calculate polygon usable geometry and view automated structural recommendations.</p>';
+    } else if (stats.usableSqFt === 0) {
+      aiAdviceBox.innerHTML = `
+        <div style="padding:12px;background:rgba(239,68,68,0.15);border:1px solid var(--danger);border-radius:var(--radius-md);color:var(--danger)">
+          <i class="fas fa-exclamation-triangle" style="margin-right:6px"></i>
+          <strong>Setback Warning:</strong> The chosen setback distance (${landSetbackFt} ft) is too large for this plot size. Reduce the setback margin to view the usable building zone.
+        </div>`;
+    } else {
+      const recGroundFootprint = Math.round(stats.usableSqFt * 0.70);
+      aiAdviceBox.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:0.85rem">
+          <div style="padding:10px;background:rgba(16,185,129,0.1);border:1px solid #10b981;border-radius:var(--radius-md)">
+            <strong style="color:#10b981"><i class="fas fa-check-circle" style="margin-right:4px"></i> Usable Construction Envelope Verified</strong>
+            <p style="margin-top:2px;color:var(--text-primary)">You have <strong>${stats.usableSqFt.toLocaleString()} sq ft</strong> (${stats.usablePercent}% of total plot) available inside mandatory setback borders.</p>
+          </div>
+          
+          <div class="grid grid-2" style="gap:10px;margin-top:4px">
+            <div class="card card-flat" style="padding:10px">
+              <span class="text-muted" style="font-size:0.75rem">Max Main Ground Floor Footprint</span>
+              <h4 style="margin-top:2px;color:var(--gold)">${recGroundFootprint.toLocaleString()} sq ft</h4>
+            </div>
+            <div class="card card-flat" style="padding:10px">
+              <span class="text-muted" style="font-size:0.75rem">Driveway / Setback Yard Zone</span>
+              <h4 style="margin-top:2px;color:var(--accent)">${stats.setbackAreaSqFt.toLocaleString()} sq ft</h4>
+            </div>
+          </div>
+
+          <p class="text-muted" style="font-size:0.8rem;margin-top:2px">
+            <i class="fas fa-info-circle" style="color:var(--primary);margin-right:4px"></i>
+            <em>Recommendation: Ideal for a multi-story building up to 4 floors with a total permissible built-up area (FAR) of approx. ${(stats.usableSqFt * 2.5).toLocaleString(undefined, {maximumFractionDigits:0})} sq ft.</em>
+          </p>
+        </div>`;
+    }
+  }
+}
+
+function haversineDistanceMeters(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+function calculateShoelaceArea(pts) {
+  if (pts.length < 3) return 0;
+  let area = 0;
+  const n = pts.length;
+  const centerLat = pts.reduce((sum, p) => sum + p.lat, 0) / n;
+  const latMetersPerDeg = 111139;
+  const lonMetersPerDeg = 111139 * Math.cos(centerLat * Math.PI / 180);
+
+  const coordsMeters = pts.map(p => ({
+    x: p.lon * lonMetersPerDeg,
+    y: p.lat * latMetersPerDeg
+  }));
+
+  for (let i = 0; i < n; i++) {
+    const j = (i + 1) % n;
+    area += coordsMeters[i].x * coordsMeters[j].y;
+    area -= coordsMeters[j].x * coordsMeters[i].y;
+  }
+  return Math.abs(area) / 2;
+}
+
+function calculatePerimeterMeters(pts) {
+  let perim = 0;
+  for (let i = 0; i < pts.length; i++) {
+    const p1 = pts[i];
+    const p2 = pts[(i + 1) % pts.length];
+    perim += haversineDistanceMeters(p1.lat, p1.lon, p2.lat, p2.lon);
+  }
+  return perim;
+}
+
+async function renderFirebaseLandPlotsList() {
+  const container = document.getElementById('firebaseLandPlotsContainer');
+  if (!container) return;
+
+  const plots = await getLandPlotsFromFirebase();
+  if (!plots || plots.length === 0) {
+    container.innerHTML = '<p class="text-muted">No saved land plots found in Firebase storage.</p>';
+    return;
+  }
+
+  let html = '<div class="grid grid-2">';
+  plots.forEach(plot => {
+    html += `
+      <div class="card card-flat" style="padding:16px;position:relative;border:1px solid rgba(245,197,24,0.2)">
+        <div class="flex-between" style="margin-bottom:6px">
+          <h4 style="color:var(--gold);margin:0"><i class="fas fa-draw-polygon" style="margin-right:6px"></i> ${plot.name}</h4>
+          <span class="badge badge-success">${plot.usablePercent}% Usable</span>
+        </div>
+        <p style="font-size:0.85rem;color:var(--text-primary);margin-bottom:4px">
+          <strong>Total Area:</strong> ${plot.totalAreaSqFt?.toLocaleString()} sq ft (${plot.totalAcres} Acres)
+        </p>
+        <p style="font-size:0.85rem;color:#10b981;margin-bottom:4px">
+          <strong>Usable Construction Area:</strong> ${plot.usableAreaSqFt?.toLocaleString()} sq ft (${plot.usableAcres} Acres)
+        </p>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px">
+          <strong>Setback Buffer:</strong> ${plot.setbackFt} ft | <strong>Perimeter:</strong> ${plot.perimeterFt} ft | Vertices: ${plot.points?.length || 0}
+        </p>
+        <div class="flex-between">
+          <span class="text-muted" style="font-size:0.75rem">${new Date(plot.timestamp).toLocaleDateString()}</span>
+          <button class="btn btn-ghost btn-sm delete-plot-btn" data-id="${plot.id}" style="color:var(--danger);padding:4px 8px">
+            <i class="fas fa-trash-can"></i> Delete
+          </button>
+        </div>
+      </div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+
+  container.querySelectorAll('.delete-plot-btn').forEach(btn => {
+    btn.addEventListener('click', async (ev) => {
+      const id = ev.currentTarget.getAttribute('data-id');
+      showToast('Deleting land plot record...', 'info');
+      await deleteLandPlotFromFirebase(id);
+      showToast('Plot removed from Firebase', 'success');
+      renderFirebaseLandPlotsList();
+    });
+  });
 }

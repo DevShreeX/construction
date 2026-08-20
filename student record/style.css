@@ -1,5 +1,6 @@
 /* Modern Design Tokens & Variables */
 :root {
+    color-scheme: dark light;
     --primary: #1e3a8a;
     --primary-dark: #0f172a;
     --primary-light: #3b82f6;

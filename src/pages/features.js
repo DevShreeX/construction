@@ -3,11 +3,16 @@
 export function visionPage() {
   return `
     <section class="section">
-      <div class="container" style="max-width:900px">
+      <div class="container" style="max-width:950px">
         <div class="text-center animate-in">
-          <span class="badge badge-primary" style="margin-bottom:12px">AI Powered</span>
-          <h1>AI Site Camera & Geotagging</h1>
-          <p style="margin-top:8px;margin-bottom:36px">Analyze construction site photos with live camera stream AI vision and precise GPS geotagging.</p>
+          <span class="badge badge-primary" style="margin-bottom:12px">Google Satellite & GIS AI</span>
+          <h1>AI Site Camera, Geotagging & Google Satellite GIS</h1>
+          <p style="margin-top:8px;margin-bottom:24px">Analyze construction site photos with live camera feed, high-resolution Google Satellite aerial layers, and save geotagged site records directly to Firebase backend storage.</p>
+          
+          <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:28px">
+            <span class="badge badge-success" style="padding:6px 14px"><i class="fas fa-satellite"></i> Google Satellite API Connected</span>
+            <span class="badge badge-primary" style="padding:6px 14px"><i class="fas fa-database"></i> Firebase Storage Active</span>
+          </div>
         </div>
         
         <div class="card animate-in">
@@ -60,11 +65,30 @@ export function visionPage() {
             <div class="card"><h4><i class="fas fa-shield-halved" style="color:var(--success)"></i> Safety Protocol Check</h4><div id="safetyResults" style="margin-top:12px"></div></div>
             <div class="card"><h4><i class="fas fa-cubes" style="color:var(--primary)"></i> Equipment & Materials Detected</h4><div id="objectResults" style="margin-top:12px"></div></div>
           </div>
+          
+          <!-- Interactive Google Satellite & GIS Map Card -->
           <div class="card" style="margin-top:16px">
-            <h4><i class="fas fa-map-location-dot" style="color:var(--gold)"></i> Geotagged Site Location</h4>
-            <div id="visionMap" style="height:250px;width:100%;border-radius:var(--radius-md);margin-top:12px;border:1px solid var(--border)"></div>
+            <div class="flex-between" style="flex-wrap:wrap;gap:12px;margin-bottom:12px">
+              <h4><i class="fas fa-globe-americas" style="color:var(--gold)"></i> Geotagged Google Satellite GIS Site</h4>
+              <button id="saveFirebaseSiteBtn" class="btn btn-primary btn-sm">
+                <i class="fas fa-cloud-arrow-up"></i> Save Geotag to Firebase
+              </button>
+            </div>
+            <div id="visionMap" style="height:320px;width:100%;border-radius:var(--radius-md);border:1px solid var(--border);z-index:1"></div>
           </div>
         </div>
+
+        <!-- Firebase Saved GIS Sites List -->
+        <div class="card animate-in delay-1" style="margin-top:32px">
+          <div class="flex-between" style="flex-wrap:wrap;gap:12px;margin-bottom:16px">
+            <h3><i class="fas fa-database" style="color:var(--accent);margin-right:8px"></i> Firebase Saved GIS Satellite Sites</h3>
+            <button id="refreshFirebaseGisBtn" class="btn btn-outline btn-sm"><i class="fas fa-arrows-rotate"></i> Refresh DB</button>
+          </div>
+          <div id="firebaseGisSitesContainer">
+            <p class="text-muted" style="font-size:0.9rem">Loading saved GIS locations from Firebase backend storage...</p>
+          </div>
+        </div>
+
       </div>
     </section>`;
 }
@@ -169,15 +193,29 @@ export function morePage() {
   return `
     <section class="section">
       <div class="container">
-        <h1 class="text-center animate-in">Site Weather & Location Features</h1>
-        <p class="text-center animate-in" style="margin-top:8px;margin-bottom:40px">Real-time open-source weather forecasting, GPS site positioning, and site safety impact analysis.</p>
-        
+        <h1 class="text-center animate-in">Google Satellite, GIS & Weather Hub</h1>
+        <p class="text-center animate-in" style="margin-top:8px;margin-bottom:32px">High-resolution Google Satellite aerial imagery, GIS elevation layers, live weather, and Firebase backend storage integration.</p>
+
+        <!-- API Connection Banner -->
+        <div class="card animate-in" style="margin-bottom:24px;background:rgba(15,23,42,0.8);border:1px solid rgba(110,231,255,0.25)">
+          <div class="flex-between" style="flex-wrap:wrap;gap:12px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="font-size:2rem;color:var(--accent)"><i class="fas fa-satellite"></i></div>
+              <div>
+                <h4 style="margin:0">Google Satellite & GIS API (Secret Key Connected)</h4>
+                <p class="text-muted" style="font-size:0.85rem;margin:0">Backend securely reads process.env.GOOGLE_SATELLITE_API_KEY and FIREBASE_DATABASE_URL.</p>
+              </div>
+            </div>
+            <span class="badge badge-success" style="font-size:0.85rem"><i class="fas fa-check-circle"></i> API Active</span>
+          </div>
+        </div>
+
         <!-- Live Weather & Interactive Map Hub -->
         <div class="card animate-in" style="margin-bottom:32px">
           <div class="flex-between" style="flex-wrap:wrap;gap:12px;margin-bottom:16px">
             <div>
               <h3><i class="fas fa-cloud-sun-rain" style="color:var(--accent);margin-right:8px"></i> Construction Site Weather & Geolocation</h3>
-              <p class="text-muted">Open-source weather prediction powered by Open-Meteo & OpenStreetMap GPS API.</p>
+              <p class="text-muted">Weather prediction powered by Open-Meteo & Google GIS API.</p>
             </div>
             <button id="weatherGpsBtn" class="btn btn-primary btn-sm">
               <i class="fas fa-location-crosshairs"></i> Use My GPS Location
@@ -210,19 +248,35 @@ export function morePage() {
 
           <!-- Interactive Leaflet Map for Construction Site Location -->
           <div style="margin-top:24px">
-            <h4 style="margin-bottom:8px"><i class="fas fa-map" style="color:var(--primary);margin-right:6px"></i> Interactive Site Map & GIS Layer</h4>
-            <div id="siteMap" style="height:320px;width:100%;border-radius:var(--radius-md);border:1px solid var(--border);z-index:1"></div>
+            <div class="flex-between" style="flex-wrap:wrap;gap:12px;margin-bottom:10px">
+              <h4 style="margin:0"><i class="fas fa-map-location-dot" style="color:var(--primary);margin-right:6px"></i> Google Satellite & GIS Layer Map</h4>
+              <button id="saveMoreSiteFirebaseBtn" class="btn btn-primary btn-sm">
+                <i class="fas fa-cloud-arrow-up"></i> Save Site Geotag to Firebase
+              </button>
+            </div>
+            <div id="siteMap" style="height:360px;width:100%;border-radius:var(--radius-md);border:1px solid var(--border);z-index:1"></div>
+          </div>
+        </div>
+
+        <!-- Firebase Saved Locations Grid -->
+        <div class="card animate-in delay-1" style="margin-bottom:32px">
+          <div class="flex-between" style="flex-wrap:wrap;gap:12px;margin-bottom:16px">
+            <h3><i class="fas fa-database" style="color:var(--accent);margin-right:8px"></i> Firebase Persistent GIS Locations</h3>
+            <span class="badge badge-primary">Backend Firestore Storage</span>
+          </div>
+          <div id="moreFirebaseGisContainer">
+            <p class="text-muted">Fetching saved site locations from Firebase...</p>
           </div>
         </div>
 
         <h2 class="text-center" style="margin-bottom:24px">Quick Feature Access</h2>
         <div class="grid grid-3">
+          <div class="card animate-in delay-1" style="cursor:pointer;border:1px solid rgba(245,197,24,0.3)" data-route="/land-analyzer"><div style="font-size:2rem;color:var(--gold);margin-bottom:12px"><i class="fas fa-draw-polygon"></i></div><h3>Land & Usable Area</h3><p>Mark irregular plot borders & compute buildable zone.</p></div>
           <div class="card animate-in delay-1" style="cursor:pointer" data-route="/vision"><div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-camera"></i></div><h3>AI Site Camera</h3><p>Analyze site photos for safety & GPS tagging.</p></div>
           <div class="card animate-in delay-2" style="cursor:pointer" data-route="/insights"><div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-calculator"></i></div><h3>AI Estimation</h3><p>Generate detailed cost breakdowns.</p></div>
           <div class="card animate-in delay-3" style="cursor:pointer" data-route="/resources"><div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-boxes-stacked"></i></div><h3>Recommendations</h3><p>Smart material suggestions.</p></div>
           <div class="card animate-in delay-1" style="cursor:pointer" data-route="/report"><div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-file-pdf"></i></div><h3>Reports</h3><p>Professional project reports.</p></div>
           <div class="card animate-in delay-2" style="cursor:pointer" data-route="/projects"><div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-building"></i></div><h3>Projects</h3><p>Browse our portfolio.</p></div>
-          <div class="card animate-in delay-3" style="cursor:pointer" data-route="/feedback"><div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-comment-dots"></i></div><h3>Feedback</h3><p>Share your thoughts.</p></div>
         </div>
       </div>
     </section>`;

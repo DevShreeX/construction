@@ -1,5 +1,6 @@
 /* ==================== Design Tokens ==================== */
 :root {
+  color-scheme: dark;
   --primary: #4dabf7;
   --primary-soft: #7dd3fc;
   --secondary: #57b3ff;
@@ -81,6 +82,22 @@ body[data-page="more"] {
   background: 
     linear-gradient(180deg, rgba(10, 18, 28, 0.35) 0%, rgba(6, 12, 24, 0.82) 100%),
     url('/images/bg_weather.png') center top / cover fixed no-repeat;
+}
+body[data-page="land-analyzer"] {
+  background: 
+    linear-gradient(180deg, rgba(4, 18, 35, 0.45) 0%, rgba(4, 12, 28, 0.85) 100%),
+    radial-gradient(circle at 50% 20%, rgba(245, 197, 24, 0.15) 0%, transparent 65%),
+    url('/images/bg_vision.png') center top / cover fixed no-repeat;
+}
+
+.land-vertex-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+}
+.land-vertex-marker:active {
+  cursor: grabbing;
 }
 
 /* Corporate & Office Pages (Admin, Client, Contact, Report) */
@@ -291,14 +308,38 @@ p { color: var(--text-secondary); line-height: 1.75; }
 .form-input, .form-select, .form-textarea {
   width: 100%;
   padding: 12px 16px;
-  background: rgba(255,255,255,0.04);
+  background: rgba(15, 23, 40, 0.95);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   color: var(--text-primary);
   transition: border-color var(--transition);
   outline: none;
+  color-scheme: dark;
 }
 .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); }
+
+/* Global Select & Option Dropdown Box Styling */
+select, .form-select {
+  color-scheme: dark;
+  background-color: #0f1728;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+select option, .form-select option {
+  background-color: #0f1728;
+  color: var(--text-primary);
+  padding: 12px 16px;
+}
+
+select option:checked,
+select option:hover,
+.form-select option:checked,
+.form-select option:hover {
+  background-color: #1e293b;
+  color: var(--primary-soft);
+}
+
 .form-input::placeholder, .form-textarea::placeholder { color: var(--text-muted); opacity: 0.5; }
 .form-textarea { min-height: 120px; resize: vertical; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
