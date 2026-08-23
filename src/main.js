@@ -85,27 +85,8 @@ async function registerServiceWorker() {
 }
 
 // ==================== PWA Install ====================
-let deferredPrompt = null;
 function setupPWAInstall() {
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    document.getElementById('pwa-install-banner')?.classList.remove('hidden');
-  });
-
-  document.getElementById('pwa-install-btn')?.addEventListener('click', async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const result = await deferredPrompt.userChoice;
-      if (result.outcome === 'accepted') showToast('App installed!', 'success');
-      deferredPrompt = null;
-      document.getElementById('pwa-install-banner')?.classList.add('hidden');
-    }
-  });
-
-  document.getElementById('pwa-dismiss-btn')?.addEventListener('click', () => {
-    document.getElementById('pwa-install-banner')?.classList.add('hidden');
-  });
+  // PWA install banner disabled per user request
 }
 
 // ==================== Global Event Listeners ====================
