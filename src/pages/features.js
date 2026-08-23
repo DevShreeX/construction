@@ -114,7 +114,7 @@ export function insightsPage() {
             <form id="recommendForm">
               <div class="form-row">
                 <div class="form-group"><label class="form-label">Project Type</label><select class="form-select" required><option value="">Select</option><option>Residential</option><option>Commercial</option><option>Industrial</option></select></div>
-                <div class="form-group"><label class="form-label">Budget Tier</label><select class="form-select" required><option value="">Select</option><option>$50K–$200K</option><option>$200K–$1M</option><option>$1M+</option></select></div>
+                <div class="form-group"><label class="form-label">Budget Tier</label><select class="form-select" required><option value="">Select</option><option>₹25 Lakhs – ₹1 Crore</option><option>₹1 Crore – ₹5 Crores</option><option>₹5 Crores+</option></select></div>
               </div>
               <div class="form-group"><label class="form-label">Construction Phase</label><select class="form-select" required><option value="">Select</option><option>Foundation</option><option>Structure</option><option>Electrical</option><option>Finishing</option><option>All</option></select></div>
               <div class="form-group"><label class="form-label">Requirements</label><textarea class="form-textarea" rows="4" placeholder="Eco-friendly, fire-rated, high durability..."></textarea></div>
@@ -142,7 +142,7 @@ export function resourcesPage() {
           <form id="recommendForm">
             <div class="form-row">
               <div class="form-group"><label class="form-label">Project Type</label><select class="form-select" required><option value="">Select</option><option>Residential</option><option>Commercial</option><option>Industrial</option></select></div>
-              <div class="form-group"><label class="form-label">Budget Tier</label><select class="form-select" required><option value="">Select</option><option>$50K–$200K</option><option>$200K–$1M</option><option>$1M+</option></select></div>
+              <div class="form-group"><label class="form-label">Budget Tier</label><select class="form-select" required><option value="">Select</option><option>₹25 Lakhs – ₹1 Crore</option><option>₹1 Crore – ₹5 Crores</option><option>₹5 Crores+</option></select></div>
             </div>
             <div class="form-group"><label class="form-label">Construction Phase</label><select class="form-select" required><option value="">Select</option><option>Foundation</option><option>Structure</option><option>Electrical</option><option>Finishing</option><option>All</option></select></div>
             <div class="form-group"><label class="form-label">Requirements</label><textarea class="form-textarea" rows="3" placeholder="Eco-friendly, fire-rated, high durability..."></textarea></div>

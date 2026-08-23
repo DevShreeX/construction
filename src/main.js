@@ -183,14 +183,14 @@ function setupGlobalListeners() {
       const results = document.getElementById('estimateResults');
       const content = document.getElementById('estimateContent');
       content.innerHTML = `
-        <div class="card" style="margin-bottom:12px"><h4>Foundation</h4><p>Excavation, footings, concrete slab — <strong style="color:var(--primary)">$85,000</strong></p></div>
-        <div class="card" style="margin-bottom:12px"><h4>Structure & Framing</h4><p>Steel, columns, beams, walls — <strong style="color:var(--primary)">$120,000</strong></p></div>
-        <div class="card" style="margin-bottom:12px"><h4>Electrical & Plumbing</h4><p>Wiring, fixtures, piping — <strong style="color:var(--primary)">$65,000</strong></p></div>
-        <div class="card" style="margin-bottom:12px"><h4>Finishing</h4><p>Flooring, painting, fixtures — <strong style="color:var(--primary)">$45,000</strong></p></div>
-        <div class="card"><h4>Labor & Overhead</h4><p>Crew, permits, insurance — <strong style="color:var(--primary)">$95,000</strong></p></div>
-        <div class="dash-stat" style="margin-top:16px;text-align:center"><h4>Total Estimate</h4><div class="value" style="color:var(--success)">$410,000</div><p class="text-muted">*Generated estimate based on project specifications</p></div>`;
+        <div class="card" style="margin-bottom:12px"><h4>Foundation</h4><p>Excavation, footings, concrete slab — <strong style="color:var(--primary)">₹70,00,000</strong></p></div>
+        <div class="card" style="margin-bottom:12px"><h4>Structure & Framing</h4><p>Steel, columns, beams, walls — <strong style="color:var(--primary)">₹1,00,00,000</strong></p></div>
+        <div class="card" style="margin-bottom:12px"><h4>Electrical & Plumbing</h4><p>Wiring, fixtures, piping — <strong style="color:var(--primary)">₹55,00,000</strong></p></div>
+        <div class="card" style="margin-bottom:12px"><h4>Finishing</h4><p>Flooring, painting, fixtures — <strong style="color:var(--primary)">₹38,00,000</strong></p></div>
+        <div class="card"><h4>Labor & Overhead</h4><p>Crew, permits, insurance — <strong style="color:var(--primary)">₹80,00,000</strong></p></div>
+        <div class="dash-stat" style="margin-top:16px;text-align:center"><h4>Total Estimate</h4><div class="value" style="color:var(--success)">₹3,43,00,000 (₹3.43 Cr)</div><p class="text-muted">*Generated estimate based on project specifications</p></div>`;
       results.style.display = 'block';
-      showToast('Estimate generated!', 'success');
+      showToast('Estimate generated in ₹ INR!', 'success');
     });
 
     // Recommend form
@@ -199,10 +199,10 @@ function setupGlobalListeners() {
       const el = document.getElementById('recommendations');
       document.getElementById('recommendContent').innerHTML = `
         <div class="grid grid-2">
-          <div class="card"><h4><i class="fas fa-cubes" style="color:var(--primary);margin-right:6px"></i> Portland Cement</h4><p>Grade 53 OPC — $8/bag</p></div>
-          <div class="card"><h4><i class="fas fa-bars" style="color:var(--primary);margin-right:6px"></i> TMT Steel Bars</h4><p>Fe-500 grade — $650/ton</p></div>
-          <div class="card"><h4><i class="fas fa-layer-group" style="color:var(--primary);margin-right:6px"></i> Ready-Mix Concrete</h4><p>M25 grade — $95/m³</p></div>
-          <div class="card"><h4><i class="fas fa-th-large" style="color:var(--primary);margin-right:6px"></i> AAC Blocks</h4><p>Lightweight — $0.65/unit</p></div>
+          <div class="card"><h4><i class="fas fa-cubes" style="color:var(--primary);margin-right:6px"></i> Portland Cement</h4><p>Grade 53 OPC — ₹420/bag</p></div>
+          <div class="card"><h4><i class="fas fa-bars" style="color:var(--primary);margin-right:6px"></i> TMT Steel Bars</h4><p>Fe-500 grade — ₹58,000/ton</p></div>
+          <div class="card"><h4><i class="fas fa-layer-group" style="color:var(--primary);margin-right:6px"></i> Ready-Mix Concrete</h4><p>M25 grade — ₹4,800/m³</p></div>
+          <div class="card"><h4><i class="fas fa-th-large" style="color:var(--primary);margin-right:6px"></i> AAC Blocks</h4><p>Lightweight — ₹55/unit</p></div>
         </div>
         <p class="text-muted" style="margin-top:12px;text-align:center">*Personalized material recommendations generated</p>`;
       el.style.display = 'block';

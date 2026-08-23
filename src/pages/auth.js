@@ -76,7 +76,7 @@ export function adminDashPage() {
         <div class="grid grid-4" style="margin-bottom:32px">
           <div class="dash-stat"><h4>Active Projects</h4><div class="value">12</div><div class="trend trend-up">+3 this month</div></div>
           <div class="dash-stat"><h4>Total Clients</h4><div class="value">48</div><div class="trend trend-up">+5 new</div></div>
-          <div class="dash-stat"><h4>Revenue</h4><div class="value">$2.4M</div><div class="trend trend-up">+12%</div></div>
+          <div class="dash-stat"><h4>Revenue</h4><div class="value">₹20.4 Cr</div><div class="trend trend-up">+12%</div></div>
           <div class="dash-stat"><h4>Pending</h4><div class="value">3</div><div class="trend">Approvals needed</div></div>
         </div>
         <div class="grid grid-2">
@@ -125,7 +125,7 @@ export function workspacePage() {
               <div class="form-group"><label class="form-label">Location</label><input class="form-input" placeholder="City, Country" required></div>
             </div>
             <div class="form-row">
-              <div class="form-group"><label class="form-label">Budget</label><input class="form-input" type="number" placeholder="500000" required></div>
+              <div class="form-group"><label class="form-label">Budget (₹ INR)</label><input class="form-input" type="number" placeholder="5000000" required></div>
               <div class="form-group"><label class="form-label">Area (sq ft)</label><input class="form-input" type="number" placeholder="5000" required></div>
             </div>
             <div class="form-row">
