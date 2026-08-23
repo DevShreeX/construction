@@ -31,6 +31,56 @@
     <link rel="stylesheet" href="/src/styles/index.css">
 </head>
 <body>
+    <!-- Interactive Front Intro Logo Video Overlay -->
+    <div id="intro-video-overlay" class="intro-overlay">
+        <div class="intro-backdrop"></div>
+        
+        <!-- Interactive Touch/Click Prompt Card -->
+        <div id="intro-start-prompt" class="intro-prompt-card">
+            <div class="intro-logo-container blink-glow" id="intro-touch-trigger">
+                <img src="/images/logo.png" alt="Forzex Logo" class="intro-logo-img">
+                <div class="touch-pulse-ring"></div>
+                <div class="touch-icon-badge"><i class="fas fa-hand-pointer"></i></div>
+            </div>
+            <h2 class="intro-title">FORZEX CONSTRUCTION</h2>
+            <p class="intro-subtitle">AI & GIS Smart Construction Management Platform</p>
+            
+            <div class="intro-action-box">
+                <button id="start-intro-btn" class="btn btn-primary btn-lg pulse-btn">
+                    <i class="fas fa-play"></i> Touch / Click to Experience Intro Video
+                </button>
+                <button id="skip-intro-btn" class="btn btn-ghost btn-sm">
+                    Skip Intro & Direct to App <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Video Player Overlay Wrapper -->
+        <div id="intro-video-container" class="intro-video-wrapper hidden">
+            <video id="intro-video-player" playsinline preload="auto">
+                <source src="/final_vdo.mp4" type="video/mp4">
+                <source src="/final vdo.mp4" type="video/mp4">
+                Your browser does not support HTML5 video.
+            </video>
+            
+            <!-- Video Overlay Control Panel -->
+            <div class="intro-video-controls">
+                <div class="intro-badge"><i class="fas fa-film"></i> FORZEX INTRO VIDEO</div>
+                <div class="video-ctrl-btns">
+                    <button id="intro-sound-toggle" class="intro-ctrl-btn" title="Toggle Sound">
+                        <i class="fas fa-volume-up" id="sound-icon"></i> <span id="sound-text">Mute</span>
+                    </button>
+                    <button id="intro-replay-btn" class="intro-ctrl-btn" title="Replay Video">
+                        <i class="fas fa-redo"></i> Replay
+                    </button>
+                    <button id="intro-close-btn" class="intro-ctrl-btn btn-close-intro">
+                        Enter Dashboard <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- App Shell -->
     <div id="app">
         <nav id="navbar"></nav>

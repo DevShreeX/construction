@@ -11,18 +11,26 @@ export function renderNavbar() {
       <div class="nav-links" id="navLinks">
         <a data-route="/">Home</a>
         <a data-route="/workspace">Workspace</a>
-        <a data-route="/interior"><i class="fas fa-couch" style="margin-right:4px;color:var(--accent)"></i> AI Interior</a>
         <a data-route="/land-analyzer"><i class="fas fa-draw-polygon" style="margin-right:4px;color:var(--gold)"></i> Land Plot</a>
         <a data-route="/vision">Vision</a>
         <a data-route="/insights">Insights</a>
+        <a data-route="/backend"><i class="fas fa-database" style="margin-right:4px;color:var(--accent)"></i> Backend</a>
         <a data-route="/resources">Resources</a>
         <a data-route="/report">Report</a>
         <a data-route="/more">More</a>
+        <a id="nav-intro-video-btn" class="nav-intro-btn"><i class="fas fa-circle-play" style="margin-right:4px;"></i> Intro Video</a>
       </div>
       <button class="nav-toggle" id="navToggle" aria-label="Menu">
         <i class="fas fa-bars"></i>
       </button>
     </div>`;
+
+  // Intro Video trigger handler
+  document.getElementById('nav-intro-video-btn')?.addEventListener('click', () => {
+    if (typeof window.replayIntroVideo === 'function') {
+      window.replayIntroVideo();
+    }
+  });
 
   // Mobile toggle
   document.getElementById('navToggle').addEventListener('click', () => {
@@ -31,7 +39,7 @@ export function renderNavbar() {
 
   // Close menu on nav
   document.addEventListener('click', (e) => {
-    if (e.target.closest('[data-route]') && e.target.closest('.nav-links')) {
+    if ((e.target.closest('[data-route]') || e.target.closest('#nav-intro-video-btn')) && e.target.closest('.nav-links')) {
       document.getElementById('navLinks').classList.remove('open');
     }
   });
@@ -44,9 +52,10 @@ export function renderBottomNav() {
   el.innerHTML = `
     <a data-route="/"><i class="fas fa-home"></i><span>Home</span></a>
     <a data-route="/workspace"><i class="fas fa-briefcase"></i><span>Work</span></a>
-    <a data-route="/interior"><i class="fas fa-couch"></i><span>Interior</span></a>
     <a data-route="/land-analyzer"><i class="fas fa-draw-polygon"></i><span>Land</span></a>
+    <a data-route="/backend"><i class="fas fa-database"></i><span>Backend</span></a>
     <a data-route="/vision"><i class="fas fa-camera"></i><span>Vision</span></a>
+    <a data-route="/insights"><i class="fas fa-chart-line"></i><span>Insights</span></a>
     <a data-route="/more"><i class="fas fa-ellipsis-h"></i><span>More</span></a>`;
 }
 
@@ -67,7 +76,6 @@ export function renderFooter() {
         <div>
           <div class="footer-links">
             <a data-route="/">Home</a>
-            <a data-route="/interior">AI Interior & Video</a>
             <a data-route="/projects">Projects</a>
             <a data-route="/about">About</a>
             <a data-route="/contact">Contact</a>

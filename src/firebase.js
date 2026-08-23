@@ -74,9 +74,12 @@ function onAuthStateChanged(authInstance, callback) {
 }
 
 // ==================== GIS Satellite Location Storage API ====================
-const LOCAL_STORAGE_GIS_KEY = 'forzex_gis_satellite_sites';
-const LOCAL_STORAGE_INTERIOR_KEY = 'forzex_ai_interior_designs';
 
+const LOCAL_STORAGE_GIS_KEY = 'forzex_gis_satellite_sites';
+
+/**
+ * Save a geotagged site location with Google Satellite & GIS details into Firebase Firestore / Persistent Storage
+ */
 export async function saveGisSiteToFirebase(siteData) {
   const payload = {
     name: siteData.name || 'Construction Site Geotag',
@@ -97,17 +100,22 @@ export async function saveGisSiteToFirebase(siteData) {
       console.log('✅ Site saved to Firebase Firestore:', docRef.id);
       return { success: true, id: docRef.id, ...payload };
     } catch (err) {
-      console.error('Firestore save failed, falling back to local storage:', err);
+      console.error('Firestore save failed, falling back to local persistent storage:', err);
     }
   }
 
+  // Fallback to local storage persistence
   const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_GIS_KEY) || '[]');
   const newSite = { id: 'gis-' + Date.now(), ...payload };
   existing.unshift(newSite);
   localStorage.setItem(LOCAL_STORAGE_GIS_KEY, JSON.stringify(existing));
+  console.log('✅ Site saved to local persistent storage:', newSite.id);
   return { success: true, ...newSite };
 }
 
+/**
+ * Retrieve all saved GIS Satellite Site locations from Firebase Firestore / Persistent Storage
+ */
 export async function getGisSitesFromFirebase() {
   if (db) {
     try {
@@ -118,10 +126,11 @@ export async function getGisSitesFromFirebase() {
       });
       if (sites.length > 0) return sites;
     } catch (err) {
-      console.warn('Firestore fetch failed, serving local storage:', err);
+      console.warn('Firestore fetch failed, serving local persistent storage:', err);
     }
   }
 
+  // Fallback default sites + localStorage items
   const localItems = JSON.parse(localStorage.getItem(LOCAL_STORAGE_GIS_KEY) || '[]');
   if (localItems.length === 0) {
     const defaultSites = [
@@ -134,93 +143,211 @@ export async function getGisSitesFromFirebase() {
   return localItems;
 }
 
+/**
+ * Delete a saved GIS site record from Firebase / Persistent Storage
+ */
 export async function deleteGisSiteFromFirebase(siteId) {
   if (db && !siteId.startsWith('gis-')) {
     try {
       await deleteDoc(doc(db, 'gis_sites', siteId));
+      console.log('✅ Site deleted from Firebase Firestore');
       return { success: true };
     } catch (err) {
       console.warn('Firestore delete failed:', err);
     }
   }
+
   const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_GIS_KEY) || '[]');
   const filtered = existing.filter(item => item.id !== siteId);
   localStorage.setItem(LOCAL_STORAGE_GIS_KEY, JSON.stringify(filtered));
   return { success: true };
 }
 
-// ==================== AI Interior & 2D-to-Video Storage API ====================
+// ==================== Land Plot Boundary Storage API ====================
 
-export async function saveInteriorDesignToFirebase(designData) {
+const LOCAL_STORAGE_LAND_KEY = 'forzex_land_plots';
+
+export async function saveLandPlotToFirebase(plotData) {
   const payload = {
-    title: designData.title || 'AI Interior & Construction Concept',
-    style: designData.style || 'Modern Minimalist',
-    roomType: designData.roomType || 'Living Room',
-    wallCount: designData.wallCount || 3,
-    renderUrl: designData.renderUrl || '/images/interior_1.png',
-    hasVideoSimulation: Boolean(designData.hasVideoSimulation),
-    costEstimate: designData.costEstimate || '$35,400',
+    name: plotData.name || 'Land Boundary Plot',
+    points: plotData.points || [],
+    totalAreaSqFt: Number(plotData.totalAreaSqFt || 0),
+    totalAcres: Number(plotData.totalAcres || 0),
+    usableAreaSqFt: Number(plotData.usableAreaSqFt || 0),
+    usableAcres: Number(plotData.usableAcres || 0),
+    setbackFt: Number(plotData.setbackFt || 5),
+    usablePercent: Number(plotData.usablePercent || 0),
+    perimeterFt: Number(plotData.perimeterFt || 0),
+    locationName: plotData.locationName || 'Mapped Property',
     timestamp: new Date().toISOString()
   };
 
   if (db) {
     try {
-      const docRef = await addDoc(collection(db, 'interior_designs'), {
+      const docRef = await addDoc(collection(db, 'land_plots'), {
         ...payload,
         createdAt: serverTimestamp()
       });
+      console.log('✅ Land plot saved to Firebase Firestore:', docRef.id);
       return { success: true, id: docRef.id, ...payload };
     } catch (err) {
-      console.error('Firestore interior save failed, using local storage:', err);
+      console.error('Firestore save failed, using local storage fallback:', err);
     }
   }
 
-  const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_INTERIOR_KEY) || '[]');
-  const newItem = { id: 'interior-' + Date.now(), ...payload };
-  existing.unshift(newItem);
-  localStorage.setItem(LOCAL_STORAGE_INTERIOR_KEY, JSON.stringify(existing));
-  return { success: true, ...newItem };
+  const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LAND_KEY) || '[]');
+  const newPlot = { id: 'plot-' + Date.now(), ...payload };
+  existing.unshift(newPlot);
+  localStorage.setItem(LOCAL_STORAGE_LAND_KEY, JSON.stringify(existing));
+  return { success: true, ...newPlot };
 }
 
-export async function getInteriorDesignsFromFirebase() {
+export async function getLandPlotsFromFirebase() {
   if (db) {
     try {
-      const querySnapshot = await getDocs(collection(db, 'interior_designs'));
-      const list = [];
+      const querySnapshot = await getDocs(collection(db, 'land_plots'));
+      const plots = [];
       querySnapshot.forEach((doc) => {
-        list.push({ id: doc.id, ...doc.data() });
+        plots.push({ id: doc.id, ...doc.data() });
       });
-      if (list.length > 0) return list;
+      if (plots.length > 0) return plots;
     } catch (err) {
-      console.warn('Firestore interior fetch failed:', err);
+      console.warn('Firestore fetch failed, serving local storage:', err);
     }
   }
 
-  const localItems = JSON.parse(localStorage.getItem(LOCAL_STORAGE_INTERIOR_KEY) || '[]');
+  const localItems = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LAND_KEY) || '[]');
   if (localItems.length === 0) {
-    const defaultDesigns = [
-      { id: 'interior-1', title: 'Luxury Master Executive Suite', style: 'Contemporary Luxury', roomType: 'Executive Suite', wallCount: 3, renderUrl: '/images/interior_1.png', hasVideoSimulation: true, costEstimate: '$42,500', timestamp: new Date().toISOString() },
-      { id: 'interior-2', title: 'Nordic Scandinavian Living Room', style: 'Scandinavian Warm Oak', roomType: 'Living Lounge', wallCount: 3, renderUrl: '/images/interior_2.png', hasVideoSimulation: true, costEstimate: '$28,900', timestamp: new Date().toISOString() }
+    const defaultPlots = [
+      {
+        id: 'plot-1',
+        name: 'Irregular Residential Corner Lot',
+        points: [{lat: 30.2672, lon: -97.7431}, {lat: 30.2678, lon: -97.7425}, {lat: 30.2675, lon: -97.7418}, {lat: 30.2668, lon: -97.7424}],
+        totalAreaSqFt: 18450,
+        totalAcres: 0.423,
+        usableAreaSqFt: 14200,
+        usableAcres: 0.326,
+        setbackFt: 5,
+        usablePercent: 76.9,
+        perimeterFt: 540,
+        locationName: 'Austin Site, TX',
+        timestamp: new Date().toISOString()
+      }
     ];
-    localStorage.setItem(LOCAL_STORAGE_INTERIOR_KEY, JSON.stringify(defaultDesigns));
-    return defaultDesigns;
+    localStorage.setItem(LOCAL_STORAGE_LAND_KEY, JSON.stringify(defaultPlots));
+    return defaultPlots;
   }
   return localItems;
 }
 
-export async function deleteInteriorDesignFromFirebase(id) {
-  if (db && !id.startsWith('interior-')) {
+export async function deleteLandPlotFromFirebase(plotId) {
+  if (db && !plotId.startsWith('plot-')) {
     try {
-      await deleteDoc(doc(db, 'interior_designs', id));
+      await deleteDoc(doc(db, 'land_plots', plotId));
       return { success: true };
     } catch (err) {
       console.warn('Firestore delete failed:', err);
     }
   }
-  const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_INTERIOR_KEY) || '[]');
-  const filtered = existing.filter(item => item.id !== id);
-  localStorage.setItem(LOCAL_STORAGE_INTERIOR_KEY, JSON.stringify(filtered));
+
+  const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LAND_KEY) || '[]');
+  const filtered = existing.filter(item => item.id !== plotId);
+  localStorage.setItem(LOCAL_STORAGE_LAND_KEY, JSON.stringify(filtered));
   return { success: true };
+}
+
+// ==================== Generic Firebase Firestore CRUD Helpers ====================
+
+const LOCAL_STORAGE_GENERIC_PREFIX = 'forzex_db_collection_';
+
+/**
+ * Save a document into any Firebase Firestore collection (or local storage fallback)
+ */
+export async function saveDocumentToFirebase(collectionName, documentData) {
+  const payload = {
+    ...documentData,
+    timestamp: new Date().toISOString()
+  };
+
+  if (db) {
+    try {
+      const docRef = await addDoc(collection(db, collectionName), {
+        ...payload,
+        createdAt: serverTimestamp()
+      });
+      console.log(`✅ Document saved to Firebase Firestore [${collectionName}]:`, docRef.id);
+      return { success: true, id: docRef.id, collection: collectionName, ...payload };
+    } catch (err) {
+      console.error(`Firestore save failed for ${collectionName}, falling back to local persistent storage:`, err);
+    }
+  }
+
+  // Fallback to local storage
+  const storageKey = LOCAL_STORAGE_GENERIC_PREFIX + collectionName;
+  const existing = JSON.parse(localStorage.getItem(storageKey) || '[]');
+  const newDoc = { id: `${collectionName.slice(0, 4)}-` + Date.now(), collection: collectionName, ...payload };
+  existing.unshift(newDoc);
+  localStorage.setItem(storageKey, JSON.stringify(existing));
+  console.log(`✅ Document saved to local persistent storage [${collectionName}]:`, newDoc.id);
+  return { success: true, ...newDoc };
+}
+
+/**
+ * Get all documents from a Firebase Firestore collection (or local storage fallback)
+ */
+export async function getDocumentsFromFirebase(collectionName) {
+  if (db) {
+    try {
+      const querySnapshot = await getDocs(collection(db, collectionName));
+      const documents = [];
+      querySnapshot.forEach((doc) => {
+        documents.push({ id: doc.id, collection: collectionName, ...doc.data() });
+      });
+      if (documents.length > 0) return documents;
+    } catch (err) {
+      console.warn(`Firestore fetch failed for ${collectionName}, serving local persistent storage:`, err);
+    }
+  }
+
+  const storageKey = LOCAL_STORAGE_GENERIC_PREFIX + collectionName;
+  const localItems = JSON.parse(localStorage.getItem(storageKey) || '[]');
+  return localItems;
+}
+
+/**
+ * Delete a document from Firebase Firestore collection (or local storage fallback)
+ */
+export async function deleteDocumentFromFirebase(collectionName, docId) {
+  if (db && !docId.includes('-')) {
+    try {
+      await deleteDoc(doc(db, collectionName, docId));
+      console.log(`✅ Document deleted from Firebase Firestore [${collectionName}]`);
+      return { success: true };
+    } catch (err) {
+      console.warn(`Firestore delete failed for ${collectionName}:`, err);
+    }
+  }
+
+  const storageKey = LOCAL_STORAGE_GENERIC_PREFIX + collectionName;
+  const existing = JSON.parse(localStorage.getItem(storageKey) || '[]');
+  const filtered = existing.filter(item => item.id !== docId);
+  localStorage.setItem(storageKey, JSON.stringify(filtered));
+  return { success: true };
+}
+
+/**
+ * Returns summary info of the Firebase connection status
+ */
+export function getFirebaseBackendStatus() {
+  return {
+    isConfigured,
+    isConnected: Boolean(db),
+    authActive: Boolean(auth),
+    projectId: firebaseConfig.projectId,
+    authDomain: firebaseConfig.authDomain,
+    storageBucket: firebaseConfig.storageBucket,
+    mode: isConfigured ? 'Firebase Cloud Firestore' : 'Demo Mode (Persistent Local Storage)'
+  };
 }
 
 export { 
@@ -231,3 +358,4 @@ export {
   signOut, 
   onAuthStateChanged 
 };
+
