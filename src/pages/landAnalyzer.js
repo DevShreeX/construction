@@ -40,9 +40,6 @@ export function landAnalyzerPage() {
                 <button id="landClearBtn" class="btn btn-danger btn-sm" style="background:rgba(239,68,68,0.2);color:var(--danger);border:1px solid var(--danger)">
                   <i class="fas fa-trash-can"></i> Reset Map
                 </button>
-                <button id="saveLandFirebaseBtn" class="btn btn-accent btn-sm">
-                  <i class="fas fa-cloud-arrow-up"></i> Save Plot to Firebase
-                </button>
               </div>
             </div>
 
@@ -172,17 +169,6 @@ export function landAnalyzerPage() {
               </div>
             </div>
 
-          </div>
-
-          <!-- Firebase Saved Plot Boundaries -->
-          <div class="card animate-in delay-3" style="margin-top:12px">
-            <div class="flex-between" style="flex-wrap:wrap;gap:12px;margin-bottom:16px">
-              <h3><i class="fas fa-database" style="color:var(--accent);margin-right:8px"></i> Firebase Saved Land Plot Records</h3>
-              <button id="refreshLandFirebaseBtn" class="btn btn-outline btn-sm"><i class="fas fa-arrows-rotate"></i> Refresh DB</button>
-            </div>
-            <div id="firebaseLandPlotsContainer">
-              <p class="text-muted" style="font-size:0.9rem">Loading saved land plots from Firebase storage...</p>
-            </div>
           </div>
 
         </div>
