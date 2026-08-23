@@ -14,11 +14,6 @@ export function landAnalyzerPage() {
             Mark boundary points ($P_1, P_2, \\dots, P_n$) for any regular or irregular plot of land. The app automatically calculates the outer plot border, side lengths, total acreage, applies customizable setback buffers, and visualizes the exact usable land area for construction.
           </p>
 
-          <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:28px">
-            <span class="badge badge-success" style="padding:6px 14px"><i class="fas fa-satellite"></i> Google Satellite Hybrid Layer</span>
-            <span class="badge badge-primary" style="padding:6px 14px"><i class="fas fa-vector-square"></i> Automatic Setback Inward Contraction</span>
-            <span class="badge badge-warning" style="padding:6px 14px"><i class="fas fa-ruler-combined"></i> Real-time Sq Ft & Acreage</span>
-          </div>
         </div>
 
         <!-- Main Workspace Grid -->
