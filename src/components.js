@@ -5,8 +5,8 @@ export function renderNavbar() {
   el.innerHTML = `
     <div class="container flex-between">
       <div class="nav-logo" data-route="/">
-        <img src="/images/logo.png" alt="Forzex Logo" style="height: 38px; width: 38px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);">
-        <span>Forzex Construction</span>
+        <img src="/images/logo.png" alt="Forzex Logo" style="height: 42px; width: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); box-shadow: 0 0 14px rgba(56, 189, 248, 0.6); transition: transform 0.3s ease;">
+        <span style="font-weight: 800; font-size: 1.35rem; color: #ffffff; letter-spacing: -0.5px; margin-left: 4px;">Forzex Construction</span>
       </div>
       <div class="nav-links" id="navLinks">
         <a data-route="/">Home</a>
