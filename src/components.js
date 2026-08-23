@@ -5,7 +5,7 @@ export function renderNavbar() {
   el.innerHTML = `
     <div class="container flex-between">
       <div class="nav-logo" data-route="/">
-        <img src="/images/logo.png" alt="Forzex Logo" style="height: 40px; width: auto; border-radius: 50%; box-shadow: 0 0 10px rgba(245,197,24,0.3);">
+        <img src="/images/logo.png" alt="Forzex Logo" style="height: 38px; width: 38px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);">
         <span>Forzex Construction</span>
       </div>
       <div class="nav-links" id="navLinks">
