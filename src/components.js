@@ -14,7 +14,6 @@ export function renderNavbar() {
         <a data-route="/land-analyzer"><i class="fas fa-draw-polygon" style="margin-right:4px;color:var(--gold)"></i> Land Plot</a>
         <a data-route="/vision">Vision</a>
         <a data-route="/insights">Insights</a>
-        <a data-route="/backend"><i class="fas fa-database" style="margin-right:4px;color:var(--accent)"></i> Backend</a>
         <a data-route="/resources">Resources</a>
         <a data-route="/report">Report</a>
         <a data-route="/more">More</a>
@@ -45,7 +44,6 @@ export function renderBottomNav() {
     <a data-route="/"><i class="fas fa-home"></i><span>Home</span></a>
     <a data-route="/workspace"><i class="fas fa-briefcase"></i><span>Work</span></a>
     <a data-route="/land-analyzer"><i class="fas fa-draw-polygon"></i><span>Land</span></a>
-    <a data-route="/backend"><i class="fas fa-database"></i><span>Backend</span></a>
     <a data-route="/vision"><i class="fas fa-camera"></i><span>Vision</span></a>
     <a data-route="/insights"><i class="fas fa-chart-line"></i><span>Insights</span></a>
     <a data-route="/more"><i class="fas fa-ellipsis-h"></i><span>More</span></a>`;
