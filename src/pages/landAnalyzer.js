@@ -135,40 +135,27 @@ export function landAnalyzerPage() {
 
           </div>
 
-          <!-- Detailed Breakdown & Side Lengths Table -->
-          <div class="grid grid-2 animate-in delay-2">
-            
-            <!-- Side Lengths & Border Vertices Table -->
-            <div class="card">
-              <div class="flex-between" style="margin-bottom:12px">
-                <h4 style="margin:0"><i class="fas fa-ruler-horizontal" style="color:var(--primary);margin-right:6px"></i> Border Side Lengths & Vertices</h4>
-                <span class="badge badge-primary" id="pointCountBadge">0 Points Marked</span>
-              </div>
-              <div style="overflow-x:auto;max-height:260px;overflow-y:auto">
-                <table style="width:100%;border-collapse:collapse;font-size:0.85rem">
-                  <thead>
-                    <tr style="border-bottom:1px solid var(--border);text-align:left;color:var(--text-muted)">
-                      <th style="padding:8px">Segment</th>
-                      <th style="padding:8px">From → To</th>
-                      <th style="padding:8px">Distance (ft)</th>
-                      <th style="padding:8px">Distance (m)</th>
-                    </tr>
-                  </thead>
-                  <tbody id="sideLengthsTableBody">
-                    <tr><td colspan="4" class="text-muted" style="padding:16px;text-align:center">Click on the map to add border points and calculate side lengths.</td></tr>
-                  </tbody>
-                </table>
-              </div>
+          <!-- Side Lengths & Border Vertices Table -->
+          <div class="card animate-in delay-2">
+            <div class="flex-between" style="margin-bottom:12px">
+              <h4 style="margin:0"><i class="fas fa-ruler-horizontal" style="color:var(--primary);margin-right:6px"></i> Border Side Lengths & Vertices</h4>
+              <span class="badge badge-primary" id="pointCountBadge">0 Points Marked</span>
             </div>
-
-            <!-- AI Construction Recommendation Card -->
-            <div class="card">
-              <h4 style="margin-bottom:12px"><i class="fas fa-brain" style="color:var(--gold);margin-right:6px"></i> AI Construction & Footprint Recommendations</h4>
-              <div id="landAiAdviceContent">
-                <p class="text-muted" style="font-size:0.9rem">Mark at least 3 points on the map to calculate polygon usable geometry and view automated structural recommendations.</p>
-              </div>
+            <div style="overflow-x:auto;max-height:260px;overflow-y:auto">
+              <table style="width:100%;border-collapse:collapse;font-size:0.85rem">
+                <thead>
+                  <tr style="border-bottom:1px solid var(--border);text-align:left;color:var(--text-muted)">
+                    <th style="padding:8px">Segment</th>
+                    <th style="padding:8px">From → To</th>
+                    <th style="padding:8px">Distance (ft)</th>
+                    <th style="padding:8px">Distance (m)</th>
+                  </tr>
+                </thead>
+                <tbody id="sideLengthsTableBody">
+                  <tr><td colspan="4" class="text-muted" style="padding:16px;text-align:center">Click on the map to add border points and calculate side lengths.</td></tr>
+                </tbody>
+              </table>
             </div>
-
           </div>
 
         </div>
