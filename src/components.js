@@ -18,19 +18,11 @@ export function renderNavbar() {
         <a data-route="/resources">Resources</a>
         <a data-route="/report">Report</a>
         <a data-route="/more">More</a>
-        <a id="nav-intro-video-btn" class="nav-intro-btn"><i class="fas fa-circle-play" style="margin-right:4px;"></i> Intro Video</a>
       </div>
       <button class="nav-toggle" id="navToggle" aria-label="Menu">
         <i class="fas fa-bars"></i>
       </button>
     </div>`;
-
-  // Intro Video trigger handler
-  document.getElementById('nav-intro-video-btn')?.addEventListener('click', () => {
-    if (typeof window.replayIntroVideo === 'function') {
-      window.replayIntroVideo();
-    }
-  });
 
   // Mobile toggle
   document.getElementById('navToggle').addEventListener('click', () => {
@@ -39,7 +31,7 @@ export function renderNavbar() {
 
   // Close menu on nav
   document.addEventListener('click', (e) => {
-    if ((e.target.closest('[data-route]') || e.target.closest('#nav-intro-video-btn')) && e.target.closest('.nav-links')) {
+    if (e.target.closest('[data-route]') && e.target.closest('.nav-links')) {
       document.getElementById('navLinks').classList.remove('open');
     }
   });
