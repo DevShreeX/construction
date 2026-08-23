@@ -210,15 +210,34 @@ export function morePage() {
           </div>
         </div>
 
+        <!-- Tamil Nadu Construction Hubs Quick Selector -->
+        <div class="card animate-in" style="margin-bottom:24px;background:rgba(15,23,42,0.85);border:1px solid rgba(251,191,36,0.3)">
+          <div class="flex-between" style="flex-wrap:wrap;gap:12px;margin-bottom:12px">
+            <h4 style="margin:0;color:var(--gold)"><i class="fas fa-map-pin" style="margin-right:6px"></i> Tamil Nadu Construction Hubs & Weather Matrix</h4>
+            <span class="badge badge-warning"><i class="fas fa-location-dot"></i> Default Region: Tamil Nadu, India</span>
+          </div>
+          <p class="text-muted" style="font-size:0.85rem;margin-bottom:14px">Select any key Tamil Nadu construction sector to inspect live satellite weather conditions and GIS coordinates instantly:</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-outline btn-sm tn-city-btn" data-lat="13.0827" data-lon="80.2707" data-name="Chennai, Tamil Nadu"><i class="fas fa-building-user" style="color:var(--primary)"></i> Chennai (HQ)</button>
+            <button class="btn btn-outline btn-sm tn-city-btn" data-lat="11.0168" data-lon="76.9558" data-name="Coimbatore, Tamil Nadu"><i class="fas fa-industry" style="color:var(--accent)"></i> Coimbatore</button>
+            <button class="btn btn-outline btn-sm tn-city-btn" data-lat="9.9252" data-lon="78.1198" data-name="Madurai, Tamil Nadu"><i class="fas fa-monument" style="color:var(--gold)"></i> Madurai</button>
+            <button class="btn btn-outline btn-sm tn-city-btn" data-lat="11.6643" data-lon="78.1460" data-name="Salem, Tamil Nadu"><i class="fas fa-gears" style="color:var(--success)"></i> Salem</button>
+            <button class="btn btn-outline btn-sm tn-city-btn" data-lat="10.7905" data-lon="78.7047" data-name="Tiruchirappalli, Tamil Nadu"><i class="fas fa-tower-observation"></i> Tiruchirappalli</button>
+            <button class="btn btn-outline btn-sm tn-city-btn" data-lat="11.1085" data-lon="77.3411" data-name="Tiruppur, Tamil Nadu"><i class="fas fa-store"></i> Tiruppur</button>
+            <button class="btn btn-outline btn-sm tn-city-btn" data-lat="12.9165" data-lon="79.1325" data-name="Vellore, Tamil Nadu"><i class="fas fa-graduation-cap"></i> Vellore</button>
+            <button class="btn btn-outline btn-sm tn-city-btn" data-lat="11.3410" data-lon="77.7172" data-name="Erode, Tamil Nadu"><i class="fas fa-truck-ramp-box"></i> Erode</button>
+          </div>
+        </div>
+
         <!-- Live Weather & Interactive Map Hub -->
         <div class="card animate-in" style="margin-bottom:32px">
           <div class="flex-between" style="flex-wrap:wrap;gap:12px;margin-bottom:16px">
             <div>
               <h3><i class="fas fa-cloud-sun-rain" style="color:var(--accent);margin-right:8px"></i> Construction Site Weather & Geolocation</h3>
-              <p class="text-muted">Weather prediction powered by Open-Meteo & Google GIS API.</p>
+              <p class="text-muted">Live weather & satellite prediction powered by Open-Meteo & Google GIS API.</p>
             </div>
             <button id="weatherGpsBtn" class="btn btn-primary btn-sm">
-              <i class="fas fa-location-crosshairs"></i> Use My GPS Location
+              <i class="fas fa-location-crosshairs"></i> Allow & Use My GPS Location
             </button>
           </div>
 
@@ -226,15 +245,15 @@ export function morePage() {
             <div class="form-group">
               <label class="form-label">City Search</label>
               <div style="display:flex;gap:8px">
-                <input class="form-input" id="weatherCityInput" placeholder="Enter city (e.g. London, Nairobi, Dubai)">
+                <input class="form-input" id="weatherCityInput" placeholder="Enter Tamil Nadu / Global city (e.g. Chennai, Madurai)">
                 <button id="searchWeatherBtn" class="btn btn-outline"><i class="fas fa-search"></i> Search</button>
               </div>
             </div>
             <div class="form-group">
               <label class="form-label">Custom Coordinates (Lat, Lon)</label>
               <div style="display:flex;gap:8px">
-                <input class="form-input" id="customLatInput" placeholder="Latitude (e.g. -1.286389)">
-                <input class="form-input" id="customLonInput" placeholder="Longitude (e.g. 36.817223)">
+                <input class="form-input" id="customLatInput" placeholder="Latitude (e.g. 13.0827)">
+                <input class="form-input" id="customLonInput" placeholder="Longitude (e.g. 80.2707)">
               </div>
             </div>
           </div>

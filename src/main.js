@@ -27,7 +27,7 @@ import {
 
 // ==================== Global State ====================
 let currentUser = null;
-let currentSiteCoords = { lat: -1.286389, lon: 36.817223, label: 'Nairobi Construction Site' };
+let currentSiteCoords = { lat: 13.0827, lon: 80.2707, label: 'Chennai, Tamil Nadu' };
 
 // ==================== Register All Routes ====================
 registerRoute('/', homePage);
@@ -523,6 +523,18 @@ function initWeatherAndMapHub() {
       (err) => { showToast(`Geolocation error: ${err.message}`, 'error'); },
       { enableHighAccuracy: true }
     );
+  });
+
+  // Tamil Nadu Quick City Hub Buttons
+  document.querySelectorAll('.tn-city-btn').forEach(btn => {
+    btn.addEventListener('click', (ev) => {
+      const lat = parseFloat(ev.currentTarget.getAttribute('data-lat'));
+      const lon = parseFloat(ev.currentTarget.getAttribute('data-lon'));
+      const name = ev.currentTarget.getAttribute('data-name');
+      currentSiteCoords = { lat, lon, label: name };
+      fetchOpenMeteoWeather(lat, lon, name);
+      showToast(`Selected Tamil Nadu hub: ${name}`, 'success');
+    });
   });
 
   // Search City Button

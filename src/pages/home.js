@@ -92,10 +92,10 @@ export function homePage() {
         <p class="text-center" style="margin-bottom:32px">For professional enquiries, partnerships, or support.</p>
         <div class="grid grid-2">
           <div>
-            <h4 style="margin-bottom:8px"><i class="fas fa-building" style="margin-right:6px"></i> Office</h4>
-            <p style="margin-bottom:16px">Forzex Construction<br>123 Construction Avenue<br>Nairobi, Kenya</p>
+            <h4 style="margin-bottom:8px"><i class="fas fa-building" style="margin-right:6px"></i> Tamil Nadu Regional HQ</h4>
+            <p style="margin-bottom:16px">Forzex Construction<br>GST Road, Guindy, Chennai<br>Tamil Nadu 600032, India</p>
             <h4 style="margin-bottom:8px"><i class="fas fa-phone" style="margin-right:6px"></i> Contact</h4>
-            <p>Email: info@forzexconstruction.com<br>Phone: +254 700 000 000<br>Mon–Fri 09:00–18:00</p>
+            <p>Email: info@forzexconstruction.com<br>Phone: +91 44 2250 0000<br>Mon–Sat 09:00–18:00 IST</p>
           </div>
           <div class="card">
             <form id="contactForm">
