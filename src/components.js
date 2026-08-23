@@ -14,7 +14,6 @@ export function renderNavbar() {
         <a data-route="/land-analyzer"><i class="fas fa-draw-polygon" style="margin-right:4px;color:var(--gold)"></i> Land Plot</a>
         <a data-route="/vision">Vision</a>
         <a data-route="/insights">Insights</a>
-        <a data-route="/resources">Resources</a>
         <a data-route="/report">Report</a>
         <a data-route="/more">More</a>
       </div>
