@@ -233,6 +233,10 @@ function setupGlobalListeners() {
       renderFirebaseGisList('moreFirebaseGisContainer');
     }
 
+    if (path === '/workspace') {
+      setupWorkspaceAiVideoGenerator();
+    }
+
     if (path === '/backend') {
       initBackendConsolePage();
     }
@@ -1679,4 +1683,48 @@ function setupIntroVideo() {
     dismissIntro();
   });
 }
+
+// ==================== Workspace AI 3D Short Video Studio Engine ====================
+function setupWorkspaceAiVideoGenerator() {
+  const form = document.getElementById('aiVdoGeneratorForm');
+  if (!form) return;
+
+  form.addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    const choice = document.getElementById('vdoChoiceSelect')?.value || 'Commercial High-Rise Tower';
+    const priority = document.getElementById('vdoPrioritySelect')?.value || 'High Priority (1080p Fast Render)';
+    const format = document.getElementById('vdoLengthSelect')?.value || 'Short Cinematic Preview (15 sec)';
+    const motion = document.getElementById('vdoCameraMotion')?.value || 'Aerial Drone Flyover';
+
+    const loadingState = document.getElementById('aiVdoLoadingState');
+    const resultContainer = document.getElementById('aiVdoResultContainer');
+    const titleEl = document.getElementById('generatedVdoTitle');
+    const metaEl = document.getElementById('generatedVdoMeta');
+    const videoPlayer = document.getElementById('workspaceAiVideoPlayer');
+    const videoSrc = document.getElementById('workspaceVideoSrc');
+
+    if (loadingState) loadingState.style.display = 'block';
+    if (resultContainer) resultContainer.style.display = 'none';
+    showToast(`⚡ AI Neural Engine compiling 3D video pass for ${choice}...`, 'info');
+
+    setTimeout(() => {
+      if (loadingState) loadingState.style.display = 'none';
+      if (titleEl) titleEl.innerHTML = `<i class="fas fa-video"></i> ${choice}`;
+      if (metaEl) metaEl.textContent = `Priority: ${priority} | Format: ${format} | Motion: ${motion}`;
+      
+      // Swap video source dynamically
+      if (videoSrc) {
+        videoSrc.src = (choice.includes('Commercial') || choice.includes('Infrastructure')) ? '/cinematic_video.mp4' : '/final_vdo.mp4';
+      }
+      if (videoPlayer) {
+        videoPlayer.load();
+        videoPlayer.play().catch(e => console.log('Autoplay handled:', e));
+      }
+
+      if (resultContainer) resultContainer.style.display = 'block';
+      showToast(`✅ Generated AI 3D Construction Video Pass for ${choice}!`, 'success');
+    }, 1400);
+  });
+}
+
 
