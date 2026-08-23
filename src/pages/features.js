@@ -70,22 +70,8 @@ export function visionPage() {
           <div class="card" style="margin-top:16px">
             <div class="flex-between" style="flex-wrap:wrap;gap:12px;margin-bottom:12px">
               <h4><i class="fas fa-globe-americas" style="color:var(--gold)"></i> Geotagged Google Satellite GIS Site</h4>
-              <button id="saveFirebaseSiteBtn" class="btn btn-primary btn-sm">
-                <i class="fas fa-cloud-arrow-up"></i> Save Geotag to Firebase
-              </button>
             </div>
             <div id="visionMap" style="height:320px;width:100%;border-radius:var(--radius-md);border:1px solid var(--border);z-index:1"></div>
-          </div>
-        </div>
-
-        <!-- Firebase Saved GIS Sites List -->
-        <div class="card animate-in delay-1" style="margin-top:32px">
-          <div class="flex-between" style="flex-wrap:wrap;gap:12px;margin-bottom:16px">
-            <h3><i class="fas fa-database" style="color:var(--accent);margin-right:8px"></i> Firebase Saved GIS Satellite Sites</h3>
-            <button id="refreshFirebaseGisBtn" class="btn btn-outline btn-sm"><i class="fas fa-arrows-rotate"></i> Refresh DB</button>
-          </div>
-          <div id="firebaseGisSitesContainer">
-            <p class="text-muted" style="font-size:0.9rem">Loading saved GIS locations from Firebase backend storage...</p>
           </div>
         </div>
 
