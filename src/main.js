@@ -230,7 +230,6 @@ function setupGlobalListeners() {
 
     if (path === '/more') {
       initWeatherAndMapHub();
-      renderFirebaseGisList('moreFirebaseGisContainer');
     }
 
     if (path === '/workspace') {

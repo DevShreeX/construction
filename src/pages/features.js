@@ -255,22 +255,8 @@ export function morePage() {
           <div style="margin-top:24px">
             <div class="flex-between" style="flex-wrap:wrap;gap:12px;margin-bottom:10px">
               <h4 style="margin:0"><i class="fas fa-map-location-dot" style="color:var(--primary);margin-right:6px"></i> Google Satellite & GIS Layer Map</h4>
-              <button id="saveMoreSiteFirebaseBtn" class="btn btn-primary btn-sm">
-                <i class="fas fa-cloud-arrow-up"></i> Save Site Geotag to Firebase
-              </button>
             </div>
             <div id="siteMap" style="height:360px;width:100%;border-radius:var(--radius-md);border:1px solid var(--border);z-index:1"></div>
-          </div>
-        </div>
-
-        <!-- Firebase Saved Locations Grid -->
-        <div class="card animate-in delay-1" style="margin-bottom:32px">
-          <div class="flex-between" style="flex-wrap:wrap;gap:12px;margin-bottom:16px">
-            <h3><i class="fas fa-database" style="color:var(--accent);margin-right:8px"></i> Firebase Persistent GIS Locations</h3>
-            <span class="badge badge-primary">Backend Firestore Storage</span>
-          </div>
-          <div id="moreFirebaseGisContainer">
-            <p class="text-muted">Fetching saved site locations from Firebase...</p>
           </div>
         </div>
 
@@ -280,7 +266,7 @@ export function morePage() {
           <div class="card animate-in delay-1" style="cursor:pointer;border:1px solid rgba(245,197,24,0.3)" data-route="/land-analyzer"><div style="font-size:2rem;color:var(--gold);margin-bottom:12px"><i class="fas fa-draw-polygon"></i></div><h3>Land & Usable Area</h3><p>Mark irregular plot borders & compute buildable zone.</p></div>
           <div class="card animate-in delay-1" style="cursor:pointer" data-route="/vision"><div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-camera"></i></div><h3>AI Site Camera</h3><p>Analyze site photos for safety & GPS tagging.</p></div>
           <div class="card animate-in delay-2" style="cursor:pointer" data-route="/insights"><div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-calculator"></i></div><h3>AI Estimation</h3><p>Generate detailed cost breakdowns.</p></div>
-          <div class="card animate-in delay-3" style="cursor:pointer" data-route="/resources"><div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-boxes-stacked"></i></div><h3>Recommendations</h3><p>Smart material suggestions.</p></div>
+          <div class="card animate-in delay-3" style="cursor:pointer" data-route="/insights"><div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-boxes-stacked"></i></div><h3>Recommendations</h3><p>Smart material suggestions.</p></div>
           <div class="card animate-in delay-1" style="cursor:pointer" data-route="/report"><div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-file-pdf"></i></div><h3>Reports</h3><p>Professional project reports.</p></div>
         </div>
       </div>
