@@ -260,15 +260,6 @@ export function morePage() {
           </div>
         </div>
 
-        <h2 class="text-center" style="margin-bottom:24px">Quick Feature Access</h2>
-        <div class="grid grid-3">
-          <div class="card animate-in delay-1" style="cursor:pointer;border:1px solid rgba(110,231,255,0.4)" data-route="/backend"><div style="font-size:2rem;color:var(--accent);margin-bottom:12px"><i class="fas fa-database"></i></div><h3>Firebase Backend</h3><p>Manage cloud Firestore DB, CRUD operations & status.</p></div>
-          <div class="card animate-in delay-1" style="cursor:pointer;border:1px solid rgba(245,197,24,0.3)" data-route="/land-analyzer"><div style="font-size:2rem;color:var(--gold);margin-bottom:12px"><i class="fas fa-draw-polygon"></i></div><h3>Land & Usable Area</h3><p>Mark irregular plot borders & compute buildable zone.</p></div>
-          <div class="card animate-in delay-1" style="cursor:pointer" data-route="/vision"><div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-camera"></i></div><h3>AI Site Camera</h3><p>Analyze site photos for safety & GPS tagging.</p></div>
-          <div class="card animate-in delay-2" style="cursor:pointer" data-route="/insights"><div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-calculator"></i></div><h3>AI Estimation</h3><p>Generate detailed cost breakdowns.</p></div>
-          <div class="card animate-in delay-3" style="cursor:pointer" data-route="/insights"><div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-boxes-stacked"></i></div><h3>Recommendations</h3><p>Smart material suggestions.</p></div>
-          <div class="card animate-in delay-1" style="cursor:pointer" data-route="/report"><div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-file-pdf"></i></div><h3>Reports</h3><p>Professional project reports.</p></div>
-        </div>
       </div>
     </section>`;
 }
