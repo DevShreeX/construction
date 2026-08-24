@@ -1686,44 +1686,66 @@ function setupIntroVideo() {
 
 // ==================== Workspace AI 3D Short Video Studio Engine ====================
 function setupWorkspaceAiVideoGenerator() {
-  const form = document.getElementById('aiVdoGeneratorForm');
+  const form = document.getElementById('projectForm');
   if (!form) return;
 
   form.addEventListener('submit', (ev) => {
     ev.preventDefault();
-    const choice = document.getElementById('vdoChoiceSelect')?.value || 'Commercial High-Rise Tower';
-    const priority = document.getElementById('vdoPrioritySelect')?.value || 'High Priority (1080p Fast Render)';
-    const format = document.getElementById('vdoLengthSelect')?.value || 'Short Cinematic Preview (15 sec)';
-    const motion = document.getElementById('vdoCameraMotion')?.value || 'Aerial Drone Flyover';
 
-    const loadingState = document.getElementById('aiVdoLoadingState');
-    const resultContainer = document.getElementById('aiVdoResultContainer');
-    const titleEl = document.getElementById('generatedVdoTitle');
-    const metaEl = document.getElementById('generatedVdoMeta');
-    const videoPlayer = document.getElementById('workspaceAiVideoPlayer');
-    const videoSrc = document.getElementById('workspaceVideoSrc');
+    const name = document.getElementById('projName')?.value || 'New Project';
+    const type = document.getElementById('projType')?.value || 'Commercial High-Rise Complex';
+    const location = document.getElementById('projLocation')?.value || 'Chennai, Tamil Nadu';
+    const budgetRaw = parseFloat(document.getElementById('projBudget')?.value || 5000000);
+    const area = document.getElementById('projArea')?.value || '5000';
+    const priority = document.getElementById('projPriority')?.value || 'High Priority (1080p Fast Render)';
+    const desc = document.getElementById('projDesc')?.value || 'Standard construction project specs.';
 
-    if (loadingState) loadingState.style.display = 'block';
-    if (resultContainer) resultContainer.style.display = 'none';
-    showToast(`⚡ AI Neural Engine compiling 3D video pass for ${choice}...`, 'info');
+    const formattedBudget = formatCurrency(budgetRaw);
+
+    const loadingBox = document.getElementById('projectAiLoading');
+    const resultCard = document.getElementById('projectResultCard');
+    const loadingSub = document.getElementById('projectAiLoadingSub');
+
+    const createdTitle = document.getElementById('createdProjTitle');
+    const createdLoc = document.getElementById('createdProjLoc');
+    const createdBudget = document.getElementById('createdProjBudget');
+    const createdArea = document.getElementById('createdProjArea');
+    const createdPriority = document.getElementById('createdProjPriority');
+    const createdDesc = document.getElementById('createdProjDesc');
+    const videoPlayer = document.getElementById('projectAiVideoPlayer');
+    const videoSrc = document.getElementById('projectVideoSrc');
+
+    if (loadingBox) loadingBox.style.display = 'block';
+    if (resultCard) resultCard.style.display = 'none';
+    if (loadingSub) loadingSub.textContent = `Compiling 3D physics, camera flight paths, and architectural daylight shaders for "${name}" in ${location}...`;
+
+    showToast(`⚡ AI Neural Engine compiling 3D video pass for ${name}...`, 'info');
 
     setTimeout(() => {
-      if (loadingState) loadingState.style.display = 'none';
-      if (titleEl) titleEl.innerHTML = `<i class="fas fa-video"></i> ${choice}`;
-      if (metaEl) metaEl.textContent = `Priority: ${priority} | Format: ${format} | Motion: ${motion}`;
-      
-      // Swap video source dynamically
+      if (loadingBox) loadingBox.style.display = 'none';
+
+      if (createdTitle) createdTitle.innerHTML = `<i class="fas fa-building"></i> ${name}`;
+      if (createdLoc) createdLoc.textContent = location;
+      if (createdBudget) createdBudget.textContent = formattedBudget;
+      if (createdArea) createdArea.textContent = `${parseFloat(area).toLocaleString()} sq ft`;
+      if (createdPriority) createdPriority.textContent = priority.split('(')[0];
+      if (createdDesc) createdDesc.innerHTML = `<em>"${desc}"</em>`;
+
+      // Select video source based on project type
       if (videoSrc) {
-        videoSrc.src = (choice.includes('Commercial') || choice.includes('Infrastructure')) ? '/cinematic_video.mp4' : '/final_vdo.mp4';
+        videoSrc.src = (type.includes('Commercial') || type.includes('Infrastructure')) ? '/cinematic_video.mp4' : '/final_vdo.mp4';
       }
+
       if (videoPlayer) {
         videoPlayer.load();
         videoPlayer.play().catch(e => console.log('Autoplay handled:', e));
       }
 
-      if (resultContainer) resultContainer.style.display = 'block';
-      showToast(`✅ Generated AI 3D Construction Video Pass for ${choice}!`, 'success');
-    }, 1400);
+      if (resultCard) resultCard.style.display = 'block';
+      showToast(`🎉 Project "${name}" created & AI 3D Video Pass Generated!`, 'success');
+
+      resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 1500);
   });
 }
 

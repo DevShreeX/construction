@@ -115,92 +115,136 @@ export function workspacePage() {
     <section class="section">
       <div class="container" style="max-width:950px">
         <h1 class="text-center animate-in">Project Workspace & AI Visualization Studio</h1>
-        <p class="text-center animate-in" style="margin-top:8px;margin-bottom:36px">Create construction projects, set architectural priorities, and generate AI 3D short video walkthroughs.</p>
-        
-        <!-- AI 3D Construction Video Generator Card -->
-        <div class="card animate-in" style="margin-bottom:28px;background:rgba(15,23,42,0.85);border:1px solid rgba(56,189,248,0.35);box-shadow:0 12px 36px rgba(0,0,0,0.6)">
+        <p class="text-center animate-in" style="margin-top:8px;margin-bottom:36px">Enter your project specifications below. Our AI engine will create your project and generate a custom 3D construction short video based on your input.</p>
+
+        <!-- Create New Project & AI Construction Video Generator Card -->
+        <div class="card animate-in" style="background:rgba(15,23,42,0.85);border:1px solid rgba(56,189,248,0.35);box-shadow:0 12px 36px rgba(0,0,0,0.6)">
           <div class="flex-between" style="flex-wrap:wrap;gap:12px;margin-bottom:16px">
             <div>
               <h3 style="margin:0;display:flex;align-items:center;gap:8px">
-                <i class="fas fa-film" style="color:var(--primary)"></i> 
-                AI 3D Construction Short Video Generator
+                <i class="fas fa-rocket" style="color:var(--primary)"></i> 
+                Create New Project & Generate AI 3D Short Video
               </h3>
               <p class="text-muted" style="font-size:0.85rem;margin-top:2px">
-                Select your architectural choice & rendering priority to generate custom 3D short video walkthroughs.
+                Provide your project details to create your project entry and generate a matching 3D short video walkthrough.
               </p>
             </div>
-            <span class="badge badge-accent" style="padding:6px 14px"><i class="fas fa-brain"></i> AI Neural Render Engine Active</span>
+            <span class="badge badge-accent" style="padding:6px 14px"><i class="fas fa-wand-magic-sparkles"></i> Content-Based AI Video</span>
           </div>
 
-          <form id="aiVdoGeneratorForm">
+          <form id="projectForm" style="margin-top:16px">
+            <div class="form-group">
+              <label class="form-label">Project Name</label>
+              <input class="form-input" id="projName" placeholder="e.g. Skyline Commercial Tower & Tech Park" required>
+            </div>
+
             <div class="form-row">
-              <!-- Architectural Choice -->
               <div class="form-group">
-                <label class="form-label"><i class="fas fa-building" style="color:var(--gold);margin-right:6px"></i> Selected Architectural Choice</label>
-                <select id="vdoChoiceSelect" class="form-select" required>
-                  <option value="Commercial High-Rise Tower">🏢 Commercial High-Rise Tower</option>
-                  <option value="Residential Luxury Villa Complex">🏡 Residential Luxury Villa Complex</option>
-                  <option value="Infrastructure, Bridge & Highway Pass">🛣️ Infrastructure, Bridge & Highway Pass</option>
-                  <option value="Industrial Smart Manufacturing Facility">🏬 Industrial Smart Manufacturing Facility</option>
-                  <option value="Eco-Friendly Sustainable Resort">🌿 Eco-Friendly Sustainable Resort</option>
+                <label class="form-label">Project Type & Architecture</label>
+                <select class="form-select" id="projType" required>
+                  <option value="">Select Type</option>
+                  <option value="Commercial High-Rise Complex">🏢 Commercial High-Rise Complex</option>
+                  <option value="Residential Luxury Villa & Apartments">🏡 Residential Luxury Villa & Apartments</option>
+                  <option value="Industrial Smart Factory & Warehouse">🏬 Industrial Smart Factory & Warehouse</option>
+                  <option value="Infrastructure Highway & Bridge Pass">🛣️ Infrastructure Highway & Bridge Pass</option>
+                  <option value="Eco-Friendly Green Building Resort">🌿 Eco-Friendly Green Building Resort</option>
                 </select>
               </div>
-
-              <!-- Rendering Priority -->
               <div class="form-group">
-                <label class="form-label"><i class="fas fa-layer-group" style="color:var(--accent);margin-right:6px"></i> Generation Priority</label>
-                <select id="vdoPrioritySelect" class="form-select" required>
+                <label class="form-label">Location</label>
+                <input class="form-input" id="projLocation" placeholder="e.g. Guindy, Chennai, Tamil Nadu" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Budget (₹ INR)</label>
+                <input class="form-input" type="number" id="projBudget" placeholder="75000000" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Plot / Built-up Area (sq ft)</label>
+                <input class="form-input" type="number" id="projArea" placeholder="12500" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label"><i class="fas fa-layer-group" style="color:var(--accent);margin-right:6px"></i> AI Rendering Priority</label>
+                <select id="projPriority" class="form-select">
                   <option value="High Priority (1080p Fast Render)">⚡ High Priority (1080p Fast Render)</option>
                   <option value="Cinematic Priority (4K Ray-Tracing)">🎬 Cinematic Priority (4K Ray-Tracing)</option>
                   <option value="Structural Priority (Physics & Steel Simulation)">🏗️ Structural Priority (Physics Simulation)</option>
                   <option value="Environmental Priority (Daylight & Solar Shadows)">☀️ Environmental Priority (Daylight Pass)</option>
                 </select>
               </div>
-            </div>
-
-            <div class="form-row">
               <div class="form-group">
-                <label class="form-label"><i class="fas fa-clock" style="color:var(--success);margin-right:6px"></i> Video Format & Length</label>
-                <select id="vdoLengthSelect" class="form-select">
-                  <option value="Short Cinematic Preview (15 sec)">⏱️ Short Cinematic Preview (15 sec)</option>
-                  <option value="Full Architectural Walkthrough (30 sec)">🎥 Full Architectural Walkthrough (30 sec)</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label"><i class="fas fa-sliders" style="color:var(--primary);margin-right:6px"></i> Camera Motion</label>
-                <select id="vdoCameraMotion" class="form-select">
-                  <option value="Aerial Drone Flyover">🚁 Aerial Drone Flyover</option>
-                  <option value="360° Orbit Rotation">🔄 360° Orbit Rotation</option>
-                  <option value="Interior Ground Walkthrough">🚶 Interior Ground Walkthrough</option>
-                </select>
+                <label class="form-label">Estimated Start Date</label>
+                <input class="form-input" type="date" id="projStartDate" required>
               </div>
             </div>
 
-            <button type="submit" id="generateVdoSubmitBtn" class="btn btn-primary btn-block pulse-btn" style="margin-top:8px">
-              <i class="fas fa-wand-magic-sparkles"></i> Generate AI 3D Construction Short Video
+            <div class="form-group">
+              <label class="form-label">Project Requirements & Design Vision</label>
+              <textarea class="form-textarea" id="projDesc" rows="3" placeholder="Specify structural details, facade style, daylight passes..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block pulse-btn" style="font-size:1.05rem;padding:16px">
+              <i class="fas fa-wand-magic-sparkles"></i> Create Project & Generate Custom AI 3D Short Video
             </button>
           </form>
 
-          <!-- AI Loading State Container -->
-          <div id="aiVdoLoadingState" style="display:none;margin-top:20px;padding:24px;background:rgba(15,23,42,0.9);border-radius:var(--radius-md);border:1px solid var(--border-glow);text-align:center">
-            <div class="loader-spinner" style="margin:0 auto 12px"></div>
-            <h4 style="color:var(--primary)" id="aiLoadingText">Generating 3D AI Video Pass...</h4>
-            <p class="text-muted" style="font-size:0.85rem;margin-top:4px">Compiling 3D physics, camera flight paths, and architectural daylight shaders.</p>
+          <!-- AI Rendering Status Loader -->
+          <div id="projectAiLoading" style="display:none;margin-top:24px;padding:28px;background:rgba(15,23,42,0.9);border-radius:var(--radius-md);border:1px solid var(--border-glow);text-align:center">
+            <div class="loader-spinner" style="margin:0 auto 14px"></div>
+            <h4 style="color:var(--primary)" id="projectAiLoadingTitle">AI Neural Engine Compiling 3D Construction Video...</h4>
+            <p class="text-muted" style="font-size:0.85rem;margin-top:6px" id="projectAiLoadingSub">Processing project specs, structural physics, and camera flight passes...</p>
           </div>
 
-          <!-- AI Generated Short Video Player Container -->
-          <div id="aiVdoResultContainer" style="display:none;margin-top:24px;border-radius:var(--radius-md);overflow:hidden;border:2px solid var(--primary);box-shadow:0 8px 32px rgba(56,189,248,0.25)">
-            <div class="flex-between" style="padding:12px 16px;background:rgba(15,23,42,0.95);border-bottom:1px solid var(--border)">
-              <div>
-                <strong style="color:var(--primary)" id="generatedVdoTitle"><i class="fas fa-video"></i> Commercial High-Rise Tower</strong>
-                <p class="text-muted" style="font-size:0.8rem;margin:0" id="generatedVdoMeta">Priority: High Priority (1080p Fast Render) | Aerial Drone Flyover</p>
+          <!-- Created Project & Generated Video Display Container -->
+          <div id="projectResultCard" style="display:none;margin-top:28px;border-radius:var(--radius-md);overflow:hidden;border:2px solid var(--primary);box-shadow:0 12px 40px rgba(56,189,248,0.3)">
+            <div style="padding:20px;background:linear-gradient(135deg, rgba(15,23,42,0.95), rgba(30,41,59,0.95));border-bottom:1px solid var(--border)">
+              <div class="flex-between" style="flex-wrap:wrap;gap:12px;margin-bottom:12px">
+                <h3 style="margin:0;color:var(--primary)" id="createdProjTitle">
+                  <i class="fas fa-building"></i> Skyline Commercial Tower
+                </h3>
+                <span class="badge badge-success" style="font-size:0.85rem"><i class="fas fa-circle-check"></i> Project Created & Video Ready</span>
               </div>
-              <span class="badge badge-success"><i class="fas fa-check"></i> AI Video Generated</span>
+
+              <div class="grid grid-4" style="gap:12px;margin-top:12px">
+                <div class="card card-flat" style="padding:10px 14px">
+                  <span class="text-muted" style="font-size:0.75rem">Location</span>
+                  <strong style="display:block;color:#fff;font-size:0.9rem" id="createdProjLoc">Chennai, Tamil Nadu</strong>
+                </div>
+                <div class="card card-flat" style="padding:10px 14px">
+                  <span class="text-muted" style="font-size:0.75rem">Budget</span>
+                  <strong style="display:block;color:var(--gold);font-size:0.9rem" id="createdProjBudget">₹7,50,00,000</strong>
+                </div>
+                <div class="card card-flat" style="padding:10px 14px">
+                  <span class="text-muted" style="font-size:0.75rem">Built-up Area</span>
+                  <strong style="display:block;color:var(--accent);font-size:0.9rem" id="createdProjArea">12,500 sq ft</strong>
+                </div>
+                <div class="card card-flat" style="padding:10px 14px">
+                  <span class="text-muted" style="font-size:0.75rem">Priority</span>
+                  <strong style="display:block;color:var(--success);font-size:0.9rem" id="createdProjPriority">High Priority</strong>
+                </div>
+              </div>
+
+              <p style="margin-top:12px;font-size:0.85rem;color:var(--text-secondary)" id="createdProjDesc">
+                <em>"Project description details..."</em>
+              </p>
             </div>
 
+            <!-- Custom AI Generated Construction Video Player -->
             <div style="position:relative;background:#000">
-              <video id="workspaceAiVideoPlayer" controls playsinline preload="auto" style="width:100%;max-height:420px;display:block">
-                <source id="workspaceVideoSrc" src="/cinematic_video.mp4" type="video/mp4">
+              <div class="flex-between" style="padding:10px 16px;background:rgba(0,0,0,0.85);position:absolute;top:0;left:0;right:0;z-index:10">
+                <span style="color:var(--primary);font-weight:700;font-size:0.85rem">
+                  <i class="fas fa-play-circle" style="margin-right:6px"></i> AI GENERATED 3D SHORT VIDEO WALKTHROUGH
+                </span>
+                <span class="badge badge-primary" style="font-size:0.75rem">1080p HD Video Pass</span>
+              </div>
+              
+              <video id="projectAiVideoPlayer" controls playsinline preload="auto" style="width:100%;max-height:450px;display:block;padding-top:40px">
+                <source id="projectVideoSrc" src="/cinematic_video.mp4" type="video/mp4">
                 <source src="/final_vdo.mp4" type="video/mp4">
                 Your browser does not support HTML5 video.
               </video>
@@ -208,27 +252,6 @@ export function workspacePage() {
           </div>
         </div>
 
-        <!-- Create New Project Card -->
-        <div class="card animate-in">
-          <h3><i class="fas fa-plus-circle" style="color:var(--primary);margin-right:8px"></i> Create New Project</h3>
-          <form id="projectForm" style="margin-top:16px">
-            <div class="form-group"><label class="form-label">Project Name</label><input class="form-input" placeholder="e.g. Modern Office Complex" required></div>
-            <div class="form-row">
-              <div class="form-group"><label class="form-label">Type</label><select class="form-select" required><option value="">Select</option><option>Residential</option><option>Commercial</option><option>Industrial</option><option>Infrastructure</option></select></div>
-              <div class="form-group"><label class="form-label">Location</label><input class="form-input" placeholder="City, Country" required></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label class="form-label">Budget (₹ INR)</label><input class="form-input" type="number" placeholder="5000000" required></div>
-              <div class="form-group"><label class="form-label">Area (sq ft)</label><input class="form-input" type="number" placeholder="5000" required></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label class="form-label">Start Date</label><input class="form-input" type="date" required></div>
-              <div class="form-group"><label class="form-label">End Date</label><input class="form-input" type="date" required></div>
-            </div>
-            <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" rows="3" placeholder="Project details..." required></textarea></div>
-            <button type="submit" class="btn btn-accent btn-block"><i class="fas fa-rocket"></i> Create Project</button>
-          </form>
-        </div>
       </div>
     </section>`;
 }
