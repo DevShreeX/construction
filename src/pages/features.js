@@ -108,23 +108,57 @@ export function insightsPage() {
             </form>
           </div>
 
-          <!-- Material Recommendations -->
-          <div class="card animate-in delay-1">
-            <h3 style="margin-bottom:16px"><i class="fas fa-boxes-stacked" style="color:var(--gold);margin-right:8px"></i> Material Recommendations</h3>
-            <form id="recommendForm">
-              <div class="form-row">
-                <div class="form-group"><label class="form-label">Project Type</label><select class="form-select" required><option value="">Select</option><option>Residential</option><option>Commercial</option><option>Industrial</option></select></div>
-                <div class="form-group"><label class="form-label">Budget Tier</label><select class="form-select" required><option value="">Select</option><option>₹25 Lakhs – ₹1 Crore</option><option>₹1 Crore – ₹5 Crores</option><option>₹5 Crores+</option></select></div>
+          <!-- Material Brand & Price Rate Studio -->
+          <div class="card animate-in delay-1" style="background:rgba(15,23,42,0.9);border:1px solid rgba(56,189,248,0.3);box-shadow:0 12px 36px rgba(0,0,0,0.5)">
+            <div class="flex-between" style="flex-wrap:wrap;gap:12px;margin-bottom:16px">
+              <div>
+                <h3 style="margin:0;display:flex;align-items:center;gap:8px">
+                  <i class="fas fa-boxes-stacked" style="color:var(--gold)"></i> 
+                  Material Brand & Price Rate Recommendation Studio
+                </h3>
+                <p class="text-muted" style="font-size:0.85rem;margin-top:2px">
+                  Compare top certified market brands for Cement, Steel, Bricks, Wood, Cupboards & Interiors with photos and current price rates.
+                </p>
               </div>
-              <div class="form-group"><label class="form-label">Construction Phase</label><select class="form-select" required><option value="">Select</option><option>Foundation</option><option>Structure</option><option>Electrical</option><option>Finishing</option><option>All</option></select></div>
-              <div class="form-group"><label class="form-label">Requirements</label><textarea class="form-textarea" rows="4" placeholder="Eco-friendly, fire-rated, high durability..."></textarea></div>
-              <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-clipboard-list"></i> Get Material List</button>
-            </form>
+              <span class="badge badge-success"><i class="fas fa-tags"></i> Live Market Prices (₹ INR)</span>
+            </div>
+
+            <!-- Search & Filter Controls -->
+            <div style="margin-bottom:20px">
+              <div class="form-group" style="margin-bottom:12px">
+                <input type="text" id="materialSearchInput" class="form-input" placeholder="🔍 Search by brand name (e.g. UltraTech, Tata Tiscon, Godrej Interio, Asian Paints...)" style="font-size:0.95rem;padding:12px 16px">
+              </div>
+
+              <div class="flex-between" style="gap:8px;overflow-x:auto;padding-bottom:8px" id="categoryFilterBar">
+                <button class="btn btn-primary btn-sm filter-tab active" data-cat="all"><i class="fas fa-th-large"></i> All Materials</button>
+                <button class="btn btn-outline btn-sm filter-tab" data-cat="cement"><i class="fas fa-cubes"></i> Cement Bags</button>
+                <button class="btn btn-outline btn-sm filter-tab" data-cat="steel"><i class="fas fa-bars"></i> Steel Rods (TMT)</button>
+                <button class="btn btn-outline btn-sm filter-tab" data-cat="bricks"><i class="fas fa-border-all"></i> Bricks & Blocks</button>
+                <button class="btn btn-outline btn-sm filter-tab" data-cat="wood"><i class="fas fa-tree"></i> Wood & Timber</button>
+                <button class="btn btn-outline btn-sm filter-tab" data-cat="cupboard"><i class="fas fa-door-closed"></i> Cupboards & Cabinets</button>
+                <button class="btn btn-outline btn-sm filter-tab" data-cat="interiors"><i class="fas fa-paint-roller"></i> Interiors & Tiles</button>
+              </div>
+            </div>
+
+            <!-- Material Cards Grid -->
+            <div class="grid grid-3" id="materialCatalogGrid" style="gap:16px">
+              <!-- Dynamically populated via JS -->
+            </div>
+
+            <!-- Selected Brand Choice Drawer Summary -->
+            <div id="selectedBrandSummary" style="display:none;margin-top:24px;padding:18px;background:rgba(30,41,59,0.95);border-radius:var(--radius-md);border:1px solid var(--primary)">
+              <div class="flex-between" style="flex-wrap:wrap;gap:12px;margin-bottom:10px">
+                <h4 style="margin:0;color:var(--primary)"><i class="fas fa-clipboard-check"></i> Your Selected Brand Choices</h4>
+                <button id="exportBrandListBtn" class="btn btn-accent btn-sm"><i class="fas fa-download"></i> Export Selected Material Plan</button>
+              </div>
+              <div id="selectedBrandItemsList" style="display:flex;flex-wrap:wrap;gap:8px">
+                <!-- User choices rendered here -->
+              </div>
+            </div>
           </div>
         </div>
 
         <div id="estimateResults" style="display:none;margin-top:24px"><div id="estimateContent"></div></div>
-        <div id="recommendations" style="display:none;margin-top:24px"><div id="recommendContent"></div></div>
       </div>
     </section>`;
 }

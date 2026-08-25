@@ -236,6 +236,10 @@ function setupGlobalListeners() {
       setupWorkspaceAiVideoGenerator();
     }
 
+    if (path === '/insights' || path === '/resources') {
+      initMaterialBrandStudio();
+    }
+
     if (path === '/backend') {
       initBackendConsolePage();
     }
@@ -1747,5 +1751,170 @@ function setupWorkspaceAiVideoGenerator() {
     }, 1500);
   });
 }
+
+// ==================== Material Brand & Price Recommendation Studio ====================
+const MATERIAL_BRANDS = [
+  // CEMENT BAGS
+  { id: 'c1', category: 'cement', brand: 'UltraTech Cement Super', grade: 'OPC 53 Grade | High Early Strength', price: 385, unit: '50kg bag', image: '/images/cement_brand.png', rating: 4.9, bestFor: 'Columns, Heavy Slabs & Structural Concrete' },
+  { id: 'c2', category: 'cement', brand: 'Ramco Supergrade', grade: 'PPC Grade | Weather Resistance', price: 375, unit: '50kg bag', image: '/images/cement_brand.png', rating: 4.8, bestFor: 'Plastering & Brick Masonry Work' },
+  { id: 'c3', category: 'cement', brand: 'Dalmia DSP Cement', grade: 'PPC Heavy Duty | Anti-Corrosion Shield', price: 365, unit: '50kg bag', image: '/images/cement_brand.png', rating: 4.7, bestFor: 'Waterproof Concrete Slabs & Roofing' },
+  { id: 'c4', category: 'cement', brand: 'ACC Concrete+ Gold', grade: 'OPC 53 Grade | Micro-Fiber Shield', price: 380, unit: '50kg bag', image: '/images/cement_brand.png', rating: 4.8, bestFor: 'Multi-Storey Frame Structures' },
+  { id: 'c5', category: 'cement', brand: 'Chettinad Super Power', grade: 'PPC High Density Fine Grind', price: 360, unit: '50kg bag', image: '/images/cement_brand.png', rating: 4.6, bestFor: 'General Wall Construction' },
+
+  // STEEL RODS / TMT BARS
+  { id: 's1', category: 'steel', brand: 'Tata Tiscon 550SD TMT', grade: 'Fe-550SD Super Ductile | Earthquake Resistant', price: 58500, unit: 'Ton', image: '/images/steel_brand.png', rating: 5.0, bestFor: 'High-Rise Columns & Main Beam Ribs' },
+  { id: 's2', category: 'steel', brand: 'JSW Neosteel 550D', grade: 'Fe-550D Grade | Pure Steel Billets', price: 56200, unit: 'Ton', image: '/images/steel_brand.png', rating: 4.9, bestFor: 'Residential Slabs & Lintels' },
+  { id: 's3', category: 'steel', brand: 'SAIL TMT EQR', grade: 'Fe-500D Grade | High Tensile Strength', price: 54800, unit: 'Ton', image: '/images/steel_brand.png', rating: 4.8, bestFor: 'Heavy Infrastructure & Foundations' },
+  { id: 's4', category: 'steel', brand: 'Kamdhenu NXT 500D', grade: 'Double Ribbed Angle TMT', price: 53900, unit: 'Ton', image: '/images/steel_brand.png', rating: 4.7, bestFor: 'Standard Framing & Footings' },
+  { id: 's5', category: 'steel', brand: 'Vizag Steel (RINL)', grade: 'Fe-500 Ductile Steel Rods', price: 55100, unit: 'Ton', image: '/images/steel_brand.png', rating: 4.8, bestFor: 'Commercial Foundation Pillars' },
+
+  // BRICKS & BLOCKS
+  { id: 'b1', category: 'bricks', brand: 'Wienerberger Porotherm Smart Bricks', grade: 'Hollow Clay Block | Thermal Insulation', price: 14, unit: 'piece', image: '/images/bricks_brand.png', rating: 4.9, bestFor: 'Eco-Friendly Exterior Walls' },
+  { id: 'b2', category: 'bricks', brand: 'UltraTech Aerocon AAC Blocks', grade: 'Lightweight Autoclaved Aerated Concrete', price: 65, unit: 'block', image: '/images/bricks_brand.png', rating: 4.8, bestFor: 'High-Rise Partition Walls' },
+  { id: 'b3', category: 'bricks', brand: 'Red Wirecut Chamber Bricks', grade: 'First Class Kiln Fired Clay', price: 9, unit: 'piece', image: '/images/bricks_brand.png', rating: 4.6, bestFor: 'Load Bearing Exterior Brickwork' },
+  { id: 'b4', category: 'bricks', brand: 'Magicrete High-Density AAC Blocks', grade: 'Fire Rated 4-Hour Class', price: 62, unit: 'block', image: '/images/bricks_brand.png', rating: 4.7, bestFor: 'Interior Soundproof Walls' },
+
+  // WOOD & TIMBER
+  { id: 'w1', category: 'wood', brand: 'CenturyPly Club Prime (IS:710)', grade: 'Boiling Water Proof (BWP) Marine Plywood', price: 115, unit: 'sq ft', image: '/images/wood_brand.png', rating: 5.0, bestFor: 'Modular Kitchens & Bathrooms' },
+  { id: 'w2', category: 'wood', brand: 'Burma Teak Wood Planks', grade: 'Natural Aged Teak | Termite Proof', price: 3200, unit: 'cu ft', image: '/images/wood_brand.png', rating: 4.9, bestFor: 'Main Entrance Doors & Frames' },
+  { id: 'w3', category: 'wood', brand: 'Greenply BWP Marine Plywood', grade: 'E0 Emission Certified | 25 Year Warranty', price: 105, unit: 'sq ft', image: '/images/wood_brand.png', rating: 4.8, bestFor: 'Living Room Furniture & Paneling' },
+  { id: 'w4', category: 'wood', brand: 'Kitply Vista Marine Plywood', grade: 'IS:710 Phenolic Resin Bonded', price: 95, unit: 'sq ft', image: '/images/wood_brand.png', rating: 4.7, bestFor: 'Interior Wardrobes & Shelving' },
+
+  // CUPBOARDS & INTERIOR CABINETS
+  { id: 'cp1', category: 'cupboard', brand: 'Godrej Interio Modular Sliding Wardrobe', grade: 'CRCA Steel Frame + Laminated Shutters', price: 42500, unit: 'unit', image: '/images/wood_brand.png', rating: 4.9, bestFor: 'Master Bedroom Storage' },
+  { id: 'cp2', category: 'cupboard', brand: 'Sleek by Asian Paints Modular Kitchen', grade: 'Soft-Close Hardware | Acrylic Finish', price: 1850, unit: 'sq ft', image: '/images/wood_brand.png', rating: 4.9, bestFor: 'Custom Modular Kitchen Cabinets' },
+  { id: 'cp3', category: 'cupboard', brand: 'Durian Engineered Wood Cupboard', grade: '4-Door Mirror Finish | Scratch Resistant', price: 35000, unit: 'unit', image: '/images/wood_brand.png', rating: 4.8, bestFor: 'Guest & Bedroom Cupboards' },
+  { id: 'cp4', category: 'cupboard', brand: 'Featherlite Executive Storage Unit', grade: 'HDF High Density Board | Metal Handles', price: 28900, unit: 'unit', image: '/images/wood_brand.png', rating: 4.7, bestFor: 'Office & Study Storage' },
+
+  // INTERIORS, PAINTS & TILES
+  { id: 'i1', category: 'interiors', brand: 'Asian Paints Royale Luxury Emulsion', grade: 'Teflon Surface Protector | Washable', price: 620, unit: 'Liter', image: '/images/bricks_brand.png', rating: 4.9, bestFor: 'Interior Living Wall Coating' },
+  { id: 'i2', category: 'interiors', brand: 'Somany Duragres Vitrified Tiles', grade: 'GVT Vitrified | 600x1200mm Anti-Skid', price: 78, unit: 'sq ft', image: '/images/bricks_brand.png', rating: 4.8, bestFor: 'Living Room & Bedroom Flooring' },
+  { id: 'i3', category: 'interiors', brand: 'Kajaria Marble Finish Glazed Tiles', grade: 'High Gloss Polish | Stain Resistant', price: 85, unit: 'sq ft', image: '/images/bricks_brand.png', rating: 4.9, bestFor: 'Bathroom & Accent Wall Tiles' },
+  { id: 'i4', category: 'interiors', brand: 'Berger Silk Glamor Luxury Paint', grade: '100% Acrylic Sheen | Anti-Fungal', price: 580, unit: 'Liter', image: '/images/bricks_brand.png', rating: 4.7, bestFor: 'Premium Interior Wall Finish' },
+  { id: 'i5', category: 'interiors', brand: 'Havells Modular Switches & Plates Set', grade: 'Shockproof Flame Retardant Polycarbonate', price: 2450, unit: 'set', image: '/images/steel_brand.png', rating: 4.8, bestFor: 'Complete Room Electrical Accessories' }
+];
+
+let selectedBrandsStore = [];
+
+function initMaterialBrandStudio() {
+  const grid = document.getElementById('materialCatalogGrid');
+  if (!grid) return;
+
+  const searchInput = document.getElementById('materialSearchInput');
+  const filterTabs = document.querySelectorAll('.filter-tab');
+
+  let activeCategory = 'all';
+  let searchQuery = '';
+
+  function renderGrid() {
+    const filtered = MATERIAL_BRANDS.filter(item => {
+      const matchCat = activeCategory === 'all' || item.category === activeCategory;
+      const matchSearch = item.brand.toLowerCase().includes(searchQuery) || item.grade.toLowerCase().includes(searchQuery);
+      return matchCat && matchSearch;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:32px" class="text-muted"><i class="fas fa-box-open" style="font-size:2rem;margin-bottom:8px;display:block"></i>No matching material brands found for "${searchQuery}".</div>`;
+      return;
+    }
+
+    grid.innerHTML = filtered.map(item => {
+      const isSelected = selectedBrandsStore.some(b => b.id === item.id);
+      const formattedPrice = formatCurrency(item.price);
+      return `
+        <div class="card card-flat" style="padding:14px;background:rgba(15,23,42,0.8);border:1px solid ${isSelected ? 'var(--primary)' : 'var(--border)'};display:flex;flex-direction:column;justify-content:space-between;transition:all 0.3s ease">
+          <div>
+            <div style="position:relative;border-radius:var(--radius-sm);overflow:hidden;margin-bottom:12px;height:140px;background:#0f172a">
+              <img src="${item.image}" alt="${item.brand}" style="width:100%;height:100%;object-fit:cover">
+              <span class="badge badge-accent" style="position:absolute;top:8px;right:8px;font-size:0.75rem;box-shadow:0 4px 12px rgba(0,0,0,0.5)">
+                <i class="fas fa-star" style="color:#f59e0b"></i> ${item.rating}
+              </span>
+            </div>
+
+            <span class="badge badge-primary" style="font-size:0.7rem;text-transform:uppercase;margin-bottom:6px">${item.category}</span>
+            <h4 style="margin:4px 0 6px;font-size:1rem;color:#fff">${item.brand}</h4>
+            <p class="text-muted" style="font-size:0.8rem;margin-bottom:8px"><strong>Grade:</strong> ${item.grade}</p>
+            <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:12px"><em>Best for: ${item.bestFor}</em></p>
+          </div>
+
+          <div>
+            <div class="flex-between" style="margin-bottom:12px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08)">
+              <span class="text-muted" style="font-size:0.8rem">Price Rate</span>
+              <strong style="color:var(--gold);font-size:1.05rem">${formattedPrice} <span style="font-size:0.75rem;color:var(--text-muted)">/ ${item.unit}</span></strong>
+            </div>
+
+            <button class="btn ${isSelected ? 'btn-success' : 'btn-primary'} btn-block btn-sm select-brand-btn" data-id="${item.id}">
+              <i class="fas ${isSelected ? 'fa-check-circle' : 'fa-plus'}"></i> ${isSelected ? 'Brand Selected' : 'Select Brand Choice'}
+            </button>
+          </div>
+        </div>`;
+    }).join('');
+
+    attachCardListeners();
+  }
+
+  function attachCardListeners() {
+    document.querySelectorAll('.select-brand-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        const item = MATERIAL_BRANDS.find(b => b.id === id);
+        if (!item) return;
+
+        const idx = selectedBrandsStore.findIndex(b => b.id === id);
+        if (idx >= 0) {
+          selectedBrandsStore.splice(idx, 1);
+          showToast(`Removed ${item.brand}`, 'info');
+        } else {
+          selectedBrandsStore.push(item);
+          showToast(`Added ${item.brand} choice!`, 'success');
+        }
+        renderGrid();
+        renderSummaryDrawer();
+      });
+    });
+  }
+
+  function renderSummaryDrawer() {
+    const summaryBox = document.getElementById('selectedBrandSummary');
+    const listContainer = document.getElementById('selectedBrandItemsList');
+    if (!summaryBox || !listContainer) return;
+
+    if (selectedBrandsStore.length === 0) {
+      summaryBox.style.display = 'none';
+      return;
+    }
+
+    summaryBox.style.display = 'block';
+    listContainer.innerHTML = selectedBrandsStore.map(item => `
+      <div style="background:rgba(15,23,42,0.9);padding:6px 12px;border-radius:var(--radius-sm);border:1px solid var(--primary);font-size:0.85rem;display:flex;align-items:center;gap:8px">
+        <span style="color:var(--gold);font-weight:700">${item.brand}</span>
+        <span style="color:var(--text-muted)">(${formatCurrency(item.price)} / ${item.unit})</span>
+      </div>
+    `).join('');
+  }
+
+  // Event Listeners
+  filterTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      filterTabs.forEach(t => { t.classList.remove('active', 'btn-primary'); t.classList.add('btn-outline'); });
+      tab.classList.remove('btn-outline'); tab.classList.add('active', 'btn-primary');
+      activeCategory = tab.getAttribute('data-cat');
+      renderGrid();
+    });
+  });
+
+  searchInput?.addEventListener('input', (e) => {
+    searchQuery = e.target.value.toLowerCase().trim();
+    renderGrid();
+  });
+
+  document.getElementById('exportBrandListBtn')?.addEventListener('click', () => {
+    if (selectedBrandsStore.length === 0) return;
+    showToast(`📄 Exporting ${selectedBrandsStore.length} selected material brand specifications...`, 'success');
+  });
+
+  renderGrid();
+}
+
 
 
