@@ -19,9 +19,7 @@ export default defineConfig({
     target: 'es2022',
     rollupOptions: {
       input: {
-        main: './index.html',
-        studentRecord: './student-record.html',
-        studentRecordIndex: './student record/index.html'
+        main: './index.html'
       }
     }
   },
