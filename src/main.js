@@ -6,6 +6,7 @@ import { aboutPage, projectsPage, contactPage, feedbackPage } from './pages/publ
 import { visionPage, insightsPage, resourcesPage, reportPage, morePage } from './pages/features.js';
 import { landAnalyzerPage } from './pages/landAnalyzer.js';
 import { backendPage } from './pages/backend.js';
+import { floorPlansPage, setupFloorPlanPageHandlers } from './pages/floorPlans.js';
 import { adminLoginPage, clientLoginPage, clientRegisterPage, adminDashPage, clientDashPage, workspacePage } from './pages/auth.js';
 import { 
   auth, 
@@ -37,6 +38,7 @@ registerRoute('/contact', contactPage);
 registerRoute('/feedback', feedbackPage);
 registerRoute('/land-analyzer', landAnalyzerPage);
 registerRoute('/backend', backendPage);
+registerRoute('/floor-plans', floorPlansPage);
 registerRoute('/vision', visionPage);
 registerRoute('/insights', insightsPage);
 registerRoute('/resources', resourcesPage);
@@ -242,6 +244,10 @@ function setupGlobalListeners() {
 
     if (path === '/backend') {
       initBackendConsolePage();
+    }
+
+    if (path === '/floor-plans') {
+      setupFloorPlanPageHandlers();
     }
   });
 }

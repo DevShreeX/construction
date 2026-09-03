@@ -57,13 +57,13 @@ export function backendPage() {
         <div class="grid grid-4" style="margin-bottom:28px">
           <div class="dash-stat animate-in">
             <h4>Collections</h4>
-            <div class="value" style="color:var(--accent)" id="statCollections">5</div>
+            <div class="value" style="color:var(--accent)" id="statCollections">6</div>
             <div class="trend trend-up"><i class="fas fa-layer-group"></i> Active collections</div>
           </div>
           <div class="dash-stat animate-in delay-1">
-            <h4>Stored Documents</h4>
-            <div class="value" style="color:var(--primary)" id="statDocuments">0</div>
-            <div class="trend trend-up"><i class="fas fa-file-code"></i> Total records</div>
+            <h4>Floor Plan API</h4>
+            <div class="value" style="color:var(--gold)">Active</div>
+            <div class="trend trend-up"><i class="fas fa-drafting-compass"></i> 10-Plan Generator</div>
           </div>
           <div class="dash-stat animate-in delay-2">
             <h4>Storage Status</h4>
@@ -74,6 +74,26 @@ export function backendPage() {
             <h4>Sync Latency</h4>
             <div class="value" style="color:var(--gold)" id="statLatency">12 ms</div>
             <div class="trend"><i class="fas fa-bolt"></i> Real-time sync</div>
+          </div>
+        </div>
+
+        <!-- Indian Floor Plans API Engine Backend Card -->
+        <div class="card card-glass animate-in" style="margin-bottom:28px;border:1px solid rgba(56,189,248,0.3)">
+          <div class="flex-between" style="flex-wrap:wrap;gap:16px">
+            <div style="display:flex;align-items:center;gap:16px">
+              <div style="width:52px;height:52px;border-radius:14px;background:rgba(56,189,248,0.15);display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:var(--primary);border:1px solid rgba(56,189,248,0.3)">
+                <i class="fas fa-drafting-compass"></i>
+              </div>
+              <div>
+                <h3 style="margin:0;font-size:1.2rem">Indian Floor Plans Backend API Service</h3>
+                <p class="text-muted" style="margin:4px 0 0;font-size:0.85rem">Reference: <strong style="color:var(--gold)">IndianFloorPlans.com</strong> | Output: <span class="badge badge-success" style="font-size:0.75rem">10 Executable Blueprint JSON Options</span></p>
+              </div>
+            </div>
+            <div>
+              <a data-route="/floor-plans" class="btn btn-primary btn-sm">
+                <i class="fas fa-eye"></i> Launch Floor Plan Studio
+              </a>
+            </div>
           </div>
         </div>
 
