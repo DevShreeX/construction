@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Forzex Platform — Modern AI-assisted application, construction, and career optimization platform.">
+    <meta name="theme-color" content="#071021">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Forzex">
+
+    <title>Forzex — Construction & AI Platform</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
+    <link rel="apple-touch-icon" href="/icons/icon-512.png">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Leaflet.js & Turf.js (Interactive Maps & Analytics) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/src/styles/index.css">
+</head>
+<body>
+    <!-- Interactive Front Intro Overlay -->
+    <div id="intro-video-overlay" class="intro-overlay">
+        <div class="intro-backdrop"></div>
+        
+        <!-- Interactive Touch/Click Prompt Card -->
+        <div id="intro-start-prompt" class="intro-prompt-card">
+            <div class="intro-logo-container blink-glow" id="intro-touch-trigger">
+                <i class="fas fa-brain-circuit" style="font-size: 3.5rem; color: var(--primary); z-index:3;"></i>
+                <div class="touch-pulse-ring"></div>
+                <div class="touch-icon-badge"><i class="fas fa-sparkles"></i></div>
+            </div>
+            <div class="hackathon-badge"><i class="fas fa-trophy"></i> HACKATHON EDITION 2026</div>
+            <h2 class="intro-title">FORZEX</h2>
+            <p class="intro-subtitle">Professional Construction & AI Platform</p>
+            
+            <div class="intro-action-box">
+                <button id="start-intro-btn" class="btn btn-primary btn-lg pulse-btn">
+                    <i class="fas fa-rocket"></i> Launch Platform
+                </button>
+                <button id="skip-intro-btn" class="btn btn-ghost btn-sm">
+                    Enter Platform Dashboard <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Video Player Overlay Wrapper -->
+        <div id="intro-video-container" class="intro-video-wrapper hidden">
+            <video id="intro-video-player" playsinline preload="auto">
+                <source src="/cinematic_logo_animation.mp4" type="video/mp4">
+                Your browser does not support HTML5 video.
+            </video>
+            
+            <!-- Video Overlay Control Panel -->
+            <div class="intro-video-controls">
+                <div class="intro-badge"><i class="fas fa-film"></i> FORZEX INTRO VIDEO</div>
+                <div class="video-ctrl-btns">
+                    <button id="intro-sound-toggle" class="intro-ctrl-btn" title="Toggle Sound">
+                        <i class="fas fa-volume-up" id="sound-icon"></i> <span id="sound-text">Mute</span>
+                    </button>
+                    <button id="intro-replay-btn" class="intro-ctrl-btn" title="Replay Video">
+                        <i class="fas fa-redo"></i> Replay
+                    </button>
+                    <button id="intro-close-btn" class="intro-ctrl-btn btn-close-intro">
+                        Enter Dashboard <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Shell -->
+    <div id="app">
+        <nav id="navbar"></nav>
+        <main id="page-content">
+            <div class="page-loader">
+                <div class="loader-spinner"></div>
+                <p>Loading Forzex...</p>
+            </div>
+        </main>
+        <footer id="app-footer"></footer>
+        <nav id="bottom-nav"></nav>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Main Script -->
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
