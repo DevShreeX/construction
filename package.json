@@ -4,10 +4,10 @@
   "description": "Forzex Construction — Professional Construction Management PWA",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "node ./node_modules/vite/bin/vite.js",
+    "build": "node ./node_modules/vite/bin/vite.js build",
     "clean": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\"",
-    "preview": "vite preview",
+    "preview": "node ./node_modules/vite/bin/vite.js preview",
     "server": "node server/index.js",
     "dev:all": "concurrently \"npm run dev\" \"npm run server\""
   },
@@ -20,6 +20,7 @@
     "dotenv": "^16.3.1",
     "firebase": "^10.7.1",
     "firebase-admin": "^12.0.0",
+    "three": "^0.170.0",
     "uuid": "^11.1.1"
   },
   "devDependencies": {

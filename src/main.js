@@ -2,6 +2,8 @@ import { registerRoute, initRouter, navigate } from './router.js';
 import { renderNavbar, renderBottomNav, renderFooter } from './components.js';
 import { showToast } from './utils.js';
 import { homePage } from './pages/home.js';
+import { skillsPage } from './pages/skills.js';
+import { SkillSphere } from './components/skillSphere/SkillSphere.js';
 import { aboutPage, projectsPage, contactPage, feedbackPage } from './pages/public.js';
 import { visionPage, insightsPage, resourcesPage, reportPage, morePage } from './pages/features.js';
 import { landAnalyzerPage } from './pages/landAnalyzer.js';
@@ -29,9 +31,11 @@ import {
 // ==================== Global State ====================
 let currentUser = null;
 let currentSiteCoords = { lat: 13.0827, lon: 80.2707, label: 'Chennai, Tamil Nadu' };
+let activeSkillSphere = null;
 
 // ==================== Register All Routes ====================
 registerRoute('/', homePage);
+registerRoute('/skills', skillsPage);
 registerRoute('/about', aboutPage);
 registerRoute('/projects', projectsPage);
 registerRoute('/contact', contactPage);
@@ -100,6 +104,32 @@ function setupGlobalListeners() {
     if (path !== '/vision' && activeCameraStream) {
       activeCameraStream.getTracks().forEach(track => track.stop());
       activeCameraStream = null;
+    }
+
+    // 3D Skill Sphere Lifecycle Management
+    if (path === '/' || path === '/skills') {
+      setTimeout(() => {
+        const mount = document.getElementById('skillSphereCanvasMount');
+        if (mount) {
+          if (activeSkillSphere) {
+            activeSkillSphere.dispose();
+            activeSkillSphere = null;
+          }
+          activeSkillSphere = new SkillSphere({
+            container: document.getElementById('skillSphereViewport')?.closest('section'),
+            mountEl: mount,
+            labelsOverlay: document.getElementById('skillLabelsOverlay'),
+            svgLinesEl: document.getElementById('skillLinesSvg'),
+            detailCardEl: document.getElementById('skillDetailCard'),
+            fallbackEl: document.getElementById('skillFallbackLayout')
+          });
+        }
+      }, 60);
+    } else {
+      if (activeSkillSphere) {
+        activeSkillSphere.dispose();
+        activeSkillSphere = null;
+      }
     }
 
     // Contact form
