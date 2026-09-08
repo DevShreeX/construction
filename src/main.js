@@ -1,6 +1,6 @@
 import { registerRoute, initRouter, navigate } from './router.js';
 import { renderNavbar, renderBottomNav, renderFooter } from './components.js';
-import { showToast } from './utils.js';
+import { showToast, formatCurrency } from './utils.js';
 import { homePage } from './pages/home.js';
 import { skillsPage } from './pages/skills.js';
 import { SkillSphere } from './components/skillSphere/SkillSphere.js';
@@ -130,6 +130,14 @@ function setupGlobalListeners() {
         activeSkillSphere.dispose();
         activeSkillSphere = null;
       }
+    }
+
+    // Workspace AI 3D Short Video Studio & Material Brand Studio
+    if (path === '/workspace') {
+      setTimeout(() => {
+        setupWorkspaceAiVideoGenerator();
+        initMaterialBrandStudio();
+      }, 60);
     }
 
     // Contact form
@@ -1620,8 +1628,8 @@ function initBackendConsolePage() {
 
 // ==================== Interactive Front Intro Video Engine ====================
 function setupIntroVideo() {
-  const introOverlay = document.getElementById('intro-video-overlay');
-  const startPrompt = document.getElementById('intro-start-prompt');
+  const introOverlay = document.getElementById('intro-video-overlay') || document.getElementById('intro-screen-overlay');
+  const startPrompt = document.getElementById('intro-start-prompt') || document.getElementById('intro-prompt-box');
   const videoWrapper = document.getElementById('intro-video-container');
   const videoPlayer = document.getElementById('intro-video-player');
   const startBtn = document.getElementById('start-intro-btn');
@@ -1635,11 +1643,17 @@ function setupIntroVideo() {
 
   if (!introOverlay || !videoPlayer) return;
 
+  // If navigating directly to a non-home route (e.g. /skills, /workspace), dismiss intro immediately
+  if (window.location.pathname !== '/' && window.location.pathname !== '') {
+    introOverlay.style.display = 'none';
+    introOverlay.classList.add('dismissed');
+  }
+
   // Helper: Start Video Playback
   const playVideo = async () => {
     try {
-      startPrompt.style.display = 'none';
-      videoWrapper.classList.remove('hidden');
+      if (startPrompt) startPrompt.style.display = 'none';
+      if (videoWrapper) videoWrapper.classList.remove('hidden');
       videoPlayer.currentTime = 0;
       videoPlayer.muted = false; // Enable audio on user interaction
       if (soundText) soundText.textContent = 'Mute';
@@ -1665,6 +1679,7 @@ function setupIntroVideo() {
     introOverlay.classList.add('dismissed');
     setTimeout(() => {
       introOverlay.style.display = 'none';
+      window.dispatchEvent(new Event('resize'));
     }, 800);
   };
 
@@ -1728,6 +1743,11 @@ function setupWorkspaceAiVideoGenerator() {
   const form = document.getElementById('projectForm');
   if (!form) return;
 
+  const dateInput = document.getElementById('projStartDate');
+  if (dateInput && !dateInput.value) {
+    dateInput.value = new Date().toISOString().split('T')[0];
+  }
+
   form.addEventListener('submit', (ev) => {
     ev.preventDefault();
 
@@ -1771,11 +1791,12 @@ function setupWorkspaceAiVideoGenerator() {
       if (createdDesc) createdDesc.innerHTML = `<em>"${desc}"</em>`;
 
       // Select video source based on project type
+      const chosenVideo = (type.includes('Commercial') || type.includes('Infrastructure')) ? '/cinematic_video.mp4' : '/final_vdo.mp4';
       if (videoSrc) {
-        videoSrc.src = (type.includes('Commercial') || type.includes('Infrastructure')) ? '/cinematic_video.mp4' : '/final_vdo.mp4';
+        videoSrc.src = chosenVideo;
       }
-
       if (videoPlayer) {
+        videoPlayer.src = chosenVideo;
         videoPlayer.load();
         videoPlayer.play().catch(e => console.log('Autoplay handled:', e));
       }
