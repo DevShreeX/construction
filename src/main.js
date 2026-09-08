@@ -100,6 +100,15 @@ function setupGlobalListeners() {
   document.addEventListener('page:mounted', (e) => {
     const { path } = e.detail;
 
+    // Immediately hide intro overlay if on sub-routes
+    if (path !== '/') {
+      const introOverlay = document.getElementById('intro-video-overlay');
+      if (introOverlay && !introOverlay.classList.contains('dismissed')) {
+        introOverlay.style.display = 'none';
+        introOverlay.classList.add('dismissed');
+      }
+    }
+
     // Clean up active camera stream if leaving /vision
     if (path !== '/vision' && activeCameraStream) {
       activeCameraStream.getTracks().forEach(track => track.stop());
@@ -1643,8 +1652,11 @@ function setupIntroVideo() {
 
   if (!introOverlay || !videoPlayer) return;
 
-  // If navigating directly to a non-home route (e.g. /skills, /workspace), dismiss intro immediately
-  if (window.location.pathname !== '/' && window.location.pathname !== '') {
+  // Auto-dismiss if already seen in this session or if loading a specific route
+  const isDirectSubRoute = window.location.pathname !== '/' && window.location.pathname !== '';
+  const alreadySeen = sessionStorage.getItem('forzex_intro_dismissed') === 'true';
+
+  if (isDirectSubRoute || alreadySeen) {
     introOverlay.style.display = 'none';
     introOverlay.classList.add('dismissed');
   }
@@ -1675,20 +1687,25 @@ function setupIntroVideo() {
 
   // Helper: Dismiss Intro Overlay to reveal Home / Dashboard
   const dismissIntro = () => {
-    videoPlayer.pause();
+    try {
+      videoPlayer.pause();
+    } catch (e) {}
+    try {
+      sessionStorage.setItem('forzex_intro_dismissed', 'true');
+    } catch (e) {}
     introOverlay.classList.add('dismissed');
     setTimeout(() => {
       introOverlay.style.display = 'none';
       window.dispatchEvent(new Event('resize'));
-    }, 800);
+    }, 400);
   };
 
   // Expose Global Replay Helper for Navbar & UI buttons
   window.replayIntroVideo = () => {
     introOverlay.style.display = 'flex';
     introOverlay.classList.remove('dismissed');
-    startPrompt.style.display = 'block';
-    videoWrapper.classList.add('hidden');
+    if (startPrompt) startPrompt.style.display = 'block';
+    if (videoWrapper) videoWrapper.classList.add('hidden');
     playVideo();
   };
 

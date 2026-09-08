@@ -1,8 +1,6 @@
-// ==================== Architectural CAD 3D Smart Construction House Engine ====================
-// Precision-modeled after the reference architectural CAD drawing:
-// 45° Pitch Cross-Gable Roof with Valley (A = 107.5°), Horizontal Timber Wood Siding,
-// Textured Earthy Clay Brick Ground Floor, Concrete Plinth, Paver Patio & Lawn Base,
-// and CAD Dimension Overlays (L = 8.65m, H = 3.20m, H = 2.90m, Roof Pitch: 45°, Compass & XYZ Trihedron)
+// ==================== Interactive 3D Smart Construction House Engine ====================
+// Futuristic architectural wireframe smart house visualization with 12 intelligent feature nodes,
+// real-time 3D feature reactions, glowing wireframe outlines, blueprint HUD, and responsive telemetry.
 
 import * as THREE from 'three';
 import { CONSTRUCTION_FEATURES, getFeatureById } from './constructionFeaturesData.js';
@@ -36,7 +34,7 @@ export class ConstructionHouse3D {
     this.activeCategory = options.initialCategory || 'ALL';
     this.isRotating = true;
     this.isDestroyed = false;
-    this.isInViewport = true;
+    this.isInViewport = true; // Always true initially so rendering starts immediately
     this.hoveredFeatureId = null;
     this.selectedFeatureId = null;
 
@@ -49,12 +47,16 @@ export class ConstructionHouse3D {
     this.dataPackets = [];
     this.htmlLabelElements = new Map();
     this.disposables = [];
-    this.interactiveHouseMaterials = [];
 
-    // User-customizable exterior materials
-    this.brickWallMeshes = [];
-    this.woodWallMeshes = [];
-    this.roofMeshes = [];
+    // Interactive feature reaction elements
+    this.wallMaterials = [];
+    this.interiorLight = null;
+    this.interiorFurnitureGroup = null;
+    this.materialCubesGroup = null;
+    this.neuralNetworkGroup = null;
+    this.landMeasurementGroup = null;
+    this.safetyZoneGroup = null;
+    this.edgeTracerMesh = null;
 
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (this.reducedMotion) {
@@ -87,38 +89,44 @@ export class ConstructionHouse3D {
     }
 
     this.setupScene();
-    this.createProceduralTextures();
-    this.createCADGroundAndCompass();
-    this.createArchitecturalHouseModel();
-    this.createCADDimensionAnnotations();
+    this.createBlueprintGroundAndCompass();
+    this.createFuturisticSmartHouse();
+    this.createBlueprintDimensionAnnotations();
     this.createCADTrihedron();
     this.createFeatureNodes();
     this.createHouseConduits();
     this.createDataPulseSystem();
-    this.createAtmosphericParticles();
+    this.createConstructionDataParticles();
+    this.createEdgeTracerSystem();
+    this.createSpecialReactionSystems();
     this.createHtmlLabels();
     this.setupEventListeners();
     this.setupIntersectionObserver();
 
     this.clock = new THREE.Clock();
     this.animate();
+
+    // Trigger an initial resize pass after DOM paints
+    requestAnimationFrame(() => {
+      this.onResize();
+    });
   }
 
   // ==================== Scene & Isometric Perspective Camera ====================
   setupScene() {
-    this.width = this.mountEl.clientWidth || 920;
-    this.height = this.mountEl.clientHeight || 680;
+    const rect = this.mountEl.getBoundingClientRect();
+    this.width = rect.width || this.mountEl.clientWidth || 920;
+    this.height = rect.height || this.mountEl.clientHeight || 680;
 
     const isMobile = window.innerWidth < 768;
     const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
-    const cameraDistance = isMobile ? 21 : (isTablet ? 18.5 : 16.0);
+    const cameraDistance = isMobile ? 22 : (isTablet ? 19 : 16.5);
 
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.FogExp2(0x060f1e, 0.011);
+    this.scene.fog = new THREE.FogExp2(0x050c1a, 0.012);
 
-    // Isometric-angled perspective camera matching the CAD reference (azimuth ~36°, elevation ~30°)
-    this.camera = new THREE.PerspectiveCamera(40, this.width / this.height, 0.1, 1000);
-    this.camera.position.set(cameraDistance * 0.76, cameraDistance * 0.56, cameraDistance * 0.84);
+    this.camera = new THREE.PerspectiveCamera(42, this.width / this.height, 0.1, 1000);
+    this.camera.position.set(cameraDistance * 0.76, cameraDistance * 0.58, cameraDistance * 0.84);
     this.camera.lookAt(0, 0.4, 0);
 
     this.renderer = new THREE.WebGLRenderer({
@@ -129,8 +137,6 @@ export class ConstructionHouse3D {
     this.renderer.setSize(this.width, this.height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     this.renderer.setClearColor(0x000000, 0);
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     this.mountEl.innerHTML = '';
     this.mountEl.appendChild(this.renderer.domElement);
@@ -140,642 +146,465 @@ export class ConstructionHouse3D {
     this.universeGroup = new THREE.Group();
     this.scene.add(this.universeGroup);
 
-    // Realistic Architectural Lighting (Clean warm sunlight + sky fill daylight)
-    // Avoids garish neon cyan/purple light floods
-    const ambientLight = new THREE.AmbientLight(0xf8fafc, 1.15);
+    // Architectural Key, Rim & Sky Lights
+    const ambientLight = new THREE.AmbientLight(0x0f2444, 1.8);
     this.scene.add(ambientLight);
 
-    const sunLight = new THREE.DirectionalLight(0xfff8ee, 2.2);
-    sunLight.position.set(15, 22, 14);
-    sunLight.castShadow = true;
-    sunLight.shadow.mapSize.width = 1024;
-    sunLight.shadow.mapSize.height = 1024;
-    sunLight.shadow.bias = -0.0004;
-    this.scene.add(sunLight);
+    const cyanKeyLight = new THREE.DirectionalLight(0x00f2fe, 2.2);
+    cyanKeyLight.position.set(16, 22, 14);
+    this.scene.add(cyanKeyLight);
 
-    const skyFill = new THREE.DirectionalLight(0xdbeafe, 0.8);
-    skyFill.position.set(-14, 12, -12);
-    this.scene.add(skyFill);
+    const purpleRimLight = new THREE.DirectionalLight(0xa855f7, 1.8);
+    purpleRimLight.position.set(-15, 14, -14);
+    this.scene.add(purpleRimLight);
 
-    const groundBounce = new THREE.DirectionalLight(0x64748b, 0.4);
-    groundBounce.position.set(0, -10, 8);
-    this.scene.add(groundBounce);
+    const softFillLight = new THREE.DirectionalLight(0x38bdf8, 1.2);
+    softFillLight.position.set(0, -10, 10);
+    this.scene.add(softFillLight);
   }
 
-  // ==================== Procedural High-Res Canvas Textures ====================
-  createProceduralTextures() {
-    // 1. Earthy Tan Clay Brick (Running-Bond)
-    this.brickTexture = this.generateBrickTexture();
-    // 2. Warm Natural Cedar Wood Siding (Horizontal Planks)
-    this.woodSidingTexture = this.generateWoodSidingTexture();
-    // 3. Architectural Slate Grey Shingles (45° Cross-Gable Shingles)
-    this.roofShingleTexture = this.generateRoofShingleTexture();
-    // 4. Concrete Pavers (Patio Walkway)
-    this.paverTexture = this.generatePaverTexture();
-    // 5. Natural Lawn Turf
-    this.grassTexture = this.generateGrassTexture();
-  }
-
-  generateBrickTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 512;
-    const ctx = canvas.getContext('2d');
-
-    // Sand/Lime mortar background
-    ctx.fillStyle = '#d8d1c7';
-    ctx.fillRect(0, 0, 512, 512);
-
-    const rows = 32;
-    const cols = 8;
-    const brickH = 512 / rows;
-    const brickW = 512 / cols;
-    const mortar = 2.4;
-
-    const brickTones = [
-      '#8e684d', '#977054', '#7f593f', '#a1795b',
-      '#886248', '#926b4f', '#775239', '#9a7356'
-    ];
-
-    for (let r = 0; r < rows; r++) {
-      const y = r * brickH + mortar / 2;
-      const h = brickH - mortar;
-      const offset = (r % 2) * (brickW / 2);
-
-      for (let c = -1; c <= cols + 1; c++) {
-        const x = c * brickW + offset + mortar / 2;
-        const w = brickW - mortar;
-
-        const tone = brickTones[(r * 7 + c * 13 + 3) % brickTones.length];
-        ctx.fillStyle = tone;
-        ctx.fillRect(x, y, w, h);
-
-        // Brick surface grain
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
-        ctx.fillRect(x, y + h - 2, w, 2);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
-        ctx.fillRect(x, y, w, 2);
-      }
-    }
-
-    // Micro-speckle noise for realistic masonry texture
-    const imgData = ctx.getImageData(0, 0, 512, 512);
-    const d = imgData.data;
-    for (let i = 0; i < d.length; i += 4) {
-      const noise = (Math.random() - 0.5) * 14;
-      d[i] = Math.min(255, Math.max(0, d[i] + noise));
-      d[i + 1] = Math.min(255, Math.max(0, d[i + 1] + noise));
-      d[i + 2] = Math.min(255, Math.max(0, d[i + 2] + noise));
-    }
-    ctx.putImageData(imgData, 0, 0);
-
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(3, 2.5);
-    return texture;
-  }
-
-  generateWoodSidingTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 512;
-    const ctx = canvas.getContext('2d');
-
-    // Natural warm timber cedar
-    ctx.fillStyle = '#aa835d';
-    ctx.fillRect(0, 0, 512, 512);
-
-    const planks = 28;
-    const plankH = 512 / planks;
-    const plankColors = ['#a9815a', '#b38d67', '#9e7852', '#ba936c', '#98724d'];
-
-    for (let i = 0; i < planks; i++) {
-      const y = i * plankH;
-      ctx.fillStyle = plankColors[i % plankColors.length];
-      ctx.fillRect(0, y, 512, plankH);
-
-      // Fine horizontal grain streaks
-      for (let g = 0; g < 3; g++) {
-        const gy = y + 2 + Math.random() * (plankH - 4);
-        ctx.fillStyle = 'rgba(90, 60, 35, 0.12)';
-        ctx.fillRect(0, gy, 512, 1);
-      }
-
-      // Horizontal plank overlap shadow and highlight
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
-      ctx.fillRect(0, y + plankH - 2, 512, 2);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.14)';
-      ctx.fillRect(0, y, 512, 1);
-    }
-
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(2, 2);
-    return texture;
-  }
-
-  generateRoofShingleTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 512;
-    const ctx = canvas.getContext('2d');
-
-    // Slate base
-    ctx.fillStyle = '#3a4048';
-    ctx.fillRect(0, 0, 512, 512);
-
-    const rows = 24;
-    const cols = 16;
-    const rowH = 512 / rows;
-    const colW = 512 / cols;
-
-    const slateTones = ['#4e555f', '#444b54', '#555d67', '#3d434b', '#59616c', '#495059'];
-
-    for (let r = 0; r < rows; r++) {
-      const y = r * rowH;
-      const offset = (r % 2) * (colW / 2);
-
-      for (let c = -1; c <= cols + 1; c++) {
-        const x = c * colW + offset;
-        const tone = slateTones[(r * 5 + c * 11) % slateTones.length];
-        ctx.fillStyle = tone;
-        ctx.fillRect(x + 1, y + 1, colW - 2, rowH - 2);
-
-        // Shingle drop shadow (creates overlapping 3D appearance)
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
-        ctx.fillRect(x, y + rowH - 2.5, colW, 2.5);
-
-        // Shingle top subtle bevel
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
-        ctx.fillRect(x + 1, y + 1, colW - 2, 1);
-
-        // Vertical seam between shingles
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-        ctx.fillRect(x + colW - 1.5, y + 1, 1.5, rowH - 2);
-      }
-    }
-
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(4, 4);
-    return texture;
-  }
-
-  generatePaverTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 256;
-    canvas.height = 256;
-    const ctx = canvas.getContext('2d');
-
-    ctx.fillStyle = '#64748b';
-    ctx.fillRect(0, 0, 256, 256);
-
-    const pavers = 8;
-    const size = 256 / pavers;
-    const tones = ['#94a3b8', '#8898ac', '#a2b1c2', '#7e8e9e'];
-
-    for (let r = 0; r < pavers; r++) {
-      for (let c = 0; c < pavers; c++) {
-        ctx.fillStyle = tones[(r * 3 + c * 7) % tones.length];
-        ctx.fillRect(c * size + 1.5, r * size + 1.5, size - 3, size - 3);
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
-        ctx.fillRect(c * size + 1.5, (r + 1) * size - 2.5, size - 3, 1);
-      }
-    }
-
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(4, 4);
-    return texture;
-  }
-
-  generateGrassTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 256;
-    canvas.height = 256;
-    const ctx = canvas.getContext('2d');
-
-    ctx.fillStyle = '#4c7838';
-    ctx.fillRect(0, 0, 256, 256);
-
-    for (let i = 0; i < 4000; i++) {
-      const x = Math.random() * 256;
-      const y = Math.random() * 256;
-      ctx.fillStyle = Math.random() > 0.5 ? '#5d9145' : '#3d612d';
-      ctx.fillRect(x, y, 1.5, 2.5);
-    }
-
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(3, 3);
-    return texture;
-  }
-
-  // ==================== CAD Blueprint Ground Disc & Compass ====================
-  createCADGroundAndCompass() {
+  // ==================== Blueprint Ground Disc & Compass ====================
+  createBlueprintGroundAndCompass() {
     this.groundGroup = new THREE.Group();
     this.groundGroup.position.y = -1.95;
     this.universeGroup.add(this.groundGroup);
 
-    // 1. Subtle CAD Blueprint Grid on Dark Slate
-    const gridHelper = new THREE.GridHelper(26, 36, 0x334155, 0x1e293b);
+    // 1. Futuristic Blueprint Grid
+    const gridHelper = new THREE.GridHelper(24, 36, 0x00f2fe, 0x0c2545);
     gridHelper.material.transparent = true;
-    gridHelper.material.opacity = 0.4;
+    gridHelper.material.opacity = 0.5;
     this.groundGroup.add(gridHelper);
     this.disposables.push(gridHelper.geometry, gridHelper.material);
 
-    // 2. CAD Compass Outer & Inner Rings
+    // 2. Glowing Circular Blueprint Compass Ring
     const ringPoints = [];
     for (let i = 0; i <= 64; i++) {
       const theta = (i / 64) * Math.PI * 2;
-      ringPoints.push(new THREE.Vector3(Math.cos(theta) * 8.4, 0.02, Math.sin(theta) * 8.4));
+      ringPoints.push(new THREE.Vector3(Math.cos(theta) * 8.2, 0.02, Math.sin(theta) * 8.2));
     }
     const ringGeo = new THREE.BufferGeometry().setFromPoints(ringPoints);
     const ringMat = new THREE.LineBasicMaterial({
-      color: 0x64748b,
+      color: 0x00f2fe,
       transparent: true,
-      opacity: 0.45
+      opacity: 0.45,
+      blending: THREE.AdditiveBlending
     });
     const compassRing = new THREE.Line(ringGeo, ringMat);
     this.groundGroup.add(compassRing);
     this.disposables.push(ringGeo, ringMat);
 
-    // Cardinal Labels (N, S, E, W)
-    const addCardinal = (text, x, z) => {
-      const sprite = this.createCADTextSprite(text, 22, '#cbd5e1', false);
-      sprite.position.set(x, 0.15, z);
-      sprite.scale.set(0.9, 0.5, 1);
+    // Inner tick ring
+    const innerPoints = [];
+    for (let i = 0; i <= 32; i++) {
+      const theta = (i / 32) * Math.PI * 2;
+      innerPoints.push(new THREE.Vector3(Math.cos(theta) * 6.5, 0.02, Math.sin(theta) * 6.5));
+    }
+    const innerGeo = new THREE.BufferGeometry().setFromPoints(innerPoints);
+    const innerMat = new THREE.LineBasicMaterial({
+      color: 0xa855f7,
+      transparent: true,
+      opacity: 0.35,
+      blending: THREE.AdditiveBlending
+    });
+    this.groundGroup.add(new THREE.Line(innerGeo, innerMat));
+    this.disposables.push(innerGeo, innerMat);
+
+    // Compass Cardinal Labels (N, S, E, W)
+    const addMarker = (text, x, z) => {
+      const sprite = this.createCADTextSprite(text, 32, '#00f2fe');
+      sprite.position.set(x, 0.2, z);
+      sprite.scale.set(1.2, 0.6, 1);
       this.groundGroup.add(sprite);
     };
-    addCardinal('N', 0, -8.9);
-    addCardinal('S', 0, 8.9);
-    addCardinal('E', 8.9, 0);
-    addCardinal('W', -8.9, 0);
+    addMarker('N (0°)', 0, -8.7);
+    addMarker('S (180°)', 0, 8.7);
+    addMarker('E (90°)', 8.7, 0);
+    addMarker('W (270°)', -8.7, 0);
 
-    // 3. Concrete Foundation Plinth / Slab (Light Architectural Concrete)
-    const plinthGeo = new THREE.BoxGeometry(8.0, 0.35, 6.8);
+    // 3. Concrete Plinth / Foundation Slab with Cyan Edge
+    const plinthGeo = new THREE.BoxGeometry(7.8, 0.35, 6.6);
     const plinthMat = new THREE.MeshStandardMaterial({
-      color: 0xcbd5e1,
-      roughness: 0.8,
-      metalness: 0.08
+      color: 0x091932,
+      roughness: 0.3,
+      metalness: 0.85
     });
     const plinth = new THREE.Mesh(plinthGeo, plinthMat);
     plinth.position.set(-0.2, 0.18, -0.2);
-    plinth.receiveShadow = true;
     this.groundGroup.add(plinth);
+    this.addWireframeEdges(plinth, plinthGeo, 0x00f2fe, 0.7);
     this.disposables.push(plinthGeo, plinthMat);
 
-    // 4. Paver Walkway & Natural Lawn Strips (Matches Reference Image)
-    // Paver walkway in front of entrance and extending along front edge
-    const walkwayGeo = new THREE.BoxGeometry(4.2, 0.06, 2.2);
-    const walkwayMat = new THREE.MeshStandardMaterial({
-      map: this.paverTexture,
-      roughness: 0.85,
-      metalness: 0.05
-    });
-    const walkway = new THREE.Mesh(walkwayGeo, walkwayMat);
-    walkway.position.set(0.2, 0.37, 2.8);
-    walkway.receiveShadow = true;
-    this.groundGroup.add(walkway);
-    this.disposables.push(walkwayGeo, walkwayMat);
-
-    // Side walkway strip
-    const sideWalkwayGeo = new THREE.BoxGeometry(1.6, 0.06, 4.4);
-    const sideWalkway = new THREE.Mesh(sideWalkwayGeo, walkwayMat);
-    sideWalkway.position.set(3.0, 0.37, 0.8);
-    sideWalkway.receiveShadow = true;
-    this.groundGroup.add(sideWalkway);
-    this.disposables.push(sideWalkwayGeo);
-
-    // Lawn grass strip along the front
-    const lawnGeo = new THREE.BoxGeometry(7.6, 0.08, 0.95);
+    // 4. Paver Walkway & Futuristic Landscaping Strip
+    const lawnGeo = new THREE.BoxGeometry(8.0, 0.08, 0.9);
     const lawnMat = new THREE.MeshStandardMaterial({
-      map: this.grassTexture,
-      roughness: 0.9,
-      metalness: 0.0
+      color: 0x064e3b,
+      emissive: 0x047857,
+      emissiveIntensity: 0.25,
+      roughness: 0.6
     });
-    const lawnFront = new THREE.Mesh(lawnGeo, lawnMat);
-    lawnFront.position.set(-0.2, 0.28, 3.4);
-    lawnFront.receiveShadow = true;
-    this.groundGroup.add(lawnFront);
+    const lawn1 = new THREE.Mesh(lawnGeo, lawnMat);
+    lawn1.position.set(-0.2, 0.24, 3.25);
+    this.groundGroup.add(lawn1);
+    this.addWireframeEdges(lawn1, lawnGeo, 0x10b981, 0.6);
     this.disposables.push(lawnGeo, lawnMat);
 
-    // Lawn curb concrete border
-    const curbGeo = new THREE.BoxGeometry(7.8, 0.12, 0.12);
-    const curbMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.7 });
-    const curbFront = new THREE.Mesh(curbGeo, curbMat);
-    curbFront.position.set(-0.2, 0.35, 3.9);
-    this.groundGroup.add(curbFront);
-    this.disposables.push(curbGeo, curbMat);
-
-    // Natural Organic Shrub / Bush on the left corner
-    this.createCornerBush(-3.5, 0.5, 2.8);
+    // Holographic corner landscaping shrub
+    const shrubGeo = new THREE.IcosahedronGeometry(0.42, 1);
+    const shrubMat = new THREE.MeshStandardMaterial({
+      color: 0x059669,
+      emissive: 0x10b981,
+      emissiveIntensity: 0.4,
+      wireframe: true
+    });
+    const shrub = new THREE.Mesh(shrubGeo, shrubMat);
+    shrub.position.set(-3.6, 0.55, 3.1);
+    this.groundGroup.add(shrub);
+    this.disposables.push(shrubGeo, shrubMat);
   }
 
-  createCornerBush(x, y, z) {
-    const bushGroup = new THREE.Group();
-    bushGroup.position.set(x, y, z);
-    const bushMat = new THREE.MeshStandardMaterial({
-      color: 0x3d662c,
-      roughness: 0.9,
-      metalness: 0.0
-    });
-
-    const sphereCoords = [
-      [0, 0, 0, 0.42],
-      [0.22, 0.12, -0.1, 0.35],
-      [-0.18, 0.08, 0.15, 0.32],
-      [0.1, -0.08, 0.2, 0.3],
-      [-0.15, 0.16, -0.15, 0.28]
-    ];
-
-    sphereCoords.forEach(([sx, sy, sz, radius]) => {
-      const geo = new THREE.SphereGeometry(radius, 10, 8);
-      const mesh = new THREE.Mesh(geo, bushMat);
-      mesh.position.set(sx, sy, sz);
-      mesh.castShadow = true;
-      bushGroup.add(mesh);
-      this.disposables.push(geo);
-    });
-
-    this.groundGroup.add(bushGroup);
-    this.disposables.push(bushMat);
-  }
-
-  // ==================== Authentic 3D Architectural House Model ====================
-  createArchitecturalHouseModel() {
+  // ==================== Futuristic Architectural Smart House ====================
+  createFuturisticSmartHouse() {
     this.houseGroup = new THREE.Group();
     this.universeGroup.add(this.houseGroup);
 
-    // Materials Palette matching the CAD reference image:
-    // 1. Brick Ground Floor
-    this.brickMat = new THREE.MeshStandardMaterial({
-      map: this.brickTexture,
-      roughness: 0.82,
-      metalness: 0.05
-    });
-    this.interactiveHouseMaterials.push(this.brickMat);
-
-    // 2. Upper Timber / Cedar Wood Siding
-    this.woodSidingMat = new THREE.MeshStandardMaterial({
-      map: this.woodSidingTexture,
-      roughness: 0.76,
-      metalness: 0.08
-    });
-    this.interactiveHouseMaterials.push(this.woodSidingMat);
-
-    // 3. Roof Slate Shingles (Grey Tiles)
-    this.roofMat = new THREE.MeshStandardMaterial({
-      map: this.roofShingleTexture,
-      roughness: 0.7,
-      metalness: 0.12
-    });
-    this.interactiveHouseMaterials.push(this.roofMat);
-
-    // 4. White Architectural Trim / Moldings / Casings
-    this.whiteTrimMat = new THREE.MeshStandardMaterial({
-      color: 0xf8fafc,
-      roughness: 0.45,
-      metalness: 0.1
-    });
-
-    // 5. Architectural Glass (Reflective dark casement panes)
-    this.glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x1e293b,
-      roughness: 0.1,
-      metalness: 0.92,
+    // Materials Palette
+    // 1. Dark Navy Obsidian Structural Facade
+    this.facadeMat = new THREE.MeshStandardMaterial({
+      color: 0x07152b,
+      roughness: 0.2,
+      metalness: 0.85,
       transparent: true,
-      opacity: 0.65,
-      transmission: 0.35,
+      opacity: 0.92
+    });
+    this.wallMaterials.push(this.facadeMat);
+
+    // 2. Second floor accent cladding
+    this.upperFacadeMat = new THREE.MeshStandardMaterial({
+      color: 0x0a2142,
+      roughness: 0.25,
+      metalness: 0.8,
+      transparent: true,
+      opacity: 0.9
+    });
+    this.wallMaterials.push(this.upperFacadeMat);
+
+    // 3. Futuristic Tinted Glass (Semi-Transparent Curtain Wall)
+    this.glassMat = new THREE.MeshPhysicalMaterial({
+      color: 0x0284c7,
+      emissive: 0x00f2fe,
+      emissiveIntensity: 0.12,
+      roughness: 0.05,
+      metalness: 0.95,
+      transparent: true,
+      opacity: 0.45,
+      transmission: 0.6,
       ior: 1.5
     });
 
-    // 6. Modern Entrance Door
-    this.doorMat = new THREE.MeshStandardMaterial({
-      color: 0x334155,
-      roughness: 0.5,
-      metalness: 0.25
+    // 4. White / Cyan Architectural Trims & Structural Frames
+    const structuralFrameMat = new THREE.MeshStandardMaterial({
+      color: 0xe0f2fe,
+      emissive: 0x38bdf8,
+      emissiveIntensity: 0.35,
+      roughness: 0.2,
+      metalness: 0.9
     });
 
-    this.disposables.push(this.brickMat, this.woodSidingMat, this.roofMat, this.whiteTrimMat, this.glassMat, this.doorMat);
+    // 5. Roof Slate Slopes
+    this.roofMat = new THREE.MeshStandardMaterial({
+      color: 0x0b1a30,
+      roughness: 0.3,
+      metalness: 0.75
+    });
 
-    const groundFloorH = 1.65;
-    const upperFloorH = 1.55;
+    this.disposables.push(this.facadeMat, this.upperFacadeMat, this.glassMat, structuralFrameMat, this.roofMat);
+
+    const groundH = 1.65;
+    const upperH = 1.55;
 
     // -------------------------------------------------------------
-    // 1. Ground Floor (Textured Brick Facade)
+    // 1. Ground Floor (Dark Obsidian Body with Cyan Wireframe)
     // -------------------------------------------------------------
-    // Main Body Block (Left/Depth Wing)
-    const gfMainGeo = new THREE.BoxGeometry(5.2, groundFloorH, 3.4);
-    const gfMain = new THREE.Mesh(gfMainGeo, this.brickMat);
+    const gfMainGeo = new THREE.BoxGeometry(5.2, groundH, 3.4);
+    const gfMain = new THREE.Mesh(gfMainGeo, this.facadeMat);
     gfMain.position.set(-0.3, -0.9, -0.4);
-    gfMain.castShadow = true;
-    gfMain.receiveShadow = true;
     this.houseGroup.add(gfMain);
-    this.brickWallMeshes.push(gfMain);
+    this.addWireframeEdges(gfMain, gfMainGeo, 0x00f2fe, 0.85);
 
-    // Front Projecting Gable Wing Ground Floor (Right-Front Wing)
-    const gfFrontGeo = new THREE.BoxGeometry(2.6, groundFloorH, 1.8);
-    const gfFront = new THREE.Mesh(gfFrontGeo, this.brickMat);
+    const gfFrontGeo = new THREE.BoxGeometry(2.6, groundH, 1.8);
+    const gfFront = new THREE.Mesh(gfFrontGeo, this.facadeMat);
     gfFront.position.set(1.0, -0.9, 1.3);
-    gfFront.castShadow = true;
-    gfFront.receiveShadow = true;
     this.houseGroup.add(gfFront);
-    this.brickWallMeshes.push(gfFront);
+    this.addWireframeEdges(gfFront, gfFrontGeo, 0x00f2fe, 0.85);
 
     // -------------------------------------------------------------
-    // 2. Horizontal White Frieze / Belt Course Board (Separates Brick & Timber)
+    // 2. Mid-Band Floor Slab (Glowing Divider Ribbon)
     // -------------------------------------------------------------
-    const belt1Geo = new THREE.BoxGeometry(5.35, 0.12, 3.55);
-    const belt1 = new THREE.Mesh(belt1Geo, this.whiteTrimMat);
-    belt1.position.set(-0.3, -0.05, -0.4);
-    belt1.castShadow = true;
-    this.houseGroup.add(belt1);
+    const band1Geo = new THREE.BoxGeometry(5.35, 0.14, 3.55);
+    const band1 = new THREE.Mesh(band1Geo, structuralFrameMat);
+    band1.position.set(-0.3, -0.05, -0.4);
+    this.houseGroup.add(band1);
+    this.addWireframeEdges(band1, band1Geo, 0x38bdf8, 0.95);
 
-    const belt2Geo = new THREE.BoxGeometry(2.75, 0.12, 1.95);
-    const belt2 = new THREE.Mesh(belt2Geo, this.whiteTrimMat);
-    belt2.position.set(1.0, -0.05, 1.3);
-    belt2.castShadow = true;
-    this.houseGroup.add(belt2);
+    const band2Geo = new THREE.BoxGeometry(2.75, 0.14, 1.95);
+    const band2 = new THREE.Mesh(band2Geo, structuralFrameMat);
+    band2.position.set(1.0, -0.05, 1.3);
+    this.houseGroup.add(band2);
+    this.addWireframeEdges(band2, band2Geo, 0x38bdf8, 0.95);
 
     // -------------------------------------------------------------
-    // 3. Upper Story (Horizontal Timber Wood Siding)
+    // 3. Upper Story & Cantilevered Balcony
     // -------------------------------------------------------------
-    // Main Upper Floor Block
-    const ufMainGeo = new THREE.BoxGeometry(5.0, upperFloorH, 3.3);
-    const ufMain = new THREE.Mesh(ufMainGeo, this.woodSidingMat);
+    const ufMainGeo = new THREE.BoxGeometry(5.0, upperH, 3.3);
+    const ufMain = new THREE.Mesh(ufMainGeo, this.upperFacadeMat);
     ufMain.position.set(-0.3, 0.78, -0.4);
-    ufMain.castShadow = true;
-    ufMain.receiveShadow = true;
     this.houseGroup.add(ufMain);
-    this.woodWallMeshes.push(ufMain);
+    this.addWireframeEdges(ufMain, ufMainGeo, 0x00f2fe, 0.85);
 
-    // Front Projecting Gable Upper Floor
-    const ufFrontGeo = new THREE.BoxGeometry(2.5, upperFloorH, 1.8);
-    const ufFront = new THREE.Mesh(ufFrontGeo, this.woodSidingMat);
+    const ufFrontGeo = new THREE.BoxGeometry(2.5, upperH, 1.8);
+    const ufFront = new THREE.Mesh(ufFrontGeo, this.upperFacadeMat);
     ufFront.position.set(1.0, 0.78, 1.3);
-    ufFront.castShadow = true;
-    ufFront.receiveShadow = true;
     this.houseGroup.add(ufFront);
-    this.woodWallMeshes.push(ufFront);
+    this.addWireframeEdges(ufFront, ufFrontGeo, 0x00f2fe, 0.85);
 
-    // Triangular Gable Pediments (Left Main Gable & Front Cross Gable)
+    // Cantilevered Upper Terrace Balcony
+    const balconyFloorGeo = new THREE.BoxGeometry(2.4, 0.12, 1.1);
+    const balconyFloor = new THREE.Mesh(balconyFloorGeo, structuralFrameMat);
+    balconyFloor.position.set(-1.6, -0.05, 1.6);
+    this.houseGroup.add(balconyFloor);
+    this.addWireframeEdges(balconyFloor, balconyFloorGeo, 0x00f2fe, 0.9);
+
+    // Balcony Glowing Glass Railing
+    const balconyGlassGeo = new THREE.BoxGeometry(2.35, 0.7, 0.06);
+    const balconyGlass = new THREE.Mesh(balconyGlassGeo, this.glassMat);
+    balconyGlass.position.set(-1.6, 0.35, 2.12);
+    this.houseGroup.add(balconyGlass);
+    this.addWireframeEdges(balconyGlass, balconyGlassGeo, 0x38bdf8, 0.9);
+
+    const balconySideGlassGeo = new THREE.BoxGeometry(0.06, 0.7, 1.05);
+    const balconySideGlass = new THREE.Mesh(balconySideGlassGeo, this.glassMat);
+    balconySideGlass.position.set(-2.75, 0.35, 1.6);
+    this.houseGroup.add(balconySideGlass);
+    this.addWireframeEdges(balconySideGlass, balconySideGlassGeo, 0x38bdf8, 0.9);
+
+    // Structural Steel Support Columns (Ground to Balcony)
+    const columnGeo = new THREE.CylinderGeometry(0.06, 0.06, groundH, 12);
+    const columnMat = new THREE.MeshStandardMaterial({
+      color: 0x38bdf8,
+      emissive: 0x00f2fe,
+      emissiveIntensity: 0.3,
+      metalness: 0.9
+    });
+    const col1 = new THREE.Mesh(columnGeo, columnMat);
+    col1.position.set(-2.7, -0.9, 2.1);
+    this.houseGroup.add(col1);
+
+    const col2 = new THREE.Mesh(columnGeo, columnMat);
+    col2.position.set(-0.5, -0.9, 2.1);
+    this.houseGroup.add(col2);
+
+    this.disposables.push(
+      gfMainGeo, gfFrontGeo, band1Geo, band2Geo, ufMainGeo, ufFrontGeo,
+      balconyFloorGeo, balconyGlassGeo, balconySideGlassGeo, columnGeo, columnMat
+    );
+
+    // -------------------------------------------------------------
+    // 4. Cross-Gable Pitched Roofs with Glowing Ridge Lines
+    // -------------------------------------------------------------
     const createTriangleGableWall = (width, height, mat) => {
       const shape = new THREE.Shape();
       shape.moveTo(-width / 2, 0);
       shape.lineTo(width / 2, 0);
       shape.lineTo(0, height);
       shape.closePath();
-      const extrudeSettings = { depth: 0.14, bevelEnabled: false };
+      const extrudeSettings = { depth: 0.12, bevelEnabled: false };
       return new THREE.ExtrudeGeometry(shape, extrudeSettings);
     };
 
-    // Left Main Gable Wall (Pitched 45°)
-    const leftGableGeo = createTriangleGableWall(3.3, 1.65, this.woodSidingMat);
-    const leftGable = new THREE.Mesh(leftGableGeo, this.woodSidingMat);
+    // Left Gable Wall
+    const leftGableGeo = createTriangleGableWall(3.3, 1.65, this.upperFacadeMat);
+    const leftGable = new THREE.Mesh(leftGableGeo, this.upperFacadeMat);
     leftGable.position.set(-2.85, 1.55, 1.25);
     leftGable.rotation.y = Math.PI / 2;
-    leftGable.castShadow = true;
     this.houseGroup.add(leftGable);
-    this.woodWallMeshes.push(leftGable);
+    this.addWireframeEdges(leftGable, leftGableGeo, 0x00f2fe, 0.85);
 
-    // Front Gable Wall (Pitched 45°)
-    const frontGableGeo = createTriangleGableWall(2.5, 1.25, this.woodSidingMat);
-    const frontGable = new THREE.Mesh(frontGableGeo, this.woodSidingMat);
+    // Front Gable Wall
+    const frontGableGeo = createTriangleGableWall(2.5, 1.25, this.upperFacadeMat);
+    const frontGable = new THREE.Mesh(frontGableGeo, this.upperFacadeMat);
     frontGable.position.set(1.0, 1.55, 2.15);
-    frontGable.castShadow = true;
     this.houseGroup.add(frontGable);
-    this.woodWallMeshes.push(frontGable);
+    this.addWireframeEdges(frontGable, frontGableGeo, 0x00f2fe, 0.85);
 
-    // -------------------------------------------------------------
-    // 4. 45° Pitch Cross-Gable Roof with Authentic Valley (A = 107.5°)
-    // -------------------------------------------------------------
+    // Main Longitudinal Roof Pitched Planes (45° pitch)
     const mainRoofSlopeLen = 2.45;
     const mainRoofLen = 5.6;
-    const slopeGeo = new THREE.BoxGeometry(mainRoofLen, 0.10, mainRoofSlopeLen);
 
-    // South/Front Slope of Main Longitudinal Roof (45° pitch)
-    const slope1 = new THREE.Mesh(slopeGeo, this.roofMat);
+    // South/Front Slope
+    const slope1Geo = new THREE.BoxGeometry(mainRoofLen, 0.08, mainRoofSlopeLen);
+    const slope1 = new THREE.Mesh(slope1Geo, this.roofMat);
     slope1.position.set(-0.3, 2.38, 0.42);
     slope1.rotation.x = Math.PI / 4;
-    slope1.castShadow = true;
-    slope1.receiveShadow = true;
     this.houseGroup.add(slope1);
-    this.roofMeshes.push(slope1);
+    this.addWireframeEdges(slope1, slope1Geo, 0x00f2fe, 0.85);
 
-    // North/Back Slope of Main Longitudinal Roof (45° pitch)
-    const slope2 = new THREE.Mesh(slopeGeo, this.roofMat);
+    // North/Back Slope
+    const slope2 = new THREE.Mesh(slope1Geo, this.roofMat);
     slope2.position.set(-0.3, 2.38, -1.22);
     slope2.rotation.x = -Math.PI / 4;
-    slope2.castShadow = true;
-    slope2.receiveShadow = true;
     this.houseGroup.add(slope2);
-    this.roofMeshes.push(slope2);
+    this.addWireframeEdges(slope2, slope1Geo, 0x00f2fe, 0.85);
 
-    // Front Projecting Gable Slopes (Intersecting valley at 90° layout, 107.5° dihedral angle)
+    // Front Projecting Gable Slopes (Intersecting valley at 107.5°)
     const frontRoofSlopeLen = 1.95;
     const frontRoofLen = 2.8;
-    const fSlopeGeo = new THREE.BoxGeometry(frontRoofLen, 0.10, frontRoofSlopeLen);
+    const fSlopeGeo = new THREE.BoxGeometry(frontRoofLen, 0.08, frontRoofSlopeLen);
 
     // East Slope of Front Gable
     const fSlopeE = new THREE.Mesh(fSlopeGeo, this.roofMat);
     fSlopeE.position.set(1.68, 2.18, 1.3);
     fSlopeE.rotation.z = -Math.PI / 4;
     fSlopeE.rotation.y = Math.PI / 2;
-    fSlopeE.castShadow = true;
-    fSlopeE.receiveShadow = true;
     this.houseGroup.add(fSlopeE);
-    this.roofMeshes.push(fSlopeE);
+    this.addWireframeEdges(fSlopeE, fSlopeGeo, 0x00f2fe, 0.85);
 
     // West Slope of Front Gable
     const fSlopeW = new THREE.Mesh(fSlopeGeo, this.roofMat);
     fSlopeW.position.set(0.32, 2.18, 1.3);
     fSlopeW.rotation.z = Math.PI / 4;
     fSlopeW.rotation.y = Math.PI / 2;
-    fSlopeW.castShadow = true;
-    fSlopeW.receiveShadow = true;
     this.houseGroup.add(fSlopeW);
-    this.roofMeshes.push(fSlopeW);
+    this.addWireframeEdges(fSlopeW, fSlopeGeo, 0x00f2fe, 0.85);
 
-    // White Bargeboards & Fascia Trim along the roof rakes
-    this.createRoofTrims();
+    // Glowing Roof Ridge Beam
+    const ridgePoints = [
+      new THREE.Vector3(-3.1, 3.25, -0.4),
+      new THREE.Vector3(2.5, 3.25, -0.4)
+    ];
+    const ridgeGeo = new THREE.BufferGeometry().setFromPoints(ridgePoints);
+    const ridgeMat = new THREE.LineBasicMaterial({ color: 0x00f2fe, linewidth: 2 });
+    this.houseGroup.add(new THREE.Line(ridgeGeo, ridgeMat));
+
+    // Valley line
+    const valleyPoints = [
+      new THREE.Vector3(1.0, 2.8, 1.3),
+      new THREE.Vector3(1.0, 2.8, -0.4)
+    ];
+    const valleyGeo = new THREE.BufferGeometry().setFromPoints(valleyPoints);
+    this.houseGroup.add(new THREE.Line(valleyGeo, ridgeMat));
+
+    this.disposables.push(leftGableGeo, frontGableGeo, slope1Geo, fSlopeGeo, ridgeGeo, ridgeMat, valleyGeo);
 
     // -------------------------------------------------------------
-    // 5. Casement Windows with White Trim & Mullions
+    // 5. Transparent Architectural Windows with Interior Glow
     // -------------------------------------------------------------
     this.windowFrames = [];
-    // Ground Floor Windows
-    // Front right window (on projecting brick wing)
-    this.addCasementWindow(2.0, -0.75, 2.22, 0.95, 1.05, false, 2, 2);
-    // Front right side window
-    this.addCasementWindow(2.32, -0.75, 0.5, 0.85, 1.0, true, 2, 2);
-    // Left side ground floor window
-    this.addCasementWindow(-2.82, -0.75, 0.2, 0.85, 0.9, true, 2, 2);
+    const addSmartWindow = (x, y, z, w, h, isRotY = false) => {
+      const frameGeo = new THREE.BoxGeometry(w, h, 0.08);
+      const frame = new THREE.Mesh(frameGeo, structuralFrameMat);
+      frame.position.set(x, y, z);
+      if (isRotY) frame.rotation.y = Math.PI / 2;
 
-    // Upper Floor Windows (Horizontal Timber Wood Siding)
-    // Front gable upper double-window
-    this.addCasementWindow(0.45, 0.95, 2.22, 0.78, 0.95, false, 2, 2);
-    // Front gable upper single-window
-    this.addCasementWindow(1.55, 0.95, 2.22, 0.78, 0.95, false, 2, 2);
-    // Left side upper floor wide 3-pane window
-    this.addCasementWindow(-2.82, 0.95, -0.4, 1.6, 0.85, true, 3, 2);
-    // Right side upper floor window
-    this.addCasementWindow(2.22, 0.95, -0.4, 0.8, 0.9, true, 2, 2);
+      const glassGeo = new THREE.BoxGeometry(w - 0.12, h - 0.12, 0.1);
+      const glass = new THREE.Mesh(glassGeo, this.glassMat);
+      frame.add(glass);
+      this.addWireframeEdges(frame, frameGeo, 0x00f2fe, 0.9);
+
+      this.houseGroup.add(frame);
+      this.windowFrames.push(frame);
+      this.disposables.push(frameGeo, glassGeo);
+    };
+
+    // Ground Floor Windows
+    addSmartWindow(2.0, -0.75, 2.22, 0.9, 1.0);
+    addSmartWindow(2.32, -0.75, -0.4, 0.9, 1.0, true);
+    addSmartWindow(-2.82, -0.75, 0.2, 0.85, 0.9, true);
+
+    // Upper Floor Windows
+    addSmartWindow(0.45, 0.95, 2.22, 0.75, 0.95);
+    addSmartWindow(1.55, 0.95, 2.22, 0.75, 0.95);
+    addSmartWindow(-2.82, 0.95, -0.4, 1.6, 0.85, true);
+    addSmartWindow(2.22, 0.95, -0.4, 0.8, 0.9, true);
+
+    // Balcony French Sliding Doors
+    addSmartWindow(-1.6, 0.9, 1.28, 1.8, 1.2);
 
     // -------------------------------------------------------------
     // 6. Recessed Modern Entrance Door & Concrete Steps
     // -------------------------------------------------------------
-    // Recessed entry alcove door
-    const doorGeo = new THREE.BoxGeometry(0.85, 1.45, 0.08);
-    const door = new THREE.Mesh(doorGeo, this.doorMat);
+    const doorGeo = new THREE.BoxGeometry(0.85, 1.45, 0.06);
+    const doorMat = new THREE.MeshStandardMaterial({
+      color: 0x0284c7,
+      emissive: 0x0369a1,
+      emissiveIntensity: 0.2,
+      roughness: 0.4
+    });
+    const door = new THREE.Mesh(doorGeo, doorMat);
     door.position.set(-0.15, -0.85, 2.05);
     this.houseGroup.add(door);
+    this.addWireframeEdges(door, doorGeo, 0x38bdf8, 0.8);
 
-    // Door white casing surround
-    const doorTrimGeo = new THREE.BoxGeometry(0.95, 1.55, 0.04);
-    const doorTrim = new THREE.Mesh(doorTrimGeo, this.whiteTrimMat);
-    doorTrim.position.set(-0.15, -0.85, 2.02);
-    this.houseGroup.add(doorTrim);
-
-    // Sidelight glass pane
-    const sideLightGeo = new THREE.BoxGeometry(0.24, 1.35, 0.06);
-    const sideLight = new THREE.Mesh(sideLightGeo, this.glassMat);
-    sideLight.position.set(0.32, -0.85, 2.06);
-    this.houseGroup.add(sideLight);
-
-    // Concrete Entrance Porch Steps (3-tier cantilevered)
+    // Steps
     for (let s = 0; s < 3; s++) {
-      const stepGeo = new THREE.BoxGeometry(1.3 - s * 0.18, 0.12, 0.38);
-      const stepMat = new THREE.MeshStandardMaterial({ color: 0xd1d5db, roughness: 0.75 });
-      const step = new THREE.Mesh(stepGeo, stepMat);
-      step.position.set(-0.15, -1.6 + s * 0.12, 2.35 + (2 - s) * 0.26);
-      step.receiveShadow = true;
+      const stepGeo = new THREE.BoxGeometry(1.2 - s * 0.15, 0.12, 0.35);
+      const step = new THREE.Mesh(stepGeo, structuralFrameMat);
+      step.position.set(-0.15, -1.6 + s * 0.12, 2.35 + (2 - s) * 0.25);
       this.houseGroup.add(step);
-      this.disposables.push(stepGeo, stepMat);
+      this.addWireframeEdges(step, stepGeo, 0x00f2fe, 0.7);
+      this.disposables.push(stepGeo);
     }
+    this.disposables.push(doorGeo, doorMat);
 
     // -------------------------------------------------------------
-    // 7. Interior Warm Illumination (Glows softly through windows)
+    // 7. Interior Visible Rooms & Ambient Illumination
     // -------------------------------------------------------------
-    this.interiorLight = new THREE.PointLight(0xffeedd, 1.6, 9.0);
+    this.interiorLight = new THREE.PointLight(0x38bdf8, 1.5, 8.0);
     this.interiorLight.position.set(0.5, 0.5, 0.2);
     this.houseGroup.add(this.interiorLight);
 
-    // Register all disposables
-    this.disposables.push(
-      gfMainGeo, gfFrontGeo, belt1Geo, belt2Geo, ufMainGeo, ufFrontGeo,
-      leftGableGeo, frontGableGeo, slopeGeo, fSlopeGeo, doorGeo, doorTrimGeo, sideLightGeo
-    );
+    // Interior Room Silhouettes
+    this.interiorFurnitureGroup = new THREE.Group();
+    this.houseGroup.add(this.interiorFurnitureGroup);
 
-    // Attachment coordinates for feature conduits
+    // Living Room Sofa Silhouette
+    const sofaGeo = new THREE.BoxGeometry(1.2, 0.38, 0.55);
+    const furnitureMat = new THREE.MeshStandardMaterial({
+      color: 0x0f3460,
+      emissive: 0x00f2fe,
+      emissiveIntensity: 0.2,
+      roughness: 0.5
+    });
+    const sofa = new THREE.Mesh(sofaGeo, furnitureMat);
+    sofa.position.set(1.0, -1.4, 0.8);
+    this.interiorFurnitureGroup.add(sofa);
+
+    // Coffee Table
+    const tableGeo = new THREE.BoxGeometry(0.7, 0.22, 0.4);
+    const table = new THREE.Mesh(tableGeo, furnitureMat);
+    table.position.set(1.0, -1.5, 0.1);
+    this.interiorFurnitureGroup.add(table);
+
+    // Modern Cantilevered Staircase
+    for (let st = 0; st < 8; st++) {
+      const treadGeo = new THREE.BoxGeometry(0.8, 0.05, 0.22);
+      const tread = new THREE.Mesh(treadGeo, furnitureMat);
+      tread.position.set(-1.8, -1.4 + st * 0.2, -0.8 + st * 0.18);
+      this.interiorFurnitureGroup.add(tread);
+      this.disposables.push(treadGeo);
+    }
+
+    // Upper Floor Bed Silhouette
+    const bedGeo = new THREE.BoxGeometry(1.4, 0.35, 1.5);
+    const bed = new THREE.Mesh(bedGeo, furnitureMat);
+    bed.position.set(0.4, 0.3, -0.6);
+    this.interiorFurnitureGroup.add(bed);
+
+    this.disposables.push(sofaGeo, tableGeo, bedGeo, furnitureMat);
+
+    // Attachment coordinate points for 3D conduits
     this.houseAttachmentPoints = {
-      'roof': new THREE.Vector3(1.0, 3.2, 1.3),
-      'upper-cantilever': new THREE.Vector3(-1.6, 1.4, 1.6),
+      'roof': new THREE.Vector3(1.0, 2.8, 1.3),
+      'upper-cantilever': new THREE.Vector3(-1.6, 1.2, 1.6),
       'interior': new THREE.Vector3(1.0, 0.6, 1.2),
       'walls': new THREE.Vector3(2.3, -0.4, 0.5),
       'exterior-facade': new THREE.Vector3(-2.8, 0.8, -0.4),
@@ -787,152 +616,97 @@ export class ConstructionHouse3D {
     };
   }
 
-  createRoofTrims() {
-    // White bargeboard fascia trim along front gable rakes
-    const rakeLen = 1.85;
-    const rakeGeo = new THREE.BoxGeometry(rakeLen, 0.08, 0.14);
-
-    const rakeE = new THREE.Mesh(rakeGeo, this.whiteTrimMat);
-    rakeE.position.set(1.68, 2.22, 2.25);
-    rakeE.rotation.z = -Math.PI / 4;
-    rakeE.rotation.y = Math.PI / 2;
-    this.houseGroup.add(rakeE);
-
-    const rakeW = new THREE.Mesh(rakeGeo, this.whiteTrimMat);
-    rakeW.position.set(0.32, 2.22, 2.25);
-    rakeW.rotation.z = Math.PI / 4;
-    rakeW.rotation.y = Math.PI / 2;
-    this.houseGroup.add(rakeW);
-
-    this.disposables.push(rakeGeo);
+  // Helper to add glowing wireframe edges
+  addWireframeEdges(mesh, geometry, colorHex = 0x00f2fe, opacity = 0.85) {
+    const edgesGeo = new THREE.EdgesGeometry(geometry, 25);
+    const edgesMat = new THREE.LineBasicMaterial({
+      color: colorHex,
+      transparent: true,
+      opacity: opacity,
+      blending: THREE.AdditiveBlending
+    });
+    const wireframe = new THREE.LineSegments(edgesGeo, edgesMat);
+    mesh.add(wireframe);
+    this.disposables.push(edgesGeo, edgesMat);
+    return wireframe;
   }
 
-  addCasementWindow(x, y, z, w, h, isRotY = false, cols = 2, rows = 2) {
-    const frameGroup = new THREE.Group();
-    frameGroup.position.set(x, y, z);
-    if (isRotY) frameGroup.rotation.y = Math.PI / 2;
-
-    // Outer white casing frame
-    const frameGeo = new THREE.BoxGeometry(w, h, 0.08);
-    const frame = new THREE.Mesh(frameGeo, this.whiteTrimMat);
-    frameGroup.add(frame);
-
-    // Sill (bottom projecting white ledge)
-    const sillGeo = new THREE.BoxGeometry(w + 0.14, 0.06, 0.12);
-    const sill = new THREE.Mesh(sillGeo, this.whiteTrimMat);
-    sill.position.set(0, -h / 2 - 0.02, 0.02);
-    frameGroup.add(sill);
-
-    // Reflective glass pane
-    const glassGeo = new THREE.BoxGeometry(w - 0.12, h - 0.12, 0.04);
-    const glass = new THREE.Mesh(glassGeo, this.glassMat);
-    frameGroup.add(glass);
-
-    // Mullion dividers (white crossbars)
-    if (cols > 1) {
-      const vertMullionGeo = new THREE.BoxGeometry(0.03, h - 0.12, 0.05);
-      const vertMullion = new THREE.Mesh(vertMullionGeo, this.whiteTrimMat);
-      frameGroup.add(vertMullion);
-      this.disposables.push(vertMullionGeo);
-    }
-    if (rows > 1) {
-      const horizMullionGeo = new THREE.BoxGeometry(w - 0.12, 0.03, 0.05);
-      const horizMullion = new THREE.Mesh(horizMullionGeo, this.whiteTrimMat);
-      frameGroup.add(horizMullion);
-      this.disposables.push(horizMullionGeo);
-    }
-
-    this.houseGroup.add(frameGroup);
-    this.windowFrames.push(frameGroup);
-    this.disposables.push(frameGeo, sillGeo, glassGeo);
-  }
-
-  // ==================== CAD Dimension Overlays (Exact Reference Image) ====================
-  createCADDimensionAnnotations() {
+  // ==================== Blueprint Dimension Annotations ====================
+  createBlueprintDimensionAnnotations() {
     this.cadAnnotationsGroup = new THREE.Group();
     this.universeGroup.add(this.cadAnnotationsGroup);
 
     // 1. Front Dimension Line: L = 8.65m
-    const frontY = -1.72;
-    const frontZ = 4.3;
-    const pFrontL = new THREE.Vector3(-2.9, frontY, frontZ);
-    const pFrontR = new THREE.Vector3(2.9, frontY, frontZ);
-    this.createDimensionLine(pFrontL, pFrontR, 0xffffff);
+    const frontDimY = -1.75;
+    const frontDimZ = 4.3;
+    const pFrontL = new THREE.Vector3(-2.9, frontDimY, frontDimZ);
+    const pFrontR = new THREE.Vector3(2.9, frontDimY, frontDimZ);
 
-    const labelL = this.createCADTextSprite('L = 8.65m', 24, '#ffffff');
-    labelL.position.set(0, frontY + 0.35, frontZ);
-    labelL.scale.set(2.4, 0.75, 1);
+    this.createDimensionLineWithArrows(pFrontL, pFrontR, 0x00f2fe);
+    const labelL = this.createCADTextSprite('L = 8.65m (Frontage)', 24, '#00f2fe');
+    labelL.position.set(0, frontDimY + 0.35, frontDimZ);
+    labelL.scale.set(2.8, 0.8, 1);
     this.cadAnnotationsGroup.add(labelL);
 
-    // 2. Left Side Ground Dimension Line: H = 3.20m
-    const sideX = -4.3;
-    const pSide1 = new THREE.Vector3(sideX, -1.72, -1.8);
-    const pSide2 = new THREE.Vector3(sideX, -1.72, 1.8);
-    this.createDimensionLine(pSide1, pSide2, 0xffffff);
+    // 2. Left Side Height Dimension Line: H = 3.20m
+    const sideDimX = -4.3;
+    const pSideBottom = new THREE.Vector3(sideDimX, -1.8, 0);
+    const pSideTop = new THREE.Vector3(sideDimX, 1.4, 0);
 
-    const labelSide = this.createCADTextSprite('H = 3.20m', 24, '#ffffff');
-    labelSide.position.set(sideX, -1.35, 0);
-    labelSide.scale.set(2.4, 0.75, 1);
-    this.cadAnnotationsGroup.add(labelSide);
-
-    // 3. Side Vertical Eaves Height: H = 3.20m with Vertical Arrow & "Z"
-    const pVertB = new THREE.Vector3(sideX, -1.72, -0.1);
-    const pVertT = new THREE.Vector3(sideX, 1.55, -0.1);
-    this.createDimensionLine(pVertB, pVertT, 0xffffff);
-
-    const labelH1 = this.createCADTextSprite('H = 3.20m', 24, '#ffffff');
-    labelH1.position.set(sideX - 0.25, -0.1, -0.1);
-    labelH1.scale.set(2.4, 0.75, 1);
+    this.createDimensionLineWithArrows(pSideBottom, pSideTop, 0x38bdf8);
+    const labelH1 = this.createCADTextSprite('H = 3.20m (Eaves)', 24, '#38bdf8');
+    labelH1.position.set(sideDimX - 0.2, -0.2, 0);
+    labelH1.scale.set(2.6, 0.8, 1);
     this.cadAnnotationsGroup.add(labelH1);
 
-    const labelZ = this.createCADTextSprite('Z', 24, '#ffffff', false);
-    labelZ.position.set(sideX, 2.1, -0.1);
-    labelZ.scale.set(0.7, 0.5, 1);
-    this.cadAnnotationsGroup.add(labelZ);
+    // Vertical Coordinate Arrow
+    const arrowZ = this.createCADTextSprite('+Z Axis', 24, '#38bdf8');
+    arrowZ.position.set(sideDimX, 2.0, 0);
+    arrowZ.scale.set(1.4, 0.7, 1);
+    this.cadAnnotationsGroup.add(arrowZ);
 
-    // 4. Roof Apex Height: H = 2.90m (Right side vertical dimension)
-    const rightX = 3.9;
-    const pRightB = new THREE.Vector3(rightX, 0.0, 1.3);
-    const pRightT = new THREE.Vector3(rightX, 2.9, 1.3);
-    this.createDimensionLine(pRightB, pRightT, 0xffffff);
+    // 3. Front Right Roof Apex Height: H = 2.90m
+    const rightDimX = 3.9;
+    const pRightBottom = new THREE.Vector3(rightDimX, 0.0, 1.3);
+    const pRightTop = new THREE.Vector3(rightDimX, 2.9, 1.3);
 
-    const labelH2 = this.createCADTextSprite('H = 2.90m', 24, '#ffffff');
-    labelH2.position.set(rightX + 0.35, 1.45, 1.3);
-    labelH2.scale.set(2.4, 0.75, 1);
+    this.createDimensionLineWithArrows(pRightBottom, pRightTop, 0xa855f7);
+    const labelH2 = this.createCADTextSprite('H = 2.90m (Ridge)', 24, '#a855f7');
+    labelH2.position.set(rightDimX + 0.3, 1.45, 1.3);
+    labelH2.scale.set(2.6, 0.8, 1);
     this.cadAnnotationsGroup.add(labelH2);
 
-    // 5. Roof Pitch Annotation: Roof Pitch: 45°
-    const pitchLabel = this.createCADTextSprite('Roof Pitch: 45°', 24, '#ffffff');
-    pitchLabel.position.set(2.6, 3.45, -0.4);
-    pitchLabel.scale.set(2.7, 0.75, 1);
+    // 4. Roof Pitch Annotation: Roof Pitch: 45°
+    const pitchLabel = this.createCADTextSprite('Roof Pitch: 45°', 24, '#00f2fe');
+    pitchLabel.position.set(2.6, 3.4, -0.4);
+    pitchLabel.scale.set(2.8, 0.8, 1);
     this.cadAnnotationsGroup.add(pitchLabel);
 
-    // 6. Roof Valley Angle Callout: A = 107.5°
-    const angleLabel = this.createCADTextSprite('A = 107.5°', 24, '#ffffff');
+    // 5. Roof Valley Angle Callout: A = 107.5°
+    const angleLabel = this.createCADTextSprite('Valley A = 107.5°', 24, '#00f2fe');
     angleLabel.position.set(0.35, 1.65, 1.35);
-    angleLabel.scale.set(2.4, 0.75, 1);
+    angleLabel.scale.set(2.6, 0.8, 1);
     this.cadAnnotationsGroup.add(angleLabel);
 
-    // Curved Valley Angle Arc with double arrows
+    // CAD curved arc
     const arcPoints = [];
     for (let a = 0; a <= 20; a++) {
       const ang = Math.PI * 0.15 + (a / 20) * Math.PI * 0.45;
       arcPoints.push(new THREE.Vector3(Math.cos(ang) * 0.8 + 0.2, Math.sin(ang) * 0.6 + 1.25, 1.3));
     }
     const arcGeo = new THREE.BufferGeometry().setFromPoints(arcPoints);
-    const arcMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1.5 });
+    const arcMat = new THREE.LineBasicMaterial({ color: 0x00f2fe, linewidth: 1.5 });
     this.cadAnnotationsGroup.add(new THREE.Line(arcGeo, arcMat));
     this.disposables.push(arcGeo, arcMat);
   }
 
-  createDimensionLine(pA, pB, colorHex = 0xffffff) {
+  createDimensionLineWithArrows(pA, pB, colorHex = 0x00f2fe) {
     const points = [pA, pB];
     const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
     const lineMat = new THREE.LineBasicMaterial({ color: colorHex, linewidth: 1.5 });
     const line = new THREE.Line(lineGeo, lineMat);
     this.cadAnnotationsGroup.add(line);
 
-    // CAD Arrowheads / Extension Ticks at both ends
     const dir = new THREE.Vector3().subVectors(pB, pA).normalize();
     const perp = new THREE.Vector3(-dir.z, 0, dir.x).normalize().multiplyScalar(0.22);
 
@@ -949,29 +723,26 @@ export class ConstructionHouse3D {
     this.disposables.push(lineGeo, tick1Geo, tick2Geo, lineMat);
   }
 
-  createCADTextSprite(text, fontSize = 24, textColor = '#ffffff', hasBackground = true) {
+  createCADTextSprite(text, fontSize = 26, textColor = '#00f2fe') {
     const canvas = document.createElement('canvas');
-    canvas.width = 360;
-    canvas.height = 90;
+    canvas.width = 380;
+    canvas.height = 96;
     const ctx = canvas.getContext('2d');
 
-    if (hasBackground) {
-      // Subtle architectural dark slate badge
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.82)';
-      ctx.roundRect(4, 4, 352, 82, 10);
-      ctx.fill();
+    ctx.fillStyle = 'rgba(7, 18, 38, 0.75)';
+    ctx.roundRect(4, 4, 372, 88, 12);
+    ctx.fill();
 
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-      ctx.lineWidth = 1.5;
-      ctx.roundRect(4, 4, 352, 82, 10);
-      ctx.stroke();
-    }
+    ctx.strokeStyle = `${textColor}55`;
+    ctx.lineWidth = 2;
+    ctx.roundRect(4, 4, 372, 88, 12);
+    ctx.stroke();
 
     ctx.fillStyle = textColor;
-    ctx.font = `600 ${fontSize}px "Inter", -apple-system, sans-serif`;
+    ctx.font = `600 ${fontSize}px "Outfit", "Inter", sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(text, 180, 45);
+    ctx.fillText(text, 190, 48);
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.minFilter = THREE.LinearFilter;
@@ -981,43 +752,44 @@ export class ConstructionHouse3D {
     return sprite;
   }
 
-  // ==================== CAD 3D Coordinate Trihedron (Bottom Left) ====================
+  // ==================== CAD 3D Coordinate Trihedron ====================
   createCADTrihedron() {
     this.trihedronGroup = new THREE.Group();
     this.trihedronGroup.position.set(-6.2, -2.2, 5.2);
     this.universeGroup.add(this.trihedronGroup);
 
-    const len = 1.25;
-    // X-Axis (Red)
+    const len = 1.3;
     const xGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(len, 0, 0)]);
     const xMat = new THREE.LineBasicMaterial({ color: 0xef4444, linewidth: 2 });
     this.trihedronGroup.add(new THREE.Line(xGeo, xMat));
 
-    // Y-Axis (Green)
     const yGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -len)]);
     const yMat = new THREE.LineBasicMaterial({ color: 0x10b981, linewidth: 2 });
     this.trihedronGroup.add(new THREE.Line(yGeo, yMat));
 
-    // Z-Axis (Blue/Cyan)
     const zGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, len, 0)]);
-    const zMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, linewidth: 2 });
+    const zMat = new THREE.LineBasicMaterial({ color: 0x00f2fe, linewidth: 2 });
     this.trihedronGroup.add(new THREE.Line(zGeo, zMat));
 
-    // Axis Labels
-    const addAxisLabel = (text, color, pos) => {
-      const sprite = this.createCADTextSprite(text, 22, color, false);
-      sprite.position.copy(pos);
-      sprite.scale.set(0.65, 0.45, 1);
-      this.trihedronGroup.add(sprite);
-    };
-    addAxisLabel('X-Axis', '#ef4444', new THREE.Vector3(len + 0.35, 0, 0));
-    addAxisLabel('Y-Axis', '#10b981', new THREE.Vector3(0, 0, -len - 0.35));
-    addAxisLabel('Z-Axis', '#38bdf8', new THREE.Vector3(0, len + 0.35, 0));
+    const lX = this.createCADTextSprite('X', 22, '#ef4444');
+    lX.position.set(len + 0.25, 0, 0);
+    lX.scale.set(0.7, 0.45, 1);
+    this.trihedronGroup.add(lX);
+
+    const lY = this.createCADTextSprite('Y', 22, '#10b981');
+    lY.position.set(0, 0, -len - 0.25);
+    lY.scale.set(0.7, 0.45, 1);
+    this.trihedronGroup.add(lY);
+
+    const lZ = this.createCADTextSprite('Z', 22, '#00f2fe');
+    lZ.position.set(0, len + 0.25, 0);
+    lZ.scale.set(0.7, 0.45, 1);
+    this.trihedronGroup.add(lZ);
 
     this.disposables.push(xGeo, yGeo, zGeo, xMat, yMat, zMat);
   }
 
-  // ==================== 12 Floating Feature Nodes & Conduits ====================
+  // ==================== 12 Floating Construction Feature Nodes ====================
   createFeatureNodes() {
     this.nodesGroup = new THREE.Group();
     this.universeGroup.add(this.nodesGroup);
@@ -1029,19 +801,19 @@ export class ConstructionHouse3D {
       const angle = feature.orbitAngle;
       const x = Math.cos(angle) * (feature.radiusX || 7.6);
       const z = Math.sin(angle) * (feature.radiusY || 5.4);
-      const y = (feature.elevation || 0) * 1.1;
+      const y = (feature.elevation || 0) * 1.12;
 
       nodeGroup.position.set(x, y, z);
       nodeGroup.userData.basePos = new THREE.Vector3(x, y, z);
       nodeGroup.userData.floatOffset = idx * 0.55;
 
-      // 1. Sleek Core Sphere (Frosted Glass / Tech Metal)
-      const sphereGeo = new THREE.SphereGeometry(0.32, 16, 14);
+      // 1. Core Glowing Sphere
+      const sphereGeo = new THREE.SphereGeometry(0.35, 16, 14);
       const sphereMat = new THREE.MeshStandardMaterial({
         color: feature.colorHex,
         emissive: feature.colorHex,
-        emissiveIntensity: 0.6,
-        roughness: 0.25,
+        emissiveIntensity: 0.95,
+        roughness: 0.2,
         metalness: 0.8
       });
       const coreSphere = new THREE.Mesh(sphereGeo, sphereMat);
@@ -1049,29 +821,31 @@ export class ConstructionHouse3D {
       nodeGroup.add(coreSphere);
       this.disposables.push(sphereGeo, sphereMat);
 
-      // 2. Subtle Outer Icosahedron Ring
-      const shellGeo = new THREE.IcosahedronGeometry(0.48, 1);
+      // 2. Outer Wireframe Shell (Icosahedron)
+      const shellGeo = new THREE.IcosahedronGeometry(0.54, 1);
       const shellWire = new THREE.WireframeGeometry(shellGeo);
       const shellMat = new THREE.LineBasicMaterial({
         color: feature.colorHex,
         transparent: true,
-        opacity: 0.45
+        opacity: 0.85,
+        blending: THREE.AdditiveBlending
       });
       const shellMesh = new THREE.LineSegments(shellWire, shellMat);
       nodeGroup.add(shellMesh);
       this.disposables.push(shellGeo, shellWire, shellMat);
 
-      // 3. Thin White Gyro Ring
+      // 3. Neon Gyro Ring
       const gyroPoints = [];
       for (let i = 0; i <= 32; i++) {
         const theta = (i / 32) * Math.PI * 2;
-        gyroPoints.push(new THREE.Vector3(Math.cos(theta) * 0.62, Math.sin(theta) * 0.62, 0));
+        gyroPoints.push(new THREE.Vector3(Math.cos(theta) * 0.68, Math.sin(theta) * 0.68, 0));
       }
       const gyroGeo = new THREE.BufferGeometry().setFromPoints(gyroPoints);
       const gyroMat = new THREE.LineBasicMaterial({
         color: 0xffffff,
         transparent: true,
-        opacity: 0.35
+        opacity: 0.55,
+        blending: THREE.AdditiveBlending
       });
       const gyroRing = new THREE.LineLoop(gyroGeo, gyroMat);
       gyroRing.rotation.x = Math.PI / 3;
@@ -1079,8 +853,8 @@ export class ConstructionHouse3D {
       nodeGroup.add(gyroRing);
       this.disposables.push(gyroGeo, gyroMat);
 
-      // 4. Soft Local Point Light
-      const light = new THREE.PointLight(feature.colorHex, 0.9, 4.5);
+      // 4. Local Neon Point Light
+      const light = new THREE.PointLight(feature.colorHex, 1.4, 5.5);
       nodeGroup.add(light);
 
       this.nodesGroup.add(nodeGroup);
@@ -1095,6 +869,7 @@ export class ConstructionHouse3D {
     });
   }
 
+  // ==================== Conduits Connecting Nodes to House ====================
   createHouseConduits() {
     this.conduitsGroup = new THREE.Group();
     this.universeGroup.add(this.conduitsGroup);
@@ -1105,11 +880,11 @@ export class ConstructionHouse3D {
       const positions = new Float32Array(6);
       lineGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-      // Delicate, subtle CAD telemetry line in soft sky blue / feature tint
       const lineMat = new THREE.LineBasicMaterial({
-        color: 0x38bdf8,
+        color: feature.colorHex,
         transparent: true,
-        opacity: 0.28
+        opacity: 0.35,
+        blending: THREE.AdditiveBlending
       });
 
       const lineMesh = new THREE.Line(lineGeo, lineMat);
@@ -1127,11 +902,12 @@ export class ConstructionHouse3D {
     });
   }
 
+  // ==================== Animated Data Pulse System ====================
   createDataPulseSystem() {
     this.dataPacketsGroup = new THREE.Group();
     this.universeGroup.add(this.dataPacketsGroup);
 
-    const count = 18;
+    const count = 20;
     const packetGeo = new THREE.BufferGeometry();
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
@@ -1141,15 +917,14 @@ export class ConstructionHouse3D {
       positions[i * 3 + 1] = 0;
       positions[i * 3 + 2] = 0;
 
-      // Soft Sky Blue & Gold pulses
-      colors[i * 3] = 0.22;
-      colors[i * 3 + 1] = 0.74;
-      colors[i * 3 + 2] = 0.97;
+      colors[i * 3] = 0.0;
+      colors[i * 3 + 1] = 0.95;
+      colors[i * 3 + 2] = 1.0;
 
       this.dataPackets.push({
         conduitIndex: i % (this.houseConnectionLines.length || 1),
         progress: Math.random(),
-        speed: 0.3 + Math.random() * 0.35
+        speed: 0.35 + Math.random() * 0.4
       });
     }
 
@@ -1157,10 +932,10 @@ export class ConstructionHouse3D {
     packetGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
     const packetMat = new THREE.PointsMaterial({
-      size: 0.22,
+      size: 0.28,
       vertexColors: true,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.95,
       blending: THREE.AdditiveBlending
     });
 
@@ -1169,22 +944,24 @@ export class ConstructionHouse3D {
     this.disposables.push(packetGeo, packetMat);
   }
 
-  createAtmosphericParticles() {
+  // ==================== Background Construction Data Particles ====================
+  createConstructionDataParticles() {
     const isMobile = window.innerWidth < 768;
-    const count = isMobile ? 200 : 450;
+    const count = isMobile ? 300 : 700;
 
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
-
-    const softBlue = new THREE.Color(0x38bdf8);
-    const slateLight = new THREE.Color(0x94a3b8);
+    const cyan = new THREE.Color(0x00f2fe);
+    const purple = new THREE.Color(0xa855f7);
+    const gold = new THREE.Color(0xfbbf24);
 
     for (let i = 0; i < count; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 44;
       positions[i * 3 + 1] = (Math.random() - 0.5) * 32;
       positions[i * 3 + 2] = (Math.random() - 0.5) * 36 - 2;
 
-      const c = Math.random() > 0.5 ? softBlue : slateLight;
+      const pick = Math.random();
+      const c = pick < 0.5 ? cyan : (pick < 0.8 ? purple : gold);
       colors[i * 3] = c.r;
       colors[i * 3 + 1] = c.g;
       colors[i * 3 + 2] = c.b;
@@ -1195,10 +972,10 @@ export class ConstructionHouse3D {
     particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
     const particleMat = new THREE.PointsMaterial({
-      size: 0.14,
+      size: 0.16,
       vertexColors: true,
       transparent: true,
-      opacity: 0.55,
+      opacity: 0.75,
       blending: THREE.AdditiveBlending
     });
 
@@ -1207,553 +984,848 @@ export class ConstructionHouse3D {
     this.disposables.push(particleGeo, particleMat);
   }
 
-  // ==================== HTML Labels Overlay ====================
+  // ==================== Edge Tracer Pulse System ====================
+  createEdgeTracerSystem() {
+    const tracerCount = 12;
+    const tracerGeo = new THREE.BufferGeometry();
+    const tracerPositions = new Float32Array(tracerCount * 3);
+
+    for (let i = 0; i < tracerCount * 3; i++) {
+      tracerPositions[i] = 0;
+    }
+    tracerGeo.setAttribute('position', new THREE.BufferAttribute(tracerPositions, 3));
+
+    const tracerMat = new THREE.PointsMaterial({
+      color: 0x00f2fe,
+      size: 0.32,
+      transparent: true,
+      opacity: 0.9,
+      blending: THREE.AdditiveBlending
+    });
+
+    this.edgeTracerMesh = new THREE.Points(tracerGeo, tracerMat);
+    this.houseGroup.add(this.edgeTracerMesh);
+    this.disposables.push(tracerGeo, tracerMat);
+
+    this.perimeterWaypoints = [
+      new THREE.Vector3(-2.8, -0.05, -2.0),
+      new THREE.Vector3(2.3, -0.05, -2.0),
+      new THREE.Vector3(2.3, -0.05, 2.2),
+      new THREE.Vector3(-0.3, -0.05, 2.2),
+      new THREE.Vector3(-2.8, -0.05, 1.3),
+      new THREE.Vector3(-2.8, 1.55, 1.3),
+      new THREE.Vector3(0.0, 3.25, -0.4),
+      new THREE.Vector3(2.5, 2.38, 0.4)
+    ];
+
+    this.tracers = [];
+    for (let t = 0; t < tracerCount; t++) {
+      this.tracers.push({
+        progress: t / tracerCount,
+        speed: 0.18 + Math.random() * 0.1
+      });
+    }
+  }
+
+  // ==================== Special Interactive Feature 3D Systems ====================
+  createSpecialReactionSystems() {
+    // 1. AI Neural-Network Effect around top node
+    this.neuralNetworkGroup = new THREE.Group();
+    this.neuralNetworkGroup.position.set(0, 4.0, 0);
+    this.neuralNetworkGroup.visible = false;
+    this.universeGroup.add(this.neuralNetworkGroup);
+
+    const nnNodes = 14;
+    const nnPoints = [];
+    for (let i = 0; i < nnNodes; i++) {
+      nnPoints.push(new THREE.Vector3(
+        (Math.random() - 0.5) * 3.5,
+        (Math.random() - 0.5) * 2.2,
+        (Math.random() - 0.5) * 3.0
+      ));
+    }
+    const nnGeo = new THREE.BufferGeometry().setFromPoints(nnPoints);
+    const nnMat = new THREE.PointsMaterial({
+      color: 0xc084fc,
+      size: 0.35,
+      transparent: true,
+      opacity: 0.9,
+      blending: THREE.AdditiveBlending
+    });
+    this.neuralNetworkGroup.add(new THREE.Points(nnGeo, nnMat));
+
+    const lineIndices = [];
+    for (let i = 0; i < nnNodes; i++) {
+      for (let j = i + 1; j < nnNodes; j++) {
+        if (nnPoints[i].distanceTo(nnPoints[j]) < 2.2) {
+          lineIndices.push(nnPoints[i], nnPoints[j]);
+        }
+      }
+    }
+    const nnLinesGeo = new THREE.BufferGeometry().setFromPoints(lineIndices);
+    const nnLinesMat = new THREE.LineBasicMaterial({
+      color: 0xa855f7,
+      transparent: true,
+      opacity: 0.6,
+      blending: THREE.AdditiveBlending
+    });
+    this.neuralNetworkGroup.add(new THREE.LineSegments(nnLinesGeo, nnLinesMat));
+    this.disposables.push(nnGeo, nnMat, nnLinesGeo, nnLinesMat);
+
+    // 2. Material Recommendation: Floating 3D Material Indicators
+    this.materialCubesGroup = new THREE.Group();
+    this.materialCubesGroup.visible = false;
+    this.universeGroup.add(this.materialCubesGroup);
+
+    const materials = [
+      { name: 'OPC 53 Cement', color: 0x94a3b8, pos: new THREE.Vector3(3.2, 0.5, 2.5) },
+      { name: 'Fe-550D Steel', color: 0x38bdf8, pos: new THREE.Vector3(3.4, 1.8, 1.0) },
+      { name: 'AAC Blocks', color: 0xcbd5e1, pos: new THREE.Vector3(-3.4, 0.4, 2.2) },
+      { name: 'Smart Glass', color: 0x00f2fe, pos: new THREE.Vector3(-3.2, 1.8, 0.8) },
+      { name: 'Weather Coating', color: 0xf59e0b, pos: new THREE.Vector3(0, 3.8, 2.4) },
+      { name: 'Vitrified Tiles', color: 0xa855f7, pos: new THREE.Vector3(0, -1.2, 3.6) }
+    ];
+
+    materials.forEach(mat => {
+      const cGeo = new THREE.BoxGeometry(0.42, 0.42, 0.42);
+      const cMat = new THREE.MeshStandardMaterial({
+        color: mat.color,
+        emissive: mat.color,
+        emissiveIntensity: 0.4,
+        roughness: 0.2,
+        metalness: 0.8
+      });
+      const cube = new THREE.Mesh(cGeo, cMat);
+      cube.position.copy(mat.pos);
+      this.addWireframeEdges(cube, cGeo, 0xffffff, 0.9);
+
+      const label = this.createCADTextSprite(mat.name, 20, '#ffffff');
+      label.position.set(mat.pos.x, mat.pos.y + 0.4, mat.pos.z);
+      label.scale.set(1.6, 0.5, 1);
+
+      this.materialCubesGroup.add(cube);
+      this.materialCubesGroup.add(label);
+      this.disposables.push(cGeo, cMat);
+    });
+
+    // 3. Land Area Measurement: Digital Ground Plot Grid & Boundary
+    this.landMeasurementGroup = new THREE.Group();
+    this.landMeasurementGroup.position.y = -1.92;
+    this.landMeasurementGroup.visible = false;
+    this.universeGroup.add(this.landMeasurementGroup);
+
+    const boundaryPts = [
+      new THREE.Vector3(-4.5, 0.05, -3.8),
+      new THREE.Vector3(4.5, 0.05, -3.8),
+      new THREE.Vector3(4.5, 0.05, 4.2),
+      new THREE.Vector3(-4.5, 0.05, 4.2),
+      new THREE.Vector3(-4.5, 0.05, -3.8)
+    ];
+    const bGeo = new THREE.BufferGeometry().setFromPoints(boundaryPts);
+    const bMat = new THREE.LineBasicMaterial({
+      color: 0x84cc16,
+      linewidth: 2,
+      blending: THREE.AdditiveBlending
+    });
+    this.landMeasurementGroup.add(new THREE.Line(bGeo, bMat));
+
+    const plotLabel = this.createCADTextSprite('Plot: 1,200 sq.ft (30\' × 40\')', 24, '#84cc16');
+    plotLabel.position.set(0, 0.35, 4.8);
+    plotLabel.scale.set(3.2, 0.85, 1);
+    this.landMeasurementGroup.add(plotLabel);
+    this.disposables.push(bGeo, bMat);
+
+    // 4. Safety Monitoring: Warning Perimeters & Beacons
+    this.safetyZoneGroup = new THREE.Group();
+    this.safetyZoneGroup.visible = false;
+    this.universeGroup.add(this.safetyZoneGroup);
+
+    const beaconGeo = new THREE.RingGeometry(0.8, 1.0, 32);
+    const beaconMat = new THREE.MeshBasicMaterial({
+      color: 0xef4444,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.65,
+      blending: THREE.AdditiveBlending
+    });
+    const beacon1 = new THREE.Mesh(beaconGeo, beaconMat);
+    beacon1.rotation.x = Math.PI / 2;
+    beacon1.position.set(-1.6, 0.02, 2.1);
+    this.safetyZoneGroup.add(beacon1);
+
+    const safetyLabel = this.createCADTextSprite('⚡ Hazard Zone Laser Geofence', 22, '#ef4444');
+    safetyLabel.position.set(-1.6, 1.2, 2.1);
+    safetyLabel.scale.set(2.8, 0.75, 1);
+    this.safetyZoneGroup.add(safetyLabel);
+    this.disposables.push(beaconGeo, beaconMat);
+  }
+
+  // ==================== Glassmorphism HTML Telemetry Labels ====================
   createHtmlLabels() {
     if (!this.labelsOverlay) return;
     this.labelsOverlay.innerHTML = '';
     this.htmlLabelElements.clear();
 
     CONSTRUCTION_FEATURES.forEach((feature) => {
-      const labelEl = document.createElement('div');
-      labelEl.className = `skill-glass-label feature-${feature.id}`;
-      labelEl.dataset.featureId = feature.id;
-      labelEl.dataset.category = feature.category;
+      const label = document.createElement('div');
+      label.className = `skill-glass-label feature-${feature.id}`;
+      label.setAttribute('tabindex', '0');
+      label.setAttribute('role', 'button');
+      label.setAttribute('aria-label', `Inspect ${feature.name}`);
+      label.dataset.featureId = feature.id;
 
-      labelEl.innerHTML = `
-        <span class="label-dot" style="background-color: ${feature.color};"></span>
-        <span class="label-text">${feature.name}</span>
-        <i class="fa-solid ${feature.icon || 'fa-cube'} label-icon"></i>
+      label.innerHTML = `
+        <span class="label-dot" style="background-color:${feature.color};box-shadow:0 0 12px ${feature.glowColor}"></span>
+        <span class="label-text">${feature.shortName || feature.name}</span>
+        <span class="label-icon"><i class="fas ${feature.icon}"></i></span>
       `;
 
-      labelEl.addEventListener('mouseenter', () => this.handleFeatureHover(feature.id));
-      labelEl.addEventListener('mouseleave', () => this.handleFeatureUnhover());
-      labelEl.addEventListener('click', (e) => {
+      label.addEventListener('mouseenter', () => this.handleFeatureHover(feature.id));
+      label.addEventListener('mouseleave', () => this.handleFeatureHover(null));
+
+      label.addEventListener('click', (e) => {
         e.stopPropagation();
         this.handleFeatureSelect(feature.id);
       });
 
-      this.labelsOverlay.appendChild(labelEl);
-      this.htmlLabelElements.set(feature.id, labelEl);
+      label.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.handleFeatureSelect(feature.id);
+        }
+      });
+
+      this.labelsOverlay.appendChild(label);
+      this.htmlLabelElements.set(feature.id, label);
     });
   }
 
-  // ==================== Interactive Reactions & Exterior Finish Swatches ====================
-  handleFeatureHover(featureId) {
-    this.hoveredFeatureId = featureId;
-    this.highlightConduitsAndNodes(featureId);
+  // ==================== 3D to 2D Label Projection & Conduits ====================
+  updateLabelsAndConduits() {
+    if (!this.labelsOverlay || !this.camera) return;
 
-    const el = this.htmlLabelElements.get(featureId);
-    if (el) el.classList.add('hovered');
+    const overlayRect = this.labelsOverlay.getBoundingClientRect();
+    const w = overlayRect.width || this.width || 920;
+    const h = overlayRect.height || this.height || 680;
 
-    this.triggerFeatureReaction(featureId, true);
+    const labelCoords = [];
+    const svgLinesHtml = [];
+
+    const worldPos = new THREE.Vector3();
+    const screenPos = new THREE.Vector3();
+
+    this.featureNodeMeshes.forEach((nodeItem) => {
+      const feature = nodeItem.feature;
+      const labelEl = this.htmlLabelElements.get(feature.id);
+      if (!labelEl) return;
+
+      const isVisibleCategory = this.activeCategory === 'ALL' || feature.category === this.activeCategory;
+      if (!isVisibleCategory) {
+        labelEl.style.display = 'none';
+        return;
+      } else {
+        labelEl.style.display = 'flex';
+      }
+
+      nodeItem.group.getWorldPosition(worldPos);
+      screenPos.copy(worldPos).project(this.camera);
+
+      if (screenPos.z > 1) {
+        labelEl.style.opacity = '0';
+        return;
+      }
+
+      const pxX = ((screenPos.x * 0.5) + 0.5) * w;
+      const pxY = ((-screenPos.y * 0.5) + 0.5) * h;
+
+      const angle = feature.orbitAngle;
+      const pushDistX = Math.cos(angle) * 38;
+      const pushDistY = -Math.sin(angle) * 28;
+
+      let labelX = pxX + pushDistX;
+      let labelY = pxY + pushDistY;
+
+      labelX = Math.max(85, Math.min(w - 95, labelX));
+      labelY = Math.max(40, Math.min(h - 45, labelY));
+
+      labelCoords.push({ id: feature.id, nodeX: pxX, nodeY: pxY, labelX, labelY, color: feature.color });
+
+      labelEl.style.transform = `translate3d(${labelX}px, ${labelY}px, 0) translate(-50%, -50%)`;
+      labelEl.style.opacity = (this.hoveredFeatureId && this.hoveredFeatureId !== feature.id) ? '0.4' : '1';
+    });
+
+    if (this.svgLinesEl) {
+      labelCoords.forEach((coord) => {
+        const isHovered = this.hoveredFeatureId === coord.id;
+        const isSelected = this.selectedFeatureId === coord.id;
+        const strokeColor = isHovered || isSelected ? coord.color : 'rgba(0, 242, 254, 0.4)';
+        const strokeWidth = isHovered || isSelected ? 2.2 : 1.0;
+        const strokeDash = isHovered ? 'none' : '3,3';
+
+        svgLinesHtml.push(`
+          <line 
+            x1="${coord.nodeX}" y1="${coord.nodeY}" 
+            x2="${coord.labelX}" y2="${coord.labelY}" 
+            stroke="${strokeColor}" 
+            stroke-width="${strokeWidth}" 
+            stroke-dasharray="${strokeDash}"
+          />
+        `);
+      });
+      this.svgLinesEl.innerHTML = svgLinesHtml.join('');
+    }
   }
 
-  handleFeatureUnhover() {
-    if (this.hoveredFeatureId) {
-      const el = this.htmlLabelElements.get(this.hoveredFeatureId);
-      if (el) el.classList.remove('hovered');
-    }
-    this.hoveredFeatureId = null;
-    this.highlightConduitsAndNodes(this.selectedFeatureId);
+  // ==================== Interactions & Real-Time Feature Reactions ====================
+  handleFeatureHover(featureId) {
+    if (this.hoveredFeatureId === featureId) return;
+    this.hoveredFeatureId = featureId;
 
-    if (!this.selectedFeatureId) {
-      this.resetFeatureReactions();
-    }
+    this.featureNodeMeshes.forEach((nodeItem) => {
+      const isThis = nodeItem.feature.id === featureId;
+      const isConnected = featureId && nodeItem.feature.connections.includes(featureId);
+
+      if (isThis) {
+        nodeItem.core.scale.set(1.45, 1.45, 1.45);
+        nodeItem.core.material.emissiveIntensity = 2.2;
+        nodeItem.shell.scale.set(1.5, 1.5, 1.5);
+        nodeItem.shell.material.opacity = 1.0;
+        nodeItem.light.intensity = 3.2;
+      } else if (isConnected) {
+        nodeItem.core.scale.set(1.15, 1.15, 1.15);
+        nodeItem.core.material.emissiveIntensity = 1.35;
+        nodeItem.shell.material.opacity = 0.85;
+        nodeItem.light.intensity = 1.8;
+      } else {
+        nodeItem.core.scale.set(1.0, 1.0, 1.0);
+        nodeItem.core.material.emissiveIntensity = featureId ? 0.35 : 0.95;
+        nodeItem.shell.scale.set(1.0, 1.0, 1.0);
+        nodeItem.shell.material.opacity = featureId ? 0.25 : 0.85;
+        nodeItem.light.intensity = featureId ? 0.4 : 1.4;
+      }
+    });
+
+    this.houseConnectionLines.forEach((conn) => {
+      const isThis = conn.featureId === featureId;
+      conn.material.opacity = isThis ? 1.0 : (featureId ? 0.1 : 0.35);
+    });
+
+    this.htmlLabelElements.forEach((el, id) => {
+      el.classList.toggle('hovered', id === featureId);
+    });
   }
 
   handleFeatureSelect(featureId) {
-    if (this.selectedFeatureId === featureId) {
-      this.deselectFeature();
-      return;
-    }
+    this.selectedFeatureId = this.selectedFeatureId === featureId ? null : featureId;
+
+    this.htmlLabelElements.forEach((el, id) => {
+      el.classList.toggle('selected', id === this.selectedFeatureId);
+    });
+
+    this.update3DSpecialReactions(this.selectedFeatureId);
 
     if (this.selectedFeatureId) {
-      const prevEl = this.htmlLabelElements.get(this.selectedFeatureId);
-      if (prevEl) prevEl.classList.remove('selected');
-    }
-
-    this.selectedFeatureId = featureId;
-    const el = this.htmlLabelElements.get(featureId);
-    if (el) el.classList.add('selected');
-
-    this.highlightConduitsAndNodes(featureId);
-    this.triggerFeatureReaction(featureId, false);
-    this.renderDetailDrawer(featureId);
-  }
-
-  deselectFeature() {
-    if (this.selectedFeatureId) {
-      const prevEl = this.htmlLabelElements.get(this.selectedFeatureId);
-      if (prevEl) prevEl.classList.remove('selected');
-    }
-    this.selectedFeatureId = null;
-    this.highlightConduitsAndNodes(null);
-    this.resetFeatureReactions();
-    this.closeDetailDrawer();
-  }
-
-  triggerFeatureReaction(featureId, isHover = false) {
-    const feature = getFeatureById(featureId);
-    if (!feature) return;
-
-    // 1. Interior Designing: warm interior room glow
-    if (featureId === 'interior-design') {
-      if (this.interiorLight) {
-        this.interiorLight.intensity = isHover ? 2.8 : 3.6;
+      const feature = getFeatureById(this.selectedFeatureId);
+      if (feature) {
+        this.displayDetailCard(feature);
       }
     } else {
-      if (this.interiorLight) this.interiorLight.intensity = 1.6;
-    }
-
-    // 2. Smart Architecture: Highlight CAD dimension lines
-    if (featureId === 'smart-architecture') {
-      if (this.cadAnnotationsGroup) {
-        this.cadAnnotationsGroup.scale.set(1.04, 1.04, 1.04);
-      }
-    } else {
-      if (this.cadAnnotationsGroup) {
-        this.cadAnnotationsGroup.scale.set(1, 1, 1);
-      }
+      this.hideDetailCard();
     }
   }
 
-  resetFeatureReactions() {
-    if (this.interiorLight) this.interiorLight.intensity = 1.6;
-    if (this.cadAnnotationsGroup) this.cadAnnotationsGroup.scale.set(1, 1, 1);
-  }
-
-  // Interactive Exterior Finishes (Painting Feature Customizer)
-  applyExteriorFinish(hexColor, finishType) {
-    if (finishType === 'brick' || !finishType) {
-      this.brickWallMeshes.forEach(mesh => {
-        mesh.material.color.set(hexColor);
-      });
+  update3DSpecialReactions(featureId) {
+    if (this.neuralNetworkGroup) {
+      this.neuralNetworkGroup.visible = (featureId === 'ai-analysis');
     }
-    if (finishType === 'wood' || finishType === 'all') {
-      this.woodWallMeshes.forEach(mesh => {
-        mesh.material.color.set(hexColor);
+
+    if (this.interiorLight) {
+      this.interiorLight.intensity = (featureId === 'interior-design') ? 3.8 : 1.5;
+      this.interiorLight.color.setHex((featureId === 'interior-design') ? 0x00f2fe : 0x38bdf8);
+    }
+
+    if (this.materialCubesGroup) {
+      this.materialCubesGroup.visible = (featureId === 'materials' || featureId === 'material-tracking');
+    }
+
+    if (this.landMeasurementGroup) {
+      this.landMeasurementGroup.visible = (featureId === 'land-measurement');
+    }
+
+    if (this.safetyZoneGroup) {
+      this.safetyZoneGroup.visible = (featureId === 'safety-monitoring');
+    }
+
+    if (this.wallMaterials) {
+      const isPainting = featureId === 'painting';
+      this.wallMaterials.forEach(mat => {
+        mat.emissive = new THREE.Color(isPainting ? 0xf59e0b : 0x000000);
+        mat.emissiveIntensity = isPainting ? 0.35 : 0.0;
       });
     }
   }
 
-  // ==================== Detail Drawer UI ====================
-  renderDetailDrawer(featureId) {
+  // ==================== Specialized Detail Telemetry Card ====================
+  displayDetailCard(feature) {
     if (!this.detailCardEl) return;
-    const feature = getFeatureById(featureId);
-    if (!feature) return;
 
-    let customContent = '';
+    const iconEl = this.detailCardEl.querySelector('#cardSkillIcon');
+    const categoryEl = this.detailCardEl.querySelector('#cardSkillCategory');
+    const titleEl = this.detailCardEl.querySelector('#cardSkillTitle');
+    const summaryEl = this.detailCardEl.querySelector('#cardSkillSummary');
+    const levelEl = this.detailCardEl.querySelector('#cardSkillLevel');
+    const pctEl = this.detailCardEl.querySelector('#cardSkillPct');
+    const progressEl = this.detailCardEl.querySelector('#cardSkillProgressBar');
+    const tagsEl = this.detailCardEl.querySelector('#cardSkillTags');
+    const connEl = this.detailCardEl.querySelector('#cardSkillConnections');
 
-    // 1. Painting Recommendation: Interactive exterior finish swatches
-    if (feature.id === 'painting' && feature.colorSwatches) {
-      customContent = `
-        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-          <div class="skill-card-sublabel">Select Exterior Architectural Finish:</div>
-          <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
-            ${feature.colorSwatches.map((swatch, sIdx) => `
-              <button class="paint-swatch-btn" data-hex="${swatch.hex}" data-type="${sIdx === 0 ? 'brick' : 'wood'}" title="${swatch.name} - ${swatch.desc}" style="
-                width: 38px; height: 38px; border-radius: 8px; background: ${swatch.hex};
-                border: 2px solid ${swatch.accent}; cursor: pointer; position: relative;
-              "></button>
-            `).join('')}
-          </div>
-          <div id="active-finish-desc" style="font-size: 0.76rem; color: #94a3b8; margin-top: 8px;">
-            Click a swatch to apply live architectural finish to the 3D house.
-          </div>
-        </div>
-      `;
+    if (iconEl) {
+      iconEl.innerHTML = `<i class="fas ${feature.icon}"></i>`;
+      iconEl.style.backgroundColor = `${feature.color}22`;
+      iconEl.style.color = feature.color;
+      iconEl.style.borderColor = feature.color;
+    }
+    if (categoryEl) categoryEl.textContent = feature.category;
+    if (titleEl) {
+      titleEl.textContent = feature.name;
+      titleEl.style.color = feature.color;
+    }
+    if (summaryEl) summaryEl.textContent = feature.summary;
+    if (levelEl) levelEl.textContent = feature.level;
+    if (pctEl) pctEl.textContent = feature.metric;
+    if (progressEl) {
+      progressEl.style.width = '100%';
+      progressEl.style.backgroundColor = feature.color;
+      progressEl.style.boxShadow = `0 0 14px ${feature.glowColor}`;
     }
 
-    // 2. Cost Estimation: Itemized BOQ
-    if (feature.id === 'cost-estimation' && feature.costBreakdown) {
-      customContent = `
-        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-          <div class="skill-card-sublabel">Itemized BOQ (Total: ${feature.totalEstimate}):</div>
-          <div style="font-size: 0.78rem; display: flex; flex-direction: column; gap: 6px; margin-top: 6px;">
-            ${feature.costBreakdown.map(b => `
-              <div style="display: flex; justify-content: space-between; color: #cbd5e1;">
-                <span>${b.item}</span>
-                <strong style="color: #818cf8;">${b.cost}</strong>
+    if (tagsEl) {
+      let customWidget = '';
+
+      if (feature.id === 'painting' && feature.colorSwatches) {
+        customWidget = `
+          <div class="swatch-preview-box" style="width:100%;margin-bottom:10px">
+            <span style="font-size:0.75rem;color:var(--text-muted);display:block;margin-bottom:6px">Live Facade Finish Simulator:</span>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              ${feature.colorSwatches.map(s => `
+                <button class="paint-swatch-btn" data-color="${s.hex}" style="background:${s.hex};border:2px solid ${s.accent};width:32px;height:32px;border-radius:6px;cursor:pointer" title="${s.name} - ${s.desc}"></button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+      else if (feature.id === 'cost-estimation' && feature.costBreakdown) {
+        customWidget = `
+          <div style="width:100%;font-size:0.78rem;background:rgba(255,255,255,0.04);padding:10px;border-radius:8px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.08)">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;color:#fff;font-weight:700">
+              <span>Total Estimated BOQ</span>
+              <span style="color:${feature.color}">${feature.totalEstimate}</span>
+            </div>
+            ${feature.costBreakdown.map(c => `
+              <div class="flex-between" style="margin-bottom:4px;color:var(--text-muted)">
+                <span>${c.item}</span>
+                <strong style="color:#fff">${c.cost}</strong>
               </div>
             `).join('')}
           </div>
-        </div>
-      `;
-    }
-
-    // 3. Land Area Measurement
-    if (feature.id === 'land-measurement' && feature.landTelemetry) {
-      customContent = `
-        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-          <div class="skill-card-sublabel">Plot Survey Telemetry:</div>
-          <div style="font-size: 0.78rem; display: flex; flex-direction: column; gap: 5px; margin-top: 6px; color: #cbd5e1;">
-            <div><strong>Plot Area:</strong> ${feature.landTelemetry.plotDimensions}</div>
-            <div><strong>Built-up Area:</strong> ${feature.landTelemetry.builtUpArea}</div>
-            <div><strong>Coverage:</strong> ${feature.landTelemetry.groundCoverage}</div>
-            <div><strong>Setbacks:</strong> Front ${feature.landTelemetry.frontSetback} | Rear ${feature.landTelemetry.rearSetback}</div>
+        `;
+      }
+      else if (feature.id === 'land-measurement' && feature.landTelemetry) {
+        customWidget = `
+          <div style="width:100%;font-size:0.78rem;background:rgba(255,255,255,0.04);padding:10px;border-radius:8px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.08)">
+            <div class="flex-between" style="margin-bottom:4px"><span>Plot Dimensions</span><strong style="color:${feature.color}">${feature.landTelemetry.plotDimensions}</strong></div>
+            <div class="flex-between" style="margin-bottom:4px"><span>Built-Up Area</span><strong style="color:#fff">${feature.landTelemetry.builtUpArea}</strong></div>
+            <div class="flex-between" style="margin-bottom:4px"><span>Ground Coverage</span><strong style="color:#fff">${feature.landTelemetry.groundCoverage}</strong></div>
+            <div class="flex-between" style="margin-bottom:4px"><span>Front Setback</span><strong style="color:#fff">${feature.landTelemetry.frontSetback}</strong></div>
           </div>
-        </div>
-      `;
-    }
-
-    // 4. Project Progress Milestones
-    if (feature.id === 'project-progress' && feature.milestones) {
-      customContent = `
-        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-          <div class="skill-card-sublabel">Construction Milestones:</div>
-          <div style="font-size: 0.76rem; display: flex; flex-direction: column; gap: 6px; margin-top: 6px;">
-            ${feature.milestones.slice(0, 4).map(m => `
-              <div>
-                <div style="display: flex; justify-content: space-between; color: #cbd5e1;">
-                  <span>${m.stage}</span>
-                  <span style="color: #10b981;">${m.progress}%</span>
+        `;
+      }
+      else if (feature.id === 'project-progress' && feature.milestones) {
+        customWidget = `
+          <div style="width:100%;font-size:0.78rem;background:rgba(255,255,255,0.04);padding:10px;border-radius:8px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.08)">
+            ${feature.milestones.map(m => `
+              <div style="margin-bottom:6px">
+                <div class="flex-between">
+                  <span><i class="fas ${m.icon}" style="margin-right:4px;color:${feature.color}"></i> ${m.stage}</span>
+                  <strong style="color:#fff">${m.progress}%</strong>
                 </div>
-                <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 99px; margin-top: 2px;">
-                  <div style="width: ${m.progress}%; height: 100%; background: #10b981; border-radius: 99px;"></div>
+                <div style="width:100%;height:4px;background:rgba(255,255,255,0.1);border-radius:999px;margin-top:2px">
+                  <div style="width:${m.progress}%;height:100%;background:${feature.color};border-radius:999px"></div>
                 </div>
               </div>
             `).join('')}
           </div>
-        </div>
-      `;
+        `;
+      }
+      else if (feature.id === 'safety-monitoring' && feature.safetyIndicators) {
+        customWidget = `
+          <div style="width:100%;font-size:0.78rem;background:rgba(255,255,255,0.04);padding:10px;border-radius:8px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.08)">
+            ${feature.safetyIndicators.map(s => `
+              <div class="flex-between" style="margin-bottom:4px">
+                <span>${s.zone}</span>
+                <span class="badge" style="background:${s.level === 'Safe' ? '#10b98122' : '#ef444422'};color:${s.level === 'Safe' ? '#10b981' : '#ef4444'}">${s.status}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+      else if (feature.id === 'worker-tracking' && feature.workforceData) {
+        customWidget = `
+          <div style="width:100%;font-size:0.78rem;background:rgba(255,255,255,0.04);padding:10px;border-radius:8px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.08)">
+            ${feature.workforceData.map(w => `
+              <div class="flex-between" style="margin-bottom:4px">
+                <span>${w.trade}</span>
+                <strong style="color:${feature.color}">${w.active} Active</strong>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      const tagsHtml = feature.tags.map(t => `<span class="skill-tag">${t}</span>`).join('');
+      tagsEl.innerHTML = customWidget + tagsHtml;
+
+      tagsEl.querySelectorAll('.paint-swatch-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const colHex = btn.dataset.color;
+          if (this.wallMaterials) {
+            this.wallMaterials.forEach(mat => {
+              mat.color.setStyle(colHex);
+            });
+          }
+        });
+      });
     }
 
-    this.detailCardEl.innerHTML = `
-      <button class="skill-card-close" aria-label="Close details">&times;</button>
-      <div class="skill-card-header">
-        <div class="skill-card-icon" style="background: ${feature.color}20; color: ${feature.color}; border-color: ${feature.color}40;">
-          <i class="fa-solid ${feature.icon}"></i>
-        </div>
-        <div>
-          <span class="skill-card-category">${feature.category}</span>
-          <h3 class="skill-card-title">${feature.name}</h3>
-        </div>
-      </div>
+    if (connEl) {
+      connEl.innerHTML = feature.connections.map(cId => {
+        const cFeat = getFeatureById(cId);
+        return cFeat ? `<button class="skill-conn-pill" data-target="${cFeat.id}" style="border-color:${cFeat.color};color:#fff">${cFeat.shortName || cFeat.name}</button>` : '';
+      }).join('');
 
-      <div class="skill-card-summary">${feature.summary}</div>
-
-      <div class="skill-card-meter-box">
-        <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 4px;">
-          <span style="color: var(--text-muted);">${feature.level}</span>
-          <strong style="color: ${feature.color};">${feature.metric}</strong>
-        </div>
-        <div class="skill-card-bar-track">
-          <div class="skill-card-bar-fill" style="width: 88%; background: ${feature.color};"></div>
-        </div>
-      </div>
-
-      <div class="skill-card-sublabel">Core Disciplines</div>
-      <div class="skill-card-tags">
-        ${feature.tags.map(tag => `<span class="skill-tag">${tag}</span>`).join('')}
-      </div>
-
-      ${customContent}
-    `;
+      connEl.querySelectorAll('.skill-conn-pill').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const target = btn.dataset.target;
+          if (target) this.handleFeatureSelect(target);
+        });
+      });
+    }
 
     this.detailCardEl.classList.remove('hidden');
     this.detailCardEl.classList.add('active');
-
-    // Close button
-    const closeBtn = this.detailCardEl.querySelector('.skill-card-close');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.deselectFeature();
-      });
-    }
-
-    // Paint swatch clicks
-    const swatchBtns = this.detailCardEl.querySelectorAll('.paint-swatch-btn');
-    swatchBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const hex = btn.dataset.hex;
-        const type = btn.dataset.type;
-        this.applyExteriorFinish(hex, type);
-        const descEl = this.detailCardEl.querySelector('#active-finish-desc');
-        if (descEl) descEl.textContent = `Applied finish: ${btn.getAttribute('title')}`;
-      });
-    });
   }
 
-  closeDetailDrawer() {
+  hideDetailCard() {
     if (!this.detailCardEl) return;
     this.detailCardEl.classList.remove('active');
-    this.detailCardEl.classList.add('hidden');
+    setTimeout(() => {
+      if (!this.selectedFeatureId) {
+        this.detailCardEl.classList.add('hidden');
+      }
+    }, 300);
   }
 
-  highlightConduitsAndNodes(activeId) {
-    this.houseConnectionLines.forEach(line => {
-      if (!activeId) {
-        line.material.opacity = 0.28;
-      } else if (line.featureId === activeId) {
-        line.material.opacity = 0.85;
-      } else {
-        line.material.opacity = 0.12;
-      }
-    });
-
-    this.featureNodeMeshes.forEach(node => {
-      if (!activeId) {
-        node.core.scale.set(1, 1, 1);
-        node.gyro.material.opacity = 0.35;
-      } else if (node.feature.id === activeId) {
-        node.core.scale.set(1.25, 1.25, 1.25);
-        node.gyro.material.opacity = 0.85;
-      } else {
-        node.core.scale.set(0.85, 0.85, 0.85);
-        node.gyro.material.opacity = 0.15;
-      }
-    });
-  }
-
-  // ==================== Category Filtering ====================
-  filterByCategory(category) {
+  setCategoryFilter(category) {
     this.activeCategory = category;
 
     this.featureNodeMeshes.forEach((nodeItem) => {
-      const feat = nodeItem.feature;
-      const isVisible = (category === 'ALL' || feat.category === category);
-      nodeItem.group.visible = isVisible;
-
-      const labelEl = this.htmlLabelElements.get(feat.id);
-      if (labelEl) {
-        labelEl.style.display = isVisible ? 'flex' : 'none';
-      }
+      const match = category === 'ALL' || nodeItem.feature.category === category;
+      nodeItem.group.visible = match;
     });
 
-    this.houseConnectionLines.forEach((conduit) => {
-      const feat = getFeatureById(conduit.featureId);
-      conduit.mesh.visible = (category === 'ALL' || feat?.category === category);
+    this.houseConnectionLines.forEach((conn) => {
+      const match = category === 'ALL' || conn.nodeItem.feature.category === category;
+      conn.mesh.visible = match;
     });
 
-    if (this.selectedFeatureId) {
-      const selFeat = getFeatureById(this.selectedFeatureId);
-      if (category !== 'ALL' && selFeat?.category !== category) {
-        this.deselectFeature();
-      }
-    }
+    this.updateLabelsAndConduits();
   }
 
-  // ==================== Event Listeners & Interaction ====================
+  // ==================== Event Listeners ====================
   setupEventListeners() {
-    this.onMouseMoveBound = this.onMouseMove.bind(this);
-    this.onPointerDownBound = this.onPointerDown.bind(this);
-    this.onPointerUpBound = this.onPointerUp.bind(this);
-    this.onResizeBound = this.onResize.bind(this);
+    this.onMouseMove = (e) => {
+      if (!this.mountEl) return;
+      const rect = this.mountEl.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
 
-    window.addEventListener('mousemove', this.onMouseMoveBound, { passive: true });
-    window.addEventListener('resize', this.onResizeBound, { passive: true });
+      this.mouse.targetX = (x / rect.width) * 2 - 1;
+      this.mouse.targetY = -(y / rect.height) * 2 + 1;
 
-    if (this.canvas) {
-      this.canvas.addEventListener('pointerdown', this.onPointerDownBound);
-      this.canvas.addEventListener('pointerup', this.onPointerUpBound);
+      this.normalizedPointer.x = this.mouse.targetX;
+      this.normalizedPointer.y = this.mouse.targetY;
+
+      if (this.camera) {
+        this.raycaster.setFromCamera(this.normalizedPointer, this.camera);
+        const targets = this.featureNodeMeshes.map(n => n.core);
+        const intersects = this.raycaster.intersectObjects(targets);
+
+        if (intersects.length > 0) {
+          const hitId = intersects[0].object.userData.featureId;
+          this.handleFeatureHover(hitId);
+        } else {
+          this.handleFeatureHover(null);
+        }
+      }
+    };
+
+    this.onCanvasClick = () => {
+      if (this.camera) {
+        this.raycaster.setFromCamera(this.normalizedPointer, this.camera);
+        const targets = this.featureNodeMeshes.map(n => n.core);
+        const intersects = this.raycaster.intersectObjects(targets);
+
+        if (intersects.length > 0) {
+          const hitId = intersects[0].object.userData.featureId;
+          this.handleFeatureSelect(hitId);
+        } else {
+          this.handleFeatureSelect(null);
+        }
+      }
+    };
+
+    this.onResize = () => {
+      if (!this.mountEl || !this.renderer || !this.camera) return;
+      const rect = this.mountEl.getBoundingClientRect();
+      const w = rect.width || this.mountEl.clientWidth || 920;
+      const h = rect.height || this.mountEl.clientHeight || 680;
+      if (w <= 0 || h <= 0) return;
+
+      this.width = w;
+      this.height = h;
+
+      const isMobile = window.innerWidth < 768;
+      const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
+      const cameraDistance = isMobile ? 22 : (isTablet ? 19 : 16.5);
+
+      this.camera.position.set(cameraDistance * 0.76, cameraDistance * 0.58, cameraDistance * 0.84);
+      this.camera.aspect = this.width / this.height;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setSize(this.width, this.height);
+      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+      this.updateLabelsAndConduits();
+    };
+
+    this.mountEl.addEventListener('mousemove', this.onMouseMove);
+    this.mountEl.addEventListener('click', this.onCanvasClick);
+    window.addEventListener('resize', this.onResize);
+
+    const closeBtn = this.detailCardEl?.querySelector('#skillCardCloseBtn') || this.detailCardEl?.querySelector('.skill-card-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.handleFeatureSelect(null);
+      });
+    }
+
+    const filterBtns = this.container?.querySelectorAll('.skill-filter-btn');
+    if (filterBtns) {
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          this.setCategoryFilter(btn.dataset.category);
+        });
+      });
+    }
+
+    const rotateBtn = this.container?.querySelector('#skillRotateToggleBtn');
+    if (rotateBtn) {
+      rotateBtn.addEventListener('click', () => {
+        this.isRotating = !this.isRotating;
+        rotateBtn.classList.toggle('paused', !this.isRotating);
+        const span = rotateBtn.querySelector('span');
+        if (span) span.textContent = this.isRotating ? 'Orbit: Active' : 'Orbit: Paused';
+      });
+    }
+
+    const resetBtn = this.container?.querySelector('#skillResetCamBtn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        this.mouse.targetX = 0;
+        this.mouse.targetY = 0;
+        this.mouse.x = 0;
+        this.mouse.y = 0;
+      });
     }
   }
 
+  // ==================== Intersection Observer ====================
   setupIntersectionObserver() {
-    if (!('IntersectionObserver' in window) || !this.mountEl) return;
+    if (!('IntersectionObserver' in window)) return;
     this.observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        this.isInViewport = entry.isIntersecting;
+        // Keep active if intersecting or partially visible
+        this.isInViewport = entry.isIntersecting || entry.intersectionRatio > 0;
       });
-    }, { threshold: 0.1 });
-    this.observer.observe(this.mountEl);
-  }
+    }, { threshold: [0, 0.1] });
 
-  onMouseMove(e) {
-    if (!this.mountEl) return;
-    const rect = this.mountEl.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    this.mouse.targetX = (x / rect.width) * 2 - 1;
-    this.mouse.targetY = -(y / rect.height) * 2 + 1;
-
-    if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
-      this.normalizedPointer.x = (x / rect.width) * 2 - 1;
-      this.normalizedPointer.y = -(y / rect.height) * 2 + 1;
+    if (this.container) {
+      this.observer.observe(this.container);
+    } else if (this.mountEl) {
+      this.observer.observe(this.mountEl);
     }
   }
 
-  onPointerDown(e) {
-    this.isDragging = true;
-    this.dragStartX = e.clientX;
-    this.dragStartY = e.clientY;
-  }
-
-  onPointerUp(e) {
-    if (!this.isDragging) return;
-    const dx = Math.abs(e.clientX - this.dragStartX);
-    const dy = Math.abs(e.clientY - this.dragStartY);
-    this.isDragging = false;
-
-    // Clean click without drag
-    if (dx < 6 && dy < 6) {
-      this.checkRaycastHit();
-    }
-  }
-
-  checkRaycastHit() {
-    if (!this.camera || !this.nodesGroup) return;
-    this.raycaster.setFromCamera(this.normalizedPointer, this.camera);
-
-    const targets = [];
-    this.featureNodeMeshes.forEach(n => {
-      if (n.group.visible) targets.push(n.core);
-    });
-
-    const intersects = this.raycaster.intersectObjects(targets, false);
-    if (intersects.length > 0) {
-      const hitObj = intersects[0].object;
-      const featId = hitObj.userData.featureId;
-      if (featId) this.handleFeatureSelect(featId);
-    } else {
-      // Clicked empty ground
-      this.deselectFeature();
-    }
-  }
-
-  onResize() {
-    if (!this.mountEl || !this.renderer || !this.camera) return;
-    this.width = this.mountEl.clientWidth;
-    this.height = this.mountEl.clientHeight;
-
-    this.camera.aspect = this.width / this.height;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(this.width, this.height);
-  }
-
-  // ==================== Render Loop & Animation ====================
+  // ==================== Animation Loop ====================
   animate() {
     if (this.isDestroyed) return;
-    requestAnimationFrame(this.animate.bind(this));
 
+    this.animationFrameId = requestAnimationFrame(() => this.animate());
     if (!this.isInViewport) return;
 
     const delta = this.clock.getDelta();
     const elapsedTime = this.clock.getElapsedTime();
 
-    // Mouse parallax lerp
-    this.mouse.x += (this.mouse.targetX - this.mouse.x) * 0.04;
-    this.mouse.y += (this.mouse.targetY - this.mouse.y) * 0.04;
+    // Smooth Mouse Parallax
+    this.mouse.x += (this.mouse.targetX - this.mouse.x) * 0.05;
+    this.mouse.y += (this.mouse.targetY - this.mouse.y) * 0.05;
 
     if (this.universeGroup) {
-      // Gentle CAD architectural orbit & mouse tilt
-      if (this.isRotating && !this.reducedMotion) {
-        this.universeGroup.rotation.y = elapsedTime * 0.04 + this.mouse.x * 0.25;
-        this.universeGroup.rotation.x = this.mouse.y * 0.12;
-      } else {
-        this.universeGroup.rotation.y = this.mouse.x * 0.35;
-        this.universeGroup.rotation.x = this.mouse.y * 0.15;
+      this.universeGroup.rotation.y = this.mouse.x * 0.28;
+      this.universeGroup.rotation.x = -this.mouse.y * 0.15;
+    }
+
+    // Slow Continuous CAD House Axial Rotation
+    if (this.isRotating && !this.reducedMotion) {
+      if (this.houseGroup) {
+        this.houseGroup.rotation.y += delta * 0.1;
+      }
+      if (this.cadAnnotationsGroup) {
+        this.cadAnnotationsGroup.rotation.y += delta * 0.1;
+      }
+      if (this.groundGroup) {
+        this.groundGroup.rotation.y += delta * 0.06;
+      }
+      if (this.nodesGroup) {
+        this.nodesGroup.rotation.y += delta * 0.05;
       }
     }
 
-    // 1. Floating animation for 12 feature nodes
+    // Floating Motion of Feature Nodes & Gyro Spins
     this.featureNodeMeshes.forEach((nodeItem) => {
-      if (!nodeItem.group.visible) return;
-      const t = elapsedTime * 1.5 + nodeItem.group.userData.floatOffset;
-      const floatY = Math.sin(t) * 0.14;
-      nodeItem.group.position.y = nodeItem.group.userData.basePos.y + floatY;
+      const offset = nodeItem.group.userData.floatOffset || 0;
+      const basePos = nodeItem.group.userData.basePos;
 
-      // Spin inner gyro ring
-      nodeItem.gyro.rotation.z += 0.015;
-      nodeItem.shell.rotation.y += 0.008;
+      const floatY = Math.sin(elapsedTime * 1.5 + offset) * 0.16;
+      const floatZ = Math.cos(elapsedTime * 1.2 + offset) * 0.12;
+      nodeItem.group.position.y = basePos.y + floatY;
+      nodeItem.group.position.z = basePos.z + floatZ;
+
+      nodeItem.shell.rotation.x += delta * 0.45;
+      nodeItem.shell.rotation.y += delta * 0.55;
+      nodeItem.gyro.rotation.z += delta * 0.75;
     });
 
-    // 2. Update dynamic CAD conduits
-    this.updateHouseConduits();
+    // Animate Edge Tracers Along House Perimeter
+    if (this.edgeTracerMesh && this.perimeterWaypoints && this.perimeterWaypoints.length > 1) {
+      const posArray = this.edgeTracerMesh.geometry.attributes.position.array;
+      const totalSegs = this.perimeterWaypoints.length;
 
-    // 3. Update traveling data packets
-    this.updateDataPackets(delta);
+      this.tracers.forEach((tracer, i) => {
+        tracer.progress = (tracer.progress + delta * tracer.speed) % 1.0;
+        const exactIndex = tracer.progress * totalSegs;
+        const idxA = Math.floor(exactIndex) % totalSegs;
+        const idxB = (idxA + 1) % totalSegs;
+        const segProgress = exactIndex - Math.floor(exactIndex);
 
-    // 4. Update HTML badge screen positions
-    this.updateHtmlLabelPositions();
+        const pA = this.perimeterWaypoints[idxA];
+        const pB = this.perimeterWaypoints[idxB];
 
-    // 5. Render Scene
-    this.renderer.render(this.scene, this.camera);
-  }
+        posArray[i * 3] = THREE.MathUtils.lerp(pA.x, pB.x, segProgress);
+        posArray[i * 3 + 1] = THREE.MathUtils.lerp(pA.y, pB.y, segProgress);
+        posArray[i * 3 + 2] = THREE.MathUtils.lerp(pA.z, pB.z, segProgress);
+      });
+      this.edgeTracerMesh.geometry.attributes.position.needsUpdate = true;
+    }
 
-  updateHouseConduits() {
-    if (!this.houseAttachmentPoints || !this.houseConnectionLines) return;
+    // Windows Emissive Breathing
+    if (this.glassMat) {
+      this.glassMat.emissiveIntensity = 0.12 + Math.sin(elapsedTime * 2.0) * 0.06;
+    }
 
-    this.houseConnectionLines.forEach((conduit) => {
-      if (!conduit.mesh.visible) return;
+    // Spin Neural Network Particles if active
+    if (this.neuralNetworkGroup && this.neuralNetworkGroup.visible) {
+      this.neuralNetworkGroup.rotation.y += delta * 0.35;
+    }
 
-      const nodeGroup = conduit.nodeItem.group;
-      const nodePos = nodeGroup.position;
+    // Spin Material Indicator Cubes if active
+    if (this.materialCubesGroup && this.materialCubesGroup.visible) {
+      this.materialCubesGroup.rotation.y += delta * 0.2;
+    }
 
-      const zoneKey = conduit.targetZoneKey;
-      const housePoint = this.houseAttachmentPoints[zoneKey] || this.houseAttachmentPoints['foundation-slab'];
+    // Update Conduits Connecting Nodes to House Targets
+    const pNode = new THREE.Vector3();
+    const pHouse = new THREE.Vector3();
 
-      const posAttr = conduit.geometry.attributes.position;
-      posAttr.setXYZ(0, nodePos.x, nodePos.y, nodePos.z);
-      posAttr.setXYZ(1, housePoint.x, housePoint.y, housePoint.z);
-      posAttr.needsUpdate = true;
-    });
-  }
+    this.houseConnectionLines.forEach((conn) => {
+      conn.nodeItem.group.getWorldPosition(pNode);
 
-  updateDataPackets(delta) {
-    if (!this.packetPointsMesh || !this.dataPackets.length) return;
-
-    const posAttr = this.packetPointsMesh.geometry.attributes.position;
-
-    this.dataPackets.forEach((packet, idx) => {
-      const conduit = this.houseConnectionLines[packet.conduitIndex];
-      if (!conduit || !conduit.mesh.visible) return;
-
-      packet.progress += delta * packet.speed;
-      if (packet.progress > 1.0) packet.progress = 0.0;
-
-      const pStart = conduit.nodeItem.group.position;
-      const zoneKey = conduit.targetZoneKey;
-      const pEnd = this.houseAttachmentPoints[zoneKey] || this.houseAttachmentPoints['foundation-slab'];
-
-      const curX = THREE.MathUtils.lerp(pStart.x, pEnd.x, packet.progress);
-      const curY = THREE.MathUtils.lerp(pStart.y, pEnd.y, packet.progress);
-      const curZ = THREE.MathUtils.lerp(pStart.z, pEnd.z, packet.progress);
-
-      posAttr.setXYZ(idx, curX, curY, curZ);
-    });
-
-    posAttr.needsUpdate = true;
-  }
-
-  updateHtmlLabelPositions() {
-    if (!this.htmlLabelElements.size || !this.camera || !this.mountEl) return;
-
-    const rect = this.mountEl.getBoundingClientRect();
-    const halfW = rect.width / 2;
-    const halfH = rect.height / 2;
-
-    const tempV = new THREE.Vector3();
-
-    this.featureNodeMeshes.forEach((nodeItem) => {
-      const labelEl = this.htmlLabelElements.get(nodeItem.feature.id);
-      if (!labelEl || !nodeItem.group.visible) return;
-
-      // Get world position of node
-      nodeItem.group.getWorldPosition(tempV);
-      tempV.y += 0.55; // position badge slightly above node core
-
-      // Project 3D vector to 2D screen coordinates
-      tempV.project(this.camera);
-
-      // Behind camera check
-      if (tempV.z > 1.0) {
-        labelEl.style.opacity = '0';
-        labelEl.style.pointerEvents = 'none';
-        return;
+      const targetOffset = this.houseAttachmentPoints[conn.targetZoneKey] || new THREE.Vector3(0, 0, 0);
+      if (this.houseGroup) {
+        this.houseGroup.localToWorld(pHouse.copy(targetOffset));
+      } else {
+        pHouse.copy(targetOffset);
       }
 
-      const screenX = (tempV.x * halfW) + halfW;
-      const screenY = -(tempV.y * halfH) + halfH;
+      this.conduitsGroup.worldToLocal(pNode);
+      this.conduitsGroup.worldToLocal(pHouse);
 
-      labelEl.style.left = `${screenX}px`;
-      labelEl.style.top = `${screenY}px`;
-      labelEl.style.opacity = '1';
-      labelEl.style.pointerEvents = 'auto';
+      const positions = conn.geometry.attributes.position.array;
+      positions[0] = pNode.x;
+      positions[1] = pNode.y;
+      positions[2] = pNode.z;
+      positions[3] = pHouse.x;
+      positions[4] = pHouse.y;
+      positions[5] = pHouse.z;
+      conn.geometry.attributes.position.needsUpdate = true;
     });
+
+    // Update Traveling Data Packets (Node -> House)
+    if (this.packetPointsMesh && this.houseConnectionLines.length > 0) {
+      const packetPositions = this.packetPointsMesh.geometry.attributes.position.array;
+
+      this.dataPackets.forEach((packet, i) => {
+        packet.progress += delta * packet.speed;
+        if (packet.progress > 1.0) {
+          packet.progress = 0;
+          packet.conduitIndex = Math.floor(Math.random() * this.houseConnectionLines.length);
+        }
+
+        const conn = this.houseConnectionLines[packet.conduitIndex];
+        if (conn) {
+          conn.nodeItem.group.getWorldPosition(pNode);
+          const targetOffset = this.houseAttachmentPoints[conn.targetZoneKey] || new THREE.Vector3(0, 0, 0);
+          this.houseGroup.localToWorld(pHouse.copy(targetOffset));
+
+          this.dataPacketsGroup.worldToLocal(pNode);
+          this.dataPacketsGroup.worldToLocal(pHouse);
+
+          const px = THREE.MathUtils.lerp(pNode.x, pHouse.x, packet.progress);
+          const py = THREE.MathUtils.lerp(pNode.y, pHouse.y, packet.progress);
+          const pz = THREE.MathUtils.lerp(pNode.z, pHouse.z, packet.progress);
+
+          packetPositions[i * 3] = px;
+          packetPositions[i * 3 + 1] = py;
+          packetPositions[i * 3 + 2] = pz;
+        }
+      });
+      this.packetPointsMesh.geometry.attributes.position.needsUpdate = true;
+    }
+
+    // Drift Background Construction Particles
+    if (this.particlesSystem) {
+      this.particlesSystem.rotation.y += delta * 0.015;
+    }
+
+    // Render WebGL Frame
+    this.renderer.render(this.scene, this.camera);
+
+    // Project 3D Nodes to 2D HTML Glassmorphism Labels
+    this.updateLabelsAndConduits();
   }
 
   // ==================== 2D Fallback ====================
@@ -1762,34 +1834,39 @@ export class ConstructionHouse3D {
     this.fallbackEl.classList.remove('hidden');
     if (this.mountEl) this.mountEl.style.display = 'none';
 
-    const grid = this.fallbackEl.querySelector('.fallback-grid');
-    if (grid) {
-      grid.innerHTML = CONSTRUCTION_FEATURES.map(f => `
-        <div class="fallback-skill-card">
-          <div style="color: ${f.color}; font-size: 1.5rem; margin-bottom: 8px;">
-            <i class="fa-solid ${f.icon}"></i>
-          </div>
-          <h4 style="font-size: 1.1rem; margin-bottom: 6px;">${f.name}</h4>
-          <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px;">${f.summary}</p>
-          <span style="font-size: 0.75rem; color: ${f.color}; font-weight: 600;">${f.metric}</span>
+    const grid = this.fallbackEl.querySelector('#skillFallbackGrid') || this.fallbackEl.querySelector('.fallback-grid');
+    if (!grid) return;
+
+    grid.innerHTML = CONSTRUCTION_FEATURES.map(f => `
+      <div class="fallback-skill-card" style="border-top: 3px solid ${f.color}">
+        <div class="flex-between">
+          <span style="font-weight:700;color:#fff">${f.name}</span>
+          <span style="color:${f.color}"><i class="fas ${f.icon}"></i></span>
         </div>
-      `).join('');
-    }
+        <p style="font-size:0.85rem;color:var(--text-muted);margin:8px 0">${f.summary}</p>
+        <span class="badge" style="background:${f.color}22;color:${f.color}">${f.metric}</span>
+      </div>
+    `).join('');
   }
 
-  // ==================== Cleanup & Disposal ====================
+  // ==================== Cleanup & Disposal (Both dispose and destroy) ====================
+  dispose() {
+    this.destroy();
+  }
+
   destroy() {
     this.isDestroyed = true;
-
-    if (this.observer) this.observer.disconnect();
-
-    window.removeEventListener('mousemove', this.onMouseMoveBound);
-    window.removeEventListener('resize', this.onResizeBound);
-
-    if (this.canvas) {
-      this.canvas.removeEventListener('pointerdown', this.onPointerDownBound);
-      this.canvas.removeEventListener('pointerup', this.onPointerUpBound);
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
     }
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+    if (this.mountEl) {
+      this.mountEl.removeEventListener('mousemove', this.onMouseMove);
+      this.mountEl.removeEventListener('click', this.onCanvasClick);
+    }
+    window.removeEventListener('resize', this.onResize);
 
     this.disposables.forEach(item => {
       if (item && typeof item.dispose === 'function') {
@@ -1803,5 +1880,6 @@ export class ConstructionHouse3D {
         this.renderer.domElement.parentNode.removeChild(this.renderer.domElement);
       }
     }
+    this.htmlLabelElements.clear();
   }
 }
