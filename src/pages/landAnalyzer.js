@@ -24,9 +24,6 @@ export function landAnalyzerPage() {
                   <i class="fas fa-map-marked-alt" style="color:var(--primary)"></i> 
                   Interactive Land Boundary Plotter
                 </h3>
-                <p class="text-muted" style="font-size:0.85rem;margin-top:2px">
-                  Click on the satellite map below to mark land border points in sequence.
-                </p>
               </div>
 
               <!-- Map Quick Actions Toolbar -->

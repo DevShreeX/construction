@@ -10,8 +10,7 @@ export function visionPage() {
         </div>
         
         <div class="card animate-in">
-          <h3><i class="fas fa-camera" style="color:var(--primary);margin-right:8px"></i> Capture or Upload Site Inspection</h3>
-          <p style="margin-bottom:16px">Use your device's live camera feed or upload a photo. Log exact GPS coordinates for compliance.</p>
+          <h3 style="margin-bottom:16px"><i class="fas fa-camera" style="color:var(--primary);margin-right:8px"></i> Capture or Upload Site Inspection</h3>
           
           <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
             <button id="startCamBtn" class="btn btn-primary"><i class="fas fa-video"></i> Start Live Camera</button>
@@ -79,8 +78,7 @@ export function insightsPage() {
       <div class="container" style="max-width:1000px">
         <div class="text-center animate-in">
           <span class="badge badge-primary" style="margin-bottom:12px">AI Powered</span>
-          <h1>Project Insights & Estimation</h1>
-          <p style="margin-top:8px;margin-bottom:36px">Detailed AI-driven cost breakdowns and smart material recommendations tailored to your construction project.</p>
+          <h1 style="margin-bottom:36px">Project Insights & Estimation</h1>
         </div>
         
         <div class="grid grid-2">
