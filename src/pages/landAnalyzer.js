@@ -9,10 +9,7 @@ export function landAnalyzerPage() {
           <span class="badge badge-primary" style="margin-bottom:12px">
             <i class="fas fa-draw-polygon" style="margin-right:6px;color:var(--gold)"></i> GIS Spatial Boundary Engine
           </span>
-          <h1>Irregular Land Border & Usable Construction Area</h1>
-          <p style="margin-top:8px;margin-bottom:24px;max-width:850px;margin-left:auto;margin-right:auto">
-            Mark boundary points ($P_1, P_2, \\dots, P_n$) for any regular or irregular plot of land. The app automatically calculates the outer plot border, side lengths, total acreage, applies customizable setback buffers, and visualizes the exact usable land area for construction.
-          </p>
+          <h1 style="margin-bottom:24px">Irregular Land Border & Usable Construction Area</h1>
 
         </div>
 

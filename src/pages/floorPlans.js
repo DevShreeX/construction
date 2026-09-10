@@ -376,13 +376,10 @@ export function floorPlansPage() {
             <i class="fas fa-house-chimney" style="color:var(--primary)"></i>
             <span style="color:var(--primary);font-weight:700;font-size:0.85rem">MAKEMYHOUSE ARCHITECTURAL & DESIGN SERVICES</span>
           </div>
-          <h1 style="font-size:2.2rem;margin-bottom:12px;letter-spacing:-0.5px">
+          <h1 style="font-size:2.2rem;margin-bottom:28px;letter-spacing:-0.5px">
             Online House Plans, 3D Elevation & Structural Drawings <br>
             <span style="background:linear-gradient(135deg,var(--primary),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent">Search By Plot Dimensions & Vastu Direction</span>
           </h1>
-          <p class="text-muted" style="font-size:1.02rem;line-height:1.6">
-            Search by plot dimension (Width x Length in Ft), Vastu direction, or BHK configuration. Get <strong>10 executable Indian floor plan blueprints, 3D front elevations, and RCC structural drawings</strong> tailored for your exact land plot.
-          </p>
         </div>
 
         <!-- MakeMyHouse Dimension & Direction Control Panel -->
@@ -466,9 +463,6 @@ export function floorPlansPage() {
               <i class="fas fa-building" style="color:var(--primary)"></i> 
               <span id="resultsHeaderTitle">10 Executable House Plans for 30 ft x 40 ft (1200 Sq Ft)</span>
             </h3>
-            <p class="text-muted" style="font-size:0.85rem;margin-top:2px">
-              Includes 2D Floor Plan Blueprint, 3D Elevation Render, and Structural Engineering Grid for every option.
-            </p>
           </div>
 
           <!-- Drawing View Mode Switcher Buttons -->

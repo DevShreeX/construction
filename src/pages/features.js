@@ -6,13 +6,7 @@ export function visionPage() {
       <div class="container" style="max-width:950px">
         <div class="text-center animate-in">
           <span class="badge badge-primary" style="margin-bottom:12px">Google Satellite & GIS AI</span>
-          <h1>AI Site Camera, Geotagging & Google Satellite GIS</h1>
-          <p style="margin-top:8px;margin-bottom:24px">Analyze construction site photos with live camera feed, high-resolution Google Satellite aerial layers, and save geotagged site records directly to Firebase backend storage.</p>
-          
-          <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:28px">
-            <span class="badge badge-success" style="padding:6px 14px"><i class="fas fa-satellite"></i> Google Satellite API Connected</span>
-            <span class="badge badge-primary" style="padding:6px 14px"><i class="fas fa-database"></i> Firebase Storage Active</span>
-          </div>
+          <h1 style="margin-bottom:28px">AI Site Camera, Geotagging & Google Satellite GIS</h1>
         </div>
         
         <div class="card animate-in">
@@ -194,8 +188,7 @@ export function reportPage() {
       <div class="container" style="max-width:900px">
         <div class="text-center animate-in">
           <span class="badge badge-primary" style="margin-bottom:12px">AI Powered</span>
-          <h1>Generate Site Report</h1>
-          <p style="margin-top:8px;margin-bottom:36px">Automated professional progress and site condition reports.</p>
+          <h1 style="margin-bottom:36px">Generate Site Report</h1>
         </div>
         <div class="card animate-in">
           <form id="reportForm">
@@ -213,8 +206,7 @@ export function morePage() {
   return `
     <section class="section">
       <div class="container">
-        <h1 class="text-center animate-in">Google Satellite, GIS & Weather Hub</h1>
-        <p class="text-center animate-in" style="margin-top:8px;margin-bottom:32px">High-resolution Google Satellite aerial imagery, GIS elevation layers, live weather, and Firebase backend storage integration.</p>
+        <h1 class="text-center animate-in" style="margin-bottom:32px">Google Satellite, GIS & Weather Hub</h1>
 
         <!-- API Connection Banner -->
         <div class="card animate-in" style="margin-bottom:24px;background:rgba(15,23,42,0.8);border:1px solid rgba(110,231,255,0.25)">

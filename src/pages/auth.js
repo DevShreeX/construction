@@ -114,8 +114,7 @@ export function workspacePage() {
   return `
     <section class="section">
       <div class="container" style="max-width:950px">
-        <h1 class="text-center animate-in">Project Workspace & AI Visualization Studio</h1>
-        <p class="text-center animate-in" style="margin-top:8px;margin-bottom:36px">Enter your project specifications below. Our AI engine will create your project and generate a custom 3D construction short video based on your input.</p>
+        <h1 class="text-center animate-in" style="margin-bottom:36px">Project Workspace & AI Visualization Studio</h1>
 
         <!-- Create New Project & AI Construction Video Generator Card -->
         <div class="card animate-in" style="background:rgba(15,23,42,0.85);border:1px solid rgba(56,189,248,0.35);box-shadow:0 12px 36px rgba(0,0,0,0.6)">
