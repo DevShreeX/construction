@@ -8,7 +8,7 @@ import { aboutPage, projectsPage, contactPage, feedbackPage } from './pages/publ
 import { visionPage, insightsPage, resourcesPage, reportPage, morePage } from './pages/features.js';
 import { landAnalyzerPage } from './pages/landAnalyzer.js';
 import { backendPage } from './pages/backend.js';
-import { floorPlansPage, setupFloorPlanPageHandlers } from './pages/floorPlans.js';
+import { floorPlansPage, setupFloorPlanPageHandlers, disposeFloorPlan3DViewer } from './pages/floorPlans.js';
 import { adminLoginPage, clientLoginPage, clientRegisterPage, adminDashPage, clientDashPage, workspacePage } from './pages/auth.js';
 import { 
   auth, 
@@ -295,6 +295,8 @@ function setupGlobalListeners() {
 
     if (path === '/floor-plans') {
       setupFloorPlanPageHandlers();
+    } else {
+      disposeFloorPlan3DViewer();
     }
   });
 }

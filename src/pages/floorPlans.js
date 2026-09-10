@@ -1,6 +1,10 @@
 // ==================== Indian Floor Plans & MakeMyHouse Architectural Engine ====================
 // Inspired by IndianFloorPlans.com & MakeMyHouse.com search dimensions, 3D elevations & Vastu principles
 
+import { FloorPlan3DViewer } from '../components/floorPlans/FloorPlan3DViewer.js';
+
+let activeFloorPlanViewer = null;
+
 export function generate10IndianFloorPlans(sqft = 1200, facing = 'East', bhkPref = 'Auto', width = 30, depth = 40) {
   const sqftNum = parseInt(sqft) || (parseInt(width) * parseInt(depth)) || 1200;
   const widthNum = parseInt(width) || 30;
@@ -456,6 +460,66 @@ export function floorPlansPage() {
           </form>
         </div>
 
+        <!-- 3D Interactive Rotating Model Showcase (Matching 1st Photo / 3D Smart House) -->
+        <div class="card" style="padding:22px;margin-bottom:30px;background:rgba(10,19,41,0.85);border:1px solid var(--border-light);position:relative;overflow:hidden;border-radius:var(--radius-lg);box-shadow:0 12px 36px rgba(0,0,0,0.5)">
+          
+          <!-- Viewport HUD Header -->
+          <div class="flex-between" style="margin-bottom:14px;flex-wrap:wrap;gap:12px">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <div class="skill-hud-badge" style="margin:0">
+                <span class="hud-pulse-dot"></span>
+                <span class="hud-badge-text">✧ 3D Interactive Parametric Model</span>
+              </div>
+              <span id="floorPlanHudBadge" class="badge badge-primary" style="font-size:0.82rem;padding:6px 12px">
+                <i class="fas fa-cube" style="margin-right:4px"></i> 30' x 40' (1200 Sq Ft) · East Facing · 2 BHK
+              </span>
+            </div>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+              <!-- Orbit Toggle -->
+              <button id="floorPlanOrbitToggleBtn" class="hud-btn" title="Toggle Auto-Rotation">
+                <i class="fas fa-arrows-rotate"></i> <span>Orbit: Active</span>
+              </button>
+              <!-- Camera Reset -->
+              <button id="floorPlanResetCamBtn" class="hud-btn" title="Reset Camera Viewpoint">
+                <i class="fas fa-crosshairs"></i> <span>Reset View</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Floor Layer Isolator Buttons (All, Ground Floor, Upper Floor, Roof Deck, Exploded 3D) -->
+          <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+            <span style="font-size:0.78rem;color:var(--text-muted);font-weight:600;margin-right:4px;text-transform:uppercase;letter-spacing:0.5px">
+              <i class="fas fa-layer-group" style="color:var(--primary)"></i> 3D Floor Isolation:
+            </span>
+            <button class="btn btn-primary btn-sm floor-layer-btn active" data-layer="ALL">All Levels</button>
+            <button class="btn btn-ghost btn-sm floor-layer-btn" data-layer="GROUND">Ground Floor</button>
+            <button class="btn btn-ghost btn-sm floor-layer-btn" data-layer="UPPER">Upper Level</button>
+            <button class="btn btn-ghost btn-sm floor-layer-btn" data-layer="ROOF">Roof Deck</button>
+            <button class="btn btn-ghost btn-sm floor-layer-btn" data-layer="EXPLODED" style="border-color:rgba(56,189,248,0.5);color:var(--primary)">
+              <i class="fas fa-cubes"></i> Exploded 3D View
+            </button>
+          </div>
+
+          <!-- 3D Canvas Viewport -->
+          <div class="skill-sphere-viewport-wrapper" id="floorPlan3DViewport" style="height:520px;border-radius:var(--radius-md);overflow:hidden;position:relative;background:radial-gradient(circle at 50% 40%, #0d2342 0%, #060e1d 85%)">
+            <div id="floorPlanCanvasMount" class="floorplan-canvas-mount" style="width:100%;height:100%"></div>
+
+            <!-- Viewport Interaction Guide Bar -->
+            <div class="skill-viewport-guide">
+              <span><i class="fas fa-mouse-pointer"></i> Drag to Orbit 360°</span>
+              <span class="guide-divider">•</span>
+              <span><i class="fas fa-magnifying-glass"></i> Scroll to Zoom</span>
+              <span class="guide-divider">•</span>
+              <span><i class="fas fa-circle-dot"></i> Click Hotspots for Specs</span>
+            </div>
+
+            <!-- Floating Detail Card -->
+            <div id="floorPlanDetailCard" class="skill-detail-card floorplan-detail-card hidden" aria-live="polite"></div>
+          </div>
+
+        </div>
+
         <!-- MakeMyHouse Architectural Drawings Switcher & Results Header -->
         <div class="flex-between" style="margin-bottom:24px;flex-wrap:wrap;gap:14px">
           <div>
@@ -548,6 +612,9 @@ export function renderPlansListHtml(plans, currentViewMode = '2d') {
           </div>
 
           <div style="display:flex;gap:8px">
+            <button type="button" class="btn btn-ghost btn-sm inspect-3d-plan-btn" data-plan-idx="${idx}" style="font-size:0.82rem;border-color:rgba(56,189,248,0.4);color:var(--primary)">
+              <i class="fas fa-cube"></i> View in 3D
+            </button>
             <a class="btn btn-primary btn-sm select-plan-btn" data-route="/workspace" data-plan-title="${plan.title}" style="font-size:0.82rem">
               <i class="fas fa-check-circle"></i> Select Plan
             </a>
@@ -575,6 +642,110 @@ export function setupFloorPlanPageHandlers() {
   const viewModeBtns = document.querySelectorAll('.view-mode-btn');
 
   let activeViewMode = '2d';
+  let currentPlans = generate10IndianFloorPlans(1200, 'East', 'Auto', 30, 40);
+
+  // Initialize 3D Rotating House Model Viewer
+  const mountEl = document.getElementById('floorPlanCanvasMount');
+  if (mountEl) {
+    if (activeFloorPlanViewer) {
+      activeFloorPlanViewer.dispose();
+      activeFloorPlanViewer = null;
+    }
+
+    const initW = parseInt(widthInput?.value) || 30;
+    const initD = parseInt(depthInput?.value) || 40;
+    const initSqFt = initW * initD;
+    const initFacing = facingSelect?.value || 'East';
+    const initBhk = bhkSelect?.value || '2 BHK';
+    const firstPlan = currentPlans[0] || {};
+
+    activeFloorPlanViewer = new FloorPlan3DViewer({
+      container: document.getElementById('floorPlan3DViewport')?.closest('.card'),
+      mountEl: mountEl,
+      hudBadgeEl: document.getElementById('floorPlanHudBadge'),
+      detailCardEl: document.getElementById('floorPlanDetailCard'),
+      width: initW,
+      depth: initD,
+      sqft: initSqFt,
+      facing: initFacing,
+      bhk: initBhk,
+      style: firstPlan.style || 'Modern Minimalist Facade',
+      colorScheme: firstPlan.colorScheme || '#38bdf8',
+      title: firstPlan.title || 'Modern Minimalist Facade with Vastu Alignment'
+    });
+  }
+
+  // Handle Orbit toggle button
+  const orbitBtn = document.getElementById('floorPlanOrbitToggleBtn');
+  if (orbitBtn) {
+    orbitBtn.addEventListener('click', () => {
+      if (!activeFloorPlanViewer) return;
+      activeFloorPlanViewer.isRotating = !activeFloorPlanViewer.isRotating;
+      orbitBtn.innerHTML = activeFloorPlanViewer.isRotating
+        ? `<i class="fas fa-arrows-rotate"></i> <span>Orbit: Active</span>`
+        : `<i class="fas fa-pause"></i> <span>Orbit: Paused</span>`;
+      orbitBtn.classList.toggle('active', activeFloorPlanViewer.isRotating);
+    });
+  }
+
+  // Handle Camera Reset button
+  const resetBtn = document.getElementById('floorPlanResetCamBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      if (!activeFloorPlanViewer) return;
+      activeFloorPlanViewer.universeGroup.rotation.set(0, 0, 0);
+      const isMobile = window.innerWidth < 768;
+      const dist = isMobile ? 22 : 17;
+      activeFloorPlanViewer.camera.position.set(dist * 0.72, dist * 0.55, dist * 0.78);
+      activeFloorPlanViewer.camera.lookAt(0, 0.6, 0);
+    });
+  }
+
+  // Handle Floor Layer Isolator Buttons
+  const floorLayerBtns = document.querySelectorAll('.floor-layer-btn');
+  floorLayerBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      floorLayerBtns.forEach(b => {
+        b.classList.remove('active', 'btn-primary');
+        b.classList.add('btn-ghost');
+      });
+      btn.classList.remove('btn-ghost');
+      btn.classList.add('active', 'btn-primary');
+
+      const layer = btn.getAttribute('data-layer') || 'ALL';
+      if (activeFloorPlanViewer) {
+        activeFloorPlanViewer.setFloorLayer(layer);
+      }
+    });
+  });
+
+  // Attach "View in 3D" click handlers on cards
+  function attachCard3DInspectListeners(plans) {
+    document.querySelectorAll('.inspect-3d-plan-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.getAttribute('data-plan-idx')) || 0;
+        const selectedPlan = plans[idx];
+        if (selectedPlan && activeFloorPlanViewer) {
+          activeFloorPlanViewer.updatePlan({
+            width: selectedPlan.plotWidth,
+            depth: selectedPlan.plotDepth,
+            sqft: selectedPlan.totalAreaSqFt,
+            facing: selectedPlan.facing,
+            bhk: selectedPlan.bhk,
+            style: selectedPlan.style,
+            colorScheme: selectedPlan.colorScheme,
+            title: selectedPlan.title,
+            vastuScore: selectedPlan.vastuScore
+          });
+
+          // Smooth scroll up to 3D viewport
+          document.getElementById('floorPlan3DViewport')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    });
+  }
+
+  attachCard3DInspectListeners(currentPlans);
 
   // Handle dimension preset buttons click
   dimPresetBtns.forEach(btn => {
@@ -638,14 +809,38 @@ export function setupFloorPlanPageHandlers() {
     const facing = facingSelect.value;
     const bhk = bhkSelect.value;
 
-    const newPlans = generate10IndianFloorPlans(totalSqFt, facing, bhk, w, d);
+    currentPlans = generate10IndianFloorPlans(totalSqFt, facing, bhk, w, d);
 
     if (resultsHeader) {
       resultsHeader.textContent = `10 Executable House Plans for ${w} ft x ${d} ft (${totalSqFt} Sq Ft) · ${facing} Facing`;
     }
 
     if (gridContainer) {
-      gridContainer.innerHTML = renderPlansListHtml(newPlans, activeViewMode);
+      gridContainer.innerHTML = renderPlansListHtml(currentPlans, activeViewMode);
+      attachCard3DInspectListeners(currentPlans);
     }
+
+    // Update the 3D rotating model to reflect the new dimensions & top plan
+    if (activeFloorPlanViewer) {
+      const topPlan = currentPlans[0] || {};
+      activeFloorPlanViewer.updatePlan({
+        width: w,
+        depth: d,
+        sqft: totalSqFt,
+        facing: facing,
+        bhk: bhk,
+        style: topPlan.style,
+        colorScheme: topPlan.colorScheme,
+        title: topPlan.title,
+        vastuScore: topPlan.vastuScore
+      });
+    }
+  }
+}
+
+export function disposeFloorPlan3DViewer() {
+  if (activeFloorPlanViewer) {
+    activeFloorPlanViewer.dispose();
+    activeFloorPlanViewer = null;
   }
 }
