@@ -23,7 +23,7 @@ export function skillsPage() {
             </div>
           </div>
 
-          <h1 class="skill-hud-headline">3D Smart Construction House Ecosystem</h1>
+          <h1 class="skill-hud-headline">3D Smart Construction House & Intelligence Network</h1>
           <p class="skill-hud-subtitle">
             <strong style="color:var(--primary)">Design • Build • Analyze • Manage</strong> — A real-time 3D architectural command center connecting AI analysis, parametric architecture, materials, and project tracking to a futuristic smart house.
           </p>

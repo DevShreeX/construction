@@ -115,8 +115,8 @@ function setupGlobalListeners() {
       activeCameraStream = null;
     }
 
-    // 3D Skill Sphere Lifecycle Management
-    if (path === '/' || path === '/skills') {
+    // 3D Smart House Lifecycle Management (on /skills page alone)
+    if (path === '/skills') {
       setTimeout(() => {
         const mount = document.getElementById('skillSphereCanvasMount');
         if (mount) {
