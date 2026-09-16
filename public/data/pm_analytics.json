@@ -1,0 +1,107 @@
+{
+  "summary": {
+    "totalTasks": 12445,
+    "totalForms": 10254,
+    "totalActions": 8865,
+    "openActions": 545,
+    "overdueTasks": 830,
+    "taskResolutionRate": "93.3",
+    "safetyObservations": 3343,
+    "closedTasks": 7431,
+    "openTasks": 1243
+  },
+  "taskGroups": {
+    "Safety": 8836,
+    "Site Management": 1411,
+    "Quality": 920,
+    "Design Team": 1051,
+    "General": 177,
+    "#N/A": 50
+  },
+  "formGroups": {
+    "Site Management": 3015,
+    "Subcontractor": 466,
+    "Quality": 4481,
+    "Safety": 2143,
+    "#N/A": 4,
+    "Design Team": 145
+  },
+  "formTypes": {
+    "Site Management": 2984,
+    "Subcontractor Inspections": 466,
+    "Quality 00 General": 1165,
+    "Permits": 2,
+    "Safety Forms": 2141,
+    "Quality 02 Architectural": 1417,
+    "Quality 04 MEP Services": 108,
+    "Quality 01 Structural": 1729,
+    "00 Project Management": 4,
+    "Design Team / BC(A)R": 145,
+    "BU - Head Office": 31,
+    "Inspection": 23,
+    "Quality 03 Civil": 39
+  },
+  "topCauses": [
+    {
+      "cause": "Safety - House Keeping",
+      "count": 2038,
+      "percentage": "16.4"
+    },
+    {
+      "cause": "Safety - Access",
+      "count": 1572,
+      "percentage": "12.6"
+    },
+    {
+      "cause": "Safety - Exclusion Zones",
+      "count": 726,
+      "percentage": "5.8"
+    },
+    {
+      "cause": "Quality - Workmanship",
+      "count": 615,
+      "percentage": "4.9"
+    },
+    {
+      "cause": "Safety - Storage",
+      "count": 552,
+      "percentage": "4.4"
+    },
+    {
+      "cause": "Safety - Management",
+      "count": 382,
+      "percentage": "3.1"
+    },
+    {
+      "cause": "Safety - Environmental",
+      "count": 310,
+      "percentage": "2.5"
+    },
+    {
+      "cause": "Safety - Documentation",
+      "count": 290,
+      "percentage": "2.3"
+    },
+    {
+      "cause": "Safety - Welfare Facilities",
+      "count": 268,
+      "percentage": "2.2"
+    },
+    {
+      "cause": "Quality - Management",
+      "count": 246,
+      "percentage": "2.0"
+    }
+  ],
+  "projects": {
+    "1328": 3672,
+    "1329": 478,
+    "1330": 3661,
+    "1335": 1266,
+    "1338": 1296,
+    "1340": 995,
+    "1343": 374,
+    "1345": 526,
+    "Project 1328": 177
+  }
+}

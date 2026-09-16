@@ -27,7 +27,9 @@ const MIME_TYPES = {
   '.jpg': 'image/jpeg',
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
-  '.woff2': 'font/woff2'
+  '.woff2': 'font/woff2',
+  '.obj': 'text/plain; charset=utf-8',
+  '.mtl': 'text/plain; charset=utf-8'
 };
 
 // In-memory fallback site geotag store when database connection is loading
@@ -53,6 +55,39 @@ let gisSiteStore = [
     timestamp: new Date().toISOString()
   }
 ];
+
+// Preload Indexed Datasets into memory for microsecond response times
+let cachedMaterials = [];
+let cachedMaterialsSummary = null;
+let cachedPmAnalytics = null;
+let cachedPmTasks = [];
+let cachedPmForms = [];
+let cachedStructured3dDesigns = [];
+
+try {
+  const dataDir = path.join(ROOT_DIR, 'public', 'data');
+  if (fs.existsSync(path.join(dataDir, 'materials.json'))) {
+    cachedMaterials = JSON.parse(fs.readFileSync(path.join(dataDir, 'materials.json'), 'utf8'));
+    cachedMaterialsSummary = JSON.parse(fs.readFileSync(path.join(dataDir, 'materials_summary.json'), 'utf8'));
+    cachedPmAnalytics = JSON.parse(fs.readFileSync(path.join(dataDir, 'pm_analytics.json'), 'utf8'));
+    if (fs.existsSync(path.join(dataDir, 'pm_tasks_all.json'))) {
+      cachedPmTasks = JSON.parse(fs.readFileSync(path.join(dataDir, 'pm_tasks_all.json'), 'utf8'));
+    }
+    if (fs.existsSync(path.join(dataDir, 'pm_forms_all.json'))) {
+      cachedPmForms = JSON.parse(fs.readFileSync(path.join(dataDir, 'pm_forms_all.json'), 'utf8'));
+    }
+    console.log(`📊 Datasets loaded into memory: ${cachedMaterials.length} materials, ${cachedPmTasks.length} PM tasks, ${cachedPmForms.length} PM forms`);
+  }
+
+  // Preload Structured3D Architectural Dataset
+  const s3dIndexPath = path.join(__dirname, 'data', 'structured3d', 'index.json');
+  if (fs.existsSync(s3dIndexPath)) {
+    cachedStructured3dDesigns = JSON.parse(fs.readFileSync(s3dIndexPath, 'utf8'));
+    console.log(`🏛️ Structured3D Architectural Dataset loaded: ${cachedStructured3dDesigns.length} house designs with 360° panoramas & 3D meshes`);
+  }
+} catch (err) {
+  console.warn('⚠️ Could not preload datasets into memory:', err.message);
+}
 
 const server = http.createServer((req, res) => {
   // CORS Headers
@@ -91,8 +126,219 @@ const server = http.createServer((req, res) => {
         service: 'Forzex Construction API', 
         googleSatelliteGis: 'Active',
         firebaseStorage: 'Connected',
+        datasetStatus: 'Loaded',
+        materialsCount: cachedMaterials.length,
+        pmTasksCount: cachedPmTasks.length,
+        pmFormsCount: cachedPmForms.length,
         timestamp: new Date().toISOString() 
       }));
+    }
+
+    // ==================== DATASET INTELLIGENCE REST ENDPOINTS ====================
+    // 1. Executive Analytics & PM Insights
+    if (pathname === '/api/dataset/analytics' && req.method === 'GET') {
+      res.writeHead(200);
+      return res.end(JSON.stringify(cachedPmAnalytics || {}));
+    }
+
+    // 2. Materials Summary (Categories, Brands, Price Tiers)
+    if (pathname === '/api/dataset/materials/summary' && req.method === 'GET') {
+      res.writeHead(200);
+      return res.end(JSON.stringify(cachedMaterialsSummary || {}));
+    }
+
+    // 3. Materials Catalog Search, Filter & Pagination (570 items)
+    if (pathname === '/api/dataset/materials' && req.method === 'GET') {
+      const q = (parsedUrl.searchParams.get('q') || '').toLowerCase().trim();
+      const category = parsedUrl.searchParams.get('category');
+      const brand = parsedUrl.searchParams.get('brand');
+      const minPrice = parseFloat(parsedUrl.searchParams.get('minPrice')) || 0;
+      const maxPrice = parseFloat(parsedUrl.searchParams.get('maxPrice')) || Infinity;
+      const sortBy = parsedUrl.searchParams.get('sortBy') || 'name';
+      const page = Math.max(1, parseInt(parsedUrl.searchParams.get('page')) || 1);
+      const limit = Math.max(1, Math.min(100, parseInt(parsedUrl.searchParams.get('limit')) || 24));
+
+      let list = cachedMaterials.filter(m => {
+        if (q && !m.name.toLowerCase().includes(q) && !m.brand.toLowerCase().includes(q) && !m.category.toLowerCase().includes(q) && !m.specification.toLowerCase().includes(q)) return false;
+        if (category && category !== 'all' && m.category.toLowerCase() !== category.toLowerCase()) return false;
+        if (brand && brand !== 'all' && m.brand.toLowerCase() !== brand.toLowerCase()) return false;
+        if (m.price < minPrice || m.price > maxPrice) return false;
+        return true;
+      });
+
+      if (sortBy === 'price-asc') list.sort((a, b) => a.price - b.price);
+      else if (sortBy === 'price-desc') list.sort((a, b) => b.price - a.price);
+      else if (sortBy === 'rating') list.sort((a, b) => (b.qualityRating + b.durabilityRating) - (a.qualityRating + a.durabilityRating));
+      else list.sort((a, b) => a.name.localeCompare(b.name));
+
+      const total = list.length;
+      const pages = Math.ceil(total / limit) || 1;
+      const offset = (page - 1) * limit;
+      const paginated = list.slice(offset, offset + limit);
+
+      res.writeHead(200);
+      return res.end(JSON.stringify({
+        success: true,
+        total,
+        page,
+        limit,
+        pages,
+        data: paginated
+      }));
+    }
+
+    // 4. PM Field Tasks (12,445 records)
+    if (pathname === '/api/dataset/pm-tasks' && req.method === 'GET') {
+      const q = (parsedUrl.searchParams.get('q') || '').toLowerCase().trim();
+      const status = parsedUrl.searchParams.get('status');
+      const group = parsedUrl.searchParams.get('group');
+      const priority = parsedUrl.searchParams.get('priority');
+      const page = Math.max(1, parseInt(parsedUrl.searchParams.get('page')) || 1);
+      const limit = Math.max(1, Math.min(100, parseInt(parsedUrl.searchParams.get('limit')) || 25));
+
+      let list = cachedPmTasks.filter(t => {
+        if (q && !t.ref.toLowerCase().includes(q) && !t.description.toLowerCase().includes(q) && !t.location.toLowerCase().includes(q) && !t.cause.toLowerCase().includes(q)) return false;
+        if (status && status !== 'all' && t.status.toLowerCase() !== status.toLowerCase()) return false;
+        if (group && group !== 'all' && t.taskGroup.toLowerCase() !== group.toLowerCase()) return false;
+        if (priority && priority !== 'all' && t.priority.toLowerCase() !== priority.toLowerCase()) return false;
+        return true;
+      });
+
+      const total = list.length;
+      const pages = Math.ceil(total / limit) || 1;
+      const offset = (page - 1) * limit;
+      const paginated = list.slice(offset, offset + limit);
+
+      res.writeHead(200);
+      return res.end(JSON.stringify({
+        success: true,
+        total,
+        page,
+        limit,
+        pages,
+        data: paginated
+      }));
+    }
+
+    // 5. PM Forms & Site Diary (10,254 records)
+    if (pathname === '/api/dataset/pm-forms' && req.method === 'GET') {
+      const q = (parsedUrl.searchParams.get('q') || '').toLowerCase().trim();
+      const status = parsedUrl.searchParams.get('status');
+      const group = parsedUrl.searchParams.get('group');
+      const type = parsedUrl.searchParams.get('type');
+      const page = Math.max(1, parseInt(parsedUrl.searchParams.get('page')) || 1);
+      const limit = Math.max(1, Math.min(100, parseInt(parsedUrl.searchParams.get('limit')) || 25));
+
+      let list = cachedPmForms.filter(f => {
+        if (q && !f.ref.toLowerCase().includes(q) && !f.name.toLowerCase().includes(q) && !f.location.toLowerCase().includes(q)) return false;
+        if (status && status !== 'all' && f.status.toLowerCase() !== status.toLowerCase()) return false;
+        if (group && group !== 'all' && f.formGroup.toLowerCase() !== group.toLowerCase()) return false;
+        if (type && type !== 'all' && f.type.toLowerCase() !== type.toLowerCase()) return false;
+        return true;
+      });
+
+      const total = list.length;
+      const pages = Math.ceil(total / limit) || 1;
+      const offset = (page - 1) * limit;
+      const paginated = list.slice(offset, offset + limit);
+
+      res.writeHead(200);
+      return res.end(JSON.stringify({
+        success: true,
+        total,
+        page,
+        limit,
+        pages,
+        data: paginated
+      }));
+    }
+
+    // ==================== STRUCTURED3D ARCHITECTURAL DATASET ROUTES ====================
+    // 1. List all Structured3D Designs (supports filters: bhk, minArea, maxArea, q)
+    if (pathname === '/api/structured3d/designs' && req.method === 'GET') {
+      const bhk = (parsedUrl.searchParams.get('bhk') || '').trim();
+      const minArea = parseFloat(parsedUrl.searchParams.get('minArea')) || 0;
+      const maxArea = parseFloat(parsedUrl.searchParams.get('maxArea')) || Infinity;
+      const q = (parsedUrl.searchParams.get('q') || '').toLowerCase().trim();
+
+      let results = cachedStructured3dDesigns.filter(d => {
+        if (bhk && !d.bhk.toLowerCase().includes(bhk.toLowerCase())) return false;
+        if (d.totalAreaSqFt < minArea) return false;
+        if (maxArea !== Infinity && d.totalAreaSqFt > maxArea) return false;
+        if (q && !d.title.toLowerCase().includes(q) && !d.style.toLowerCase().includes(q) && !d.designId.toLowerCase().includes(q)) return false;
+        return true;
+      });
+
+      res.writeHead(200);
+      return res.end(JSON.stringify({
+        success: true,
+        total: results.length,
+        dataset: 'Structured3D (Structured 3D Modeling of Indoor Scenes)',
+        license: 'MIT License (Copyright 2019 Structured3D Group)',
+        data: results
+      }));
+    }
+
+    // 2. Stream Structured3D Assets (floor plans, 3D meshes, 360° panoramas, perspectives)
+    if (pathname.startsWith('/api/structured3d/asset/') && req.method === 'GET') {
+      const subPath = pathname.replace('/api/structured3d/asset/', '');
+      const parts = subPath.split('/').filter(Boolean);
+      const designId = parts[0];
+      const assetType = parts[1]; // thumbnail, floorplan, mesh, view, room
+
+      const design = cachedStructured3dDesigns.find(d => d.designId.toLowerCase() === (designId || '').toLowerCase());
+      const sceneId = design ? design.sceneId : (designId.startsWith('scene_') ? designId : 'scene_00000');
+      const sceneDir = path.join(__dirname, 'data', 'structured3d', 'scenes', sceneId);
+
+      let targetFile = null;
+      let contentType = 'image/png';
+
+      if (assetType === 'thumbnail' || assetType === 'mesh_preview') {
+        targetFile = path.join(sceneDir, 'mesh_preview.png');
+      } else if (assetType === 'floorplan') {
+        targetFile = path.join(sceneDir, 'floorplan.png');
+      } else if (assetType === 'mesh') {
+        targetFile = path.join(sceneDir, 'model_3d.obj');
+        contentType = 'text/plain; charset=utf-8';
+      } else if (assetType === 'view') {
+        const viewName = parts[2] || 'front';
+        targetFile = path.join(sceneDir, `view_${viewName}.png`);
+        if (!fs.existsSync(targetFile)) {
+          targetFile = path.join(sceneDir, 'view_front.png');
+        }
+      } else if (assetType === 'room') {
+        const roomType = parts[2] || 'living_room';
+        const fileType = parts[3] || 'panorama';
+        if (fileType === 'panorama') {
+          targetFile = path.join(sceneDir, 'rooms', roomType, 'panorama.png');
+          if (!fs.existsSync(targetFile)) {
+            targetFile = path.join(sceneDir, 'rooms', 'living_room', 'panorama.png');
+          }
+        }
+      }
+
+      if (targetFile && fs.existsSync(targetFile)) {
+        res.setHeader('Content-Type', contentType);
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+        res.writeHead(200);
+        return fs.createReadStream(targetFile).pipe(res);
+      }
+
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      res.writeHead(404);
+      return res.end(JSON.stringify({ success: false, error: `Structured3D asset not found: ${pathname}` }));
+    }
+
+    // 3. Get specific Structured3D Design by Design ID
+    if (pathname.startsWith('/api/structured3d/designs/') && req.method === 'GET') {
+      const designId = pathname.replace('/api/structured3d/designs/', '').trim();
+      const design = cachedStructured3dDesigns.find(d => d.designId.toLowerCase() === designId.toLowerCase() || d.sceneId.toLowerCase() === designId.toLowerCase());
+      if (!design) {
+        res.writeHead(404);
+        return res.end(JSON.stringify({ success: false, error: `Structured3D design '${designId}' not found` }));
+      }
+      res.writeHead(200);
+      return res.end(JSON.stringify({ success: true, data: design }));
     }
 
     // ==================== GOOGLE SATELLITE & GIS API CONFIG ====================

@@ -1,0 +1,33 @@
+# Structured3D Room Mesh Export (scene_00000)
+# Units: meters
+v -3.5 0.0 -4.0
+v 3.5 0.0 -4.0
+v 3.5 2.8 -4.0
+v -3.5 2.8 -4.0
+v -3.5 0.0 4.0
+v 3.5 0.0 4.0
+v 3.5 2.8 4.0
+v -3.5 2.8 4.0
+
+# Interior Partition Wall
+v 0.0 0.0 -4.0
+v 0.0 2.8 -4.0
+v 0.0 0.0 1.5
+v 0.0 2.8 1.5
+
+# Normals
+vn 0.0 0.0 1.0
+vn 0.0 0.0 -1.0
+vn 0.0 1.0 0.0
+vn 0.0 -1.0 0.0
+vn 1.0 0.0 0.0
+vn -1.0 0.0 0.0
+
+# Faces (Floor, Ceiling, North Wall, South Wall, West Wall, East Wall, Divider)
+f 1//4 2//4 6//4 5//4
+f 4//3 3//3 7//3 8//3
+f 1//2 2//2 3//2 4//2
+f 5//1 6//1 7//1 8//1
+f 1//6 5//6 8//6 4//6
+f 2//5 6//5 7//5 3//5
+f 9//5 11//5 12//5 10//5

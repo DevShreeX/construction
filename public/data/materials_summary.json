@@ -1,0 +1,293 @@
+{
+  "total": 570,
+  "categoriesCount": 19,
+  "brandsCount": 57,
+  "categories": [
+    "Adhesives & Grouts",
+    "Aggregate",
+    "Bricks & Blocks",
+    "Cement",
+    "Concrete Products",
+    "Doors & Windows",
+    "Electrical",
+    "Faucets",
+    "Glass",
+    "Laminates",
+    "Paint",
+    "Pipes",
+    "Plywood",
+    "Roofing",
+    "Sand",
+    "Sanitaryware",
+    "Steel",
+    "Tiles",
+    "Waterproofing"
+  ],
+  "brands": [
+    "ACC",
+    "AIS",
+    "AIS Windows",
+    "Ambuja Cements",
+    "Asian Granito",
+    "Asian Paints",
+    "Astral",
+    "Berger",
+    "CenturyLaminates",
+    "CenturyPly",
+    "Cera",
+    "Dalmia Bharat",
+    "Dr. Fixit",
+    "Everest",
+    "Fenesta",
+    "Fenestration",
+    "Finolex",
+    "Fosroc",
+    "Generic",
+    "Greenlam",
+    "Greenpanel",
+    "Greenply",
+    "Guardian Glass",
+    "Havells",
+    "Hindware",
+    "Indigo Paints",
+    "JK Lakshmi",
+    "JSW",
+    "JSW Neosteel",
+    "Jaquar",
+    "Jindal Panther",
+    "KEI",
+    "Kajaria",
+    "Kitply",
+    "Local Quarry",
+    "Local Supplier",
+    "MYK Laticrete",
+    "Magicrete",
+    "Merino",
+    "Nerolac",
+    "Orientbell",
+    "Parryware",
+    "Pidilite",
+    "Polycab",
+    "Prince Pipes",
+    "Roff",
+    "SAIL",
+    "Saint-Gobain",
+    "Sika",
+    "Somany",
+    "Stylam",
+    "Supreme",
+    "Tata Shaktee",
+    "Tata Tiscon",
+    "UltraTech",
+    "Visaka",
+    "Weber"
+  ],
+  "priceRange": {
+    "min": 12.87,
+    "max": 16683.86
+  },
+  "categoryBreakdown": [
+    {
+      "category": "Adhesives & Grouts",
+      "count": 30,
+      "avgPrice": 1118,
+      "brands": [
+        "Pidilite",
+        "Roff",
+        "MYK Laticrete",
+        "Weber"
+      ]
+    },
+    {
+      "category": "Aggregate",
+      "count": 30,
+      "avgPrice": 966,
+      "brands": [
+        "Generic",
+        "Local Quarry"
+      ]
+    },
+    {
+      "category": "Bricks & Blocks",
+      "count": 30,
+      "avgPrice": 52,
+      "brands": [
+        "Magicrete",
+        "JK Lakshmi",
+        "Generic"
+      ]
+    },
+    {
+      "category": "Cement",
+      "count": 30,
+      "avgPrice": 417,
+      "brands": [
+        "UltraTech",
+        "ACC",
+        "Ambuja Cements",
+        "Dalmia Bharat"
+      ]
+    },
+    {
+      "category": "Concrete Products",
+      "count": 30,
+      "avgPrice": 6467,
+      "brands": [
+        "UltraTech",
+        "ACC",
+        "Generic"
+      ]
+    },
+    {
+      "category": "Doors & Windows",
+      "count": 30,
+      "avgPrice": 7996,
+      "brands": [
+        "Fenesta",
+        "AIS Windows",
+        "Fenestration",
+        "Generic"
+      ]
+    },
+    {
+      "category": "Electrical",
+      "count": 30,
+      "avgPrice": 2457,
+      "brands": [
+        "Havells",
+        "Polycab",
+        "Finolex",
+        "KEI"
+      ]
+    },
+    {
+      "category": "Faucets",
+      "count": 30,
+      "avgPrice": 6333,
+      "brands": [
+        "Jaquar",
+        "Cera",
+        "Hindware",
+        "Parryware"
+      ]
+    },
+    {
+      "category": "Glass",
+      "count": 30,
+      "avgPrice": 351,
+      "brands": [
+        "AIS",
+        "Saint-Gobain",
+        "Guardian Glass"
+      ]
+    },
+    {
+      "category": "Laminates",
+      "count": 30,
+      "avgPrice": 167,
+      "brands": [
+        "Greenlam",
+        "Merino",
+        "CenturyLaminates",
+        "Stylam"
+      ]
+    },
+    {
+      "category": "Paint",
+      "count": 30,
+      "avgPrice": 3254,
+      "brands": [
+        "Asian Paints",
+        "Berger",
+        "Nerolac",
+        "Indigo Paints"
+      ]
+    },
+    {
+      "category": "Pipes",
+      "count": 30,
+      "avgPrice": 966,
+      "brands": [
+        "Astral",
+        "Supreme",
+        "Finolex",
+        "Prince Pipes"
+      ]
+    },
+    {
+      "category": "Plywood",
+      "count": 30,
+      "avgPrice": 172,
+      "brands": [
+        "CenturyPly",
+        "Greenply",
+        "Greenpanel",
+        "Kitply"
+      ]
+    },
+    {
+      "category": "Roofing",
+      "count": 30,
+      "avgPrice": 328,
+      "brands": [
+        "Tata Shaktee",
+        "Everest",
+        "JSW",
+        "Visaka"
+      ]
+    },
+    {
+      "category": "Sand",
+      "count": 30,
+      "avgPrice": 1058,
+      "brands": [
+        "Generic",
+        "Local Supplier"
+      ]
+    },
+    {
+      "category": "Sanitaryware",
+      "count": 30,
+      "avgPrice": 11025,
+      "brands": [
+        "Cera",
+        "Hindware",
+        "Jaquar",
+        "Parryware"
+      ]
+    },
+    {
+      "category": "Steel",
+      "count": 30,
+      "avgPrice": 7995,
+      "brands": [
+        "Tata Tiscon",
+        "JSW Neosteel",
+        "SAIL",
+        "Jindal Panther"
+      ]
+    },
+    {
+      "category": "Tiles",
+      "count": 30,
+      "avgPrice": 115,
+      "brands": [
+        "Kajaria",
+        "Somany",
+        "Orientbell",
+        "Asian Granito"
+      ]
+    },
+    {
+      "category": "Waterproofing",
+      "count": 30,
+      "avgPrice": 2044,
+      "brands": [
+        "Dr. Fixit",
+        "Sika",
+        "Fosroc",
+        "UltraTech"
+      ]
+    }
+  ]
+}

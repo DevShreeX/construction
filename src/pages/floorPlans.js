@@ -2,6 +2,15 @@
 // Inspired by IndianFloorPlans.com & MakeMyHouse.com search dimensions, 3D elevations & Vastu principles
 
 import { FloorPlan3DViewer } from '../components/floorPlans/FloorPlan3DViewer.js';
+import {
+  DEFAULT_STRUCTURED3D_DESIGNS,
+  renderStructured3dCardsHtml,
+  renderStructured3dModalSuite,
+  initStructured3dPanorama,
+  initStructured3dMesh
+} from './structured3dViewer.js';
+import { projectState } from '../projectState.js';
+import { showToast } from '../utils.js';
 
 let activeFloorPlanViewer = null;
 
@@ -520,36 +529,98 @@ export function floorPlansPage() {
 
         </div>
 
-        <!-- MakeMyHouse Architectural Drawings Switcher & Results Header -->
-        <div class="flex-between" style="margin-bottom:24px;flex-wrap:wrap;gap:14px">
-          <div>
-            <h3 style="margin:0;display:flex;align-items:center;gap:8px">
-              <i class="fas fa-building" style="color:var(--primary)"></i> 
-              <span id="resultsHeaderTitle">10 Executable House Plans for 30 ft x 40 ft (1200 Sq Ft)</span>
-            </h3>
+        <!-- Architectural Library Switcher Tabs -->
+        <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;border-bottom:1px solid var(--border);padding-bottom:14px">
+          <button type="button" id="tabBtnResPlan" class="plan-lib-tab-btn active">
+            <i class="fas fa-layer-group" style="color:var(--primary)"></i> 
+            <span>Indian Floor Plans & 3D Model (10 Options)</span>
+          </button>
+          <button type="button" id="tabBtnStructured3D" class="plan-lib-tab-btn">
+            <i class="fas fa-vr-cardboard" style="color:var(--gold)"></i> 
+            <span>Structured3D Architectural Library & 360° Panoramas</span>
+            <span class="badge s3d-glow-badge" style="font-size:0.72rem;padding:2px 8px;margin-left:4px">Design IDs: S3D-DES-001/002/003</span>
+          </button>
+        </div>
+
+        <!-- Section 1: ResPlan 10 Plans View -->
+        <div id="resplanViewSection">
+          <!-- MakeMyHouse Architectural Drawings Switcher & Results Header -->
+          <div class="flex-between" style="margin-bottom:24px;flex-wrap:wrap;gap:14px">
+            <div>
+              <h3 style="margin:0;display:flex;align-items:center;gap:8px">
+                <i class="fas fa-building" style="color:var(--primary)"></i> 
+                <span id="resultsHeaderTitle">10 Executable House Plans for 30 ft x 40 ft (1200 Sq Ft)</span>
+              </h3>
+            </div>
+
+            <!-- Drawing View Mode Switcher Buttons -->
+            <div style="display:flex;gap:6px;background:rgba(15,23,42,0.8);padding:4px;border-radius:var(--radius-md);border:1px solid var(--border)">
+              <button class="btn btn-primary btn-sm view-mode-btn active" data-view-mode="2d">
+                <i class="fas fa-layer-group"></i> 2D Blueprint
+              </button>
+              <button class="btn btn-ghost btn-sm view-mode-btn" data-view-mode="3d">
+                <i class="fas fa-cube"></i> 3D Elevation
+              </button>
+              <button class="btn btn-ghost btn-sm view-mode-btn" data-view-mode="structural">
+                <i class="fas fa-table-cells"></i> Structural Grid
+              </button>
+            </div>
           </div>
 
-          <!-- Drawing View Mode Switcher Buttons -->
-          <div style="display:flex;gap:6px;background:rgba(15,23,42,0.8);padding:4px;border-radius:var(--radius-md);border:1px solid var(--border)">
-            <button class="btn btn-primary btn-sm view-mode-btn active" data-view-mode="2d">
-              <i class="fas fa-layer-group"></i> 2D Blueprint
-            </button>
-            <button class="btn btn-ghost btn-sm view-mode-btn" data-view-mode="3d">
-              <i class="fas fa-cube"></i> 3D Elevation
-            </button>
-            <button class="btn btn-ghost btn-sm view-mode-btn" data-view-mode="structural">
-              <i class="fas fa-table-cells"></i> Structural Grid
-            </button>
+          <!-- 10 Plans Grid Container -->
+          <div class="grid grid-2" id="floorPlansGridContainer" style="gap:24px;margin-bottom:40px">
+            ${renderPlansListHtml(initialPlans, '2d')}
           </div>
         </div>
 
-        <!-- 10 Plans Grid Container -->
-        <div class="grid grid-2" id="floorPlansGridContainer" style="gap:24px;margin-bottom:40px">
-          ${renderPlansListHtml(initialPlans, '2d')}
+        <!-- Section 2: Structured3D Architectural Library View -->
+        <div id="structured3dViewSection" style="display:none">
+          <div class="flex-between" style="margin-bottom:20px;flex-wrap:wrap;gap:12px">
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+                <span class="badge s3d-glow-badge"><i class="fas fa-shield-halved"></i> MIT Licensed Structured3D Dataset</span>
+                <span class="badge badge-accent">3D Mesh OBJ · 360° Panoramic Equirectangular</span>
+                <span class="badge badge-success"><i class="fas fa-check-double"></i> Backend REST APIs Active</span>
+              </div>
+              <h3 style="margin:0;display:flex;align-items:center;gap:8px">
+                <i class="fas fa-cubes" style="color:var(--gold)"></i> 
+                Structured3D Indoor Architectural Dataset Designs
+              </h3>
+              <p class="text-muted" style="font-size:0.85rem;margin-top:2px">
+                Verified dataset houses with unique <strong>Design IDs</strong>, real 360° equirectangular panoramas, multi-angle perspectives (Front, Back, Left, Right, Top), and 3D Wavefront meshes.
+              </p>
+            </div>
+
+            <!-- BHK Filter for Structured3D -->
+            <div style="display:flex;gap:8px;align-items:center">
+              <label style="font-size:0.82rem;color:var(--text-muted)">Filter BHK:</label>
+              <select id="s3dBhkFilter" class="form-select" style="padding:6px 12px;font-size:0.82rem;width:auto">
+                <option value="all">All Designs (3)</option>
+                <option value="2 BHK">2 BHK Duplex</option>
+                <option value="3 BHK">3 BHK Urban</option>
+                <option value="4 BHK">4 BHK Luxury Villa</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Structured3D Cards Grid -->
+          <div class="grid grid-2" id="structured3dGrid" style="gap:24px;margin-bottom:48px">
+            ${renderStructured3dCardsHtml(DEFAULT_STRUCTURED3D_DESIGNS)}
+          </div>
         </div>
 
       </div>
     </section>
+
+    <!-- Dedicated Structured3D Suite Modal -->
+    <div id="structured3dModal" class="modal-overlay" style="display:none">
+      <div class="modal-content" style="max-width:1150px;width:96%;max-height:94vh;overflow-y:auto;background:#070d1a;border:1px solid rgba(251,191,36,0.4);box-shadow:0 0 40px rgba(0,0,0,0.8), 0 0 20px rgba(251,191,36,0.15);border-radius:var(--radius-lg);padding:0;position:relative">
+        <button id="closeStructured3dModalBtn" class="modal-close-btn" style="z-index:30;top:14px;right:18px">&times;</button>
+        <div id="structured3dModalContent">
+          <!-- Dynamically loaded on View Structured3D Suite click -->
+        </div>
+      </div>
+    </div>
   `;
 }
 
@@ -836,6 +907,278 @@ export function setupFloorPlanPageHandlers() {
       });
     }
   }
+
+  // ==================== Structured3D Dataset & 360 Viewer Logic ====================
+  function setupStructured3dFeature() {
+    const tabBtnResPlan = document.getElementById('tabBtnResPlan');
+    const tabBtnStructured3D = document.getElementById('tabBtnStructured3D');
+    const resplanSection = document.getElementById('resplanViewSection');
+    const s3dSection = document.getElementById('structured3dViewSection');
+    const s3dGrid = document.getElementById('structured3dGrid');
+    const s3dBhkFilter = document.getElementById('s3dBhkFilter');
+
+    // Tab switching
+    tabBtnResPlan?.addEventListener('click', () => {
+      tabBtnResPlan.classList.add('active');
+      tabBtnStructured3D?.classList.remove('active');
+      if (resplanSection) resplanSection.style.display = 'block';
+      if (s3dSection) s3dSection.style.display = 'none';
+    });
+
+    tabBtnStructured3D?.addEventListener('click', () => {
+      tabBtnStructured3D.classList.add('active');
+      tabBtnResPlan?.classList.remove('active');
+      if (s3dSection) s3dSection.style.display = 'block';
+      if (resplanSection) resplanSection.style.display = 'none';
+    });
+
+    let s3dDesigns = [...DEFAULT_STRUCTURED3D_DESIGNS];
+
+    // Fetch from backend API
+    const fetchS3dData = async () => {
+      try {
+        const res = await fetch('/api/structured3d/designs');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && json.data && json.data.length > 0) {
+            s3dDesigns = json.data;
+            renderS3dCards(s3dDesigns);
+          }
+        }
+      } catch (err) {
+        console.log('Using default Structured3D catalog');
+      }
+    };
+    fetchS3dData();
+
+    function renderS3dCards(designs) {
+      if (s3dGrid) {
+        s3dGrid.innerHTML = renderStructured3dCardsHtml(designs);
+        attachS3dCardEvents();
+      }
+    }
+
+    // Filter
+    s3dBhkFilter?.addEventListener('change', () => {
+      const val = s3dBhkFilter.value;
+      const filtered = val === 'all' 
+        ? s3dDesigns 
+        : s3dDesigns.filter(d => d.bhk.toLowerCase().includes(val.toLowerCase()));
+      renderS3dCards(filtered);
+    });
+
+    // Structured3D Modal
+    const s3dModal = document.getElementById('structured3dModal');
+    const s3dModalContent = document.getElementById('structured3dModalContent');
+    const closeS3dModalBtn = document.getElementById('closeStructured3dModalBtn');
+
+    let activePano = null;
+    let activeMesh = null;
+
+    const closeS3d = () => {
+      if (activePano) { activePano.destroy(); activePano = null; }
+      if (activeMesh) { activeMesh.destroy(); activeMesh = null; }
+      if (s3dModal) s3dModal.style.display = 'none';
+    };
+
+    closeS3dModalBtn?.addEventListener('click', closeS3d);
+    s3dModal?.addEventListener('click', (e) => {
+      if (e.target === s3dModal) closeS3d();
+    });
+
+    function attachS3dCardEvents() {
+      // View Structured3D Suite Modal
+      document.querySelectorAll('.btn-s3d-suite').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const s3dId = btn.getAttribute('data-s3d-id');
+          const design = s3dDesigns.find(d => d.designId === s3dId) || s3dDesigns[0];
+          openS3dSuiteModal(design);
+        });
+      });
+
+      // Quick Select
+      document.querySelectorAll('.btn-select-s3d').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const s3dId = btn.getAttribute('data-s3d-id');
+          const design = s3dDesigns.find(d => d.designId === s3dId) || s3dDesigns[0];
+          selectS3dDesign(design);
+        });
+      });
+    }
+
+    function selectS3dDesign(design) {
+      try {
+        projectState.selectHousePlan({
+          designId: design.designId,
+          source: 'Structured3D',
+          title: design.title,
+          style: design.style,
+          bhk: design.bhk,
+          floors: design.floors,
+          totalAreaSqFt: design.totalAreaSqFt,
+          builtUpAreaSqFt: Math.round(design.totalAreaSqFt * 1.35),
+          vastuScore: design.vastuScore,
+          costRange: design.estimatedCost,
+          thumbnail: design.thumbnail,
+          floorplan: design.floorplan,
+          model3D: design.model3D,
+          rooms: design.rooms.map(r => ({ name: r.name, size: r.dimensions }))
+        });
+
+        localStorage.setItem('forzex_selected_house_plan', JSON.stringify({
+          id: design.designId,
+          designId: design.designId,
+          source: 'Structured3D',
+          title: design.title,
+          dimensions: `${design.dimensions.widthFt}' x ${design.dimensions.depthFt}'`,
+          totalAreaSqFt: design.totalAreaSqFt,
+          builtUpAreaSqFt: Math.round(design.totalAreaSqFt * 1.35),
+          bhk: design.bhk,
+          floors: design.floors,
+          costRange: design.estimatedCost,
+          vastuScore: design.vastuScore,
+          image: `/api/structured3d/asset/${design.designId}/view/front`,
+          floorplan: `/api/structured3d/asset/${design.designId}/floorplan`,
+          model3d: `/api/structured3d/asset/${design.designId}/mesh`,
+          selectedAt: new Date().toISOString()
+        }));
+      } catch (err) {
+        console.warn('Project state update issue:', err);
+      }
+
+      closeS3d();
+      showToast(`🎉 Success! Structured3D design ${design.designId} (${design.title}) selected for your project!`, 'success');
+    }
+
+    function openS3dSuiteModal(design) {
+      if (!s3dModal || !s3dModalContent) return;
+      s3dModalContent.innerHTML = renderStructured3dModalSuite(design);
+      s3dModal.style.display = 'flex';
+
+      // Select button in modal
+      s3dModalContent.querySelectorAll('.btn-select-s3d-modal').forEach(b => {
+        b.addEventListener('click', () => { selectS3dDesign(design); });
+      });
+
+      // Modal Tabs
+      const tabBtns = s3dModalContent.querySelectorAll('[data-s3d-tab]');
+      tabBtns.forEach(t => {
+        t.addEventListener('click', () => {
+          const tabName = t.getAttribute('data-s3d-tab');
+          tabBtns.forEach(b => b.classList.remove('active'));
+          t.classList.add('active');
+
+          s3dModalContent.querySelectorAll('.suite-tab-content').forEach(c => {
+            c.style.display = 'none';
+            c.classList.remove('active');
+          });
+
+          const activeSubTab = s3dModalContent.querySelector(`#s3d-subtab-${tabName}`);
+          if (activeSubTab) {
+            activeSubTab.style.display = 'block';
+            activeSubTab.classList.add('active');
+          }
+
+          // If mesh tab opened and mesh not yet initialized
+          if (tabName === 'mesh' && !activeMesh) {
+            setTimeout(() => {
+              const meshContainer = s3dModalContent.querySelector('#s3dMeshContainer');
+              const meshCanvas = s3dModalContent.querySelector('#s3dMeshCanvas');
+              if (meshContainer && meshCanvas) {
+                activeMesh = initStructured3dMesh(meshContainer, meshCanvas, design.model3D.path, design.sceneId);
+                
+                const toggleMeshBtn = s3dModalContent.querySelector('#s3dToggleMeshRotateBtn');
+                const resetMeshBtn = s3dModalContent.querySelector('#s3dResetMeshCamBtn');
+                const meshAutoBadge = s3dModalContent.querySelector('#s3dMeshAutoBadge');
+
+                toggleMeshBtn?.addEventListener('click', () => {
+                  const running = activeMesh.toggleAutoRotate();
+                  if (meshAutoBadge) meshAutoBadge.style.display = running ? 'block' : 'none';
+                  toggleMeshBtn.innerHTML = running ? '<i class="fas fa-pause"></i> Pause Orbit' : '<i class="fas fa-rotate"></i> Auto Orbit';
+                });
+
+                resetMeshBtn?.addEventListener('click', () => {
+                  activeMesh.resetCamera();
+                });
+              }
+            }, 100);
+          }
+        });
+      });
+
+      // Initialize 360 Panorama Viewer
+      setTimeout(() => {
+        const panoContainer = s3dModalContent.querySelector('#s3dPanoramaContainer');
+        const panoCanvas = s3dModalContent.querySelector('#s3dPanoramaCanvas');
+        if (panoContainer && panoCanvas) {
+          activePano = initStructured3dPanorama(panoContainer, panoCanvas, design.rooms[0].panorama);
+
+          // Room switcher pills
+          const roomPills = s3dModalContent.querySelectorAll('.s3d-room-pill');
+          const activeRoomText = s3dModalContent.querySelector('#s3dActiveRoomText');
+
+          roomPills.forEach(pill => {
+            pill.addEventListener('click', () => {
+              roomPills.forEach(p => p.classList.remove('active'));
+              pill.classList.add('active');
+              const panoUrl = pill.getAttribute('data-pano-url');
+              const roomName = pill.getAttribute('data-room-name');
+              if (activePano && panoUrl) activePano.loadPanorama(panoUrl);
+              if (activeRoomText) activeRoomText.textContent = roomName;
+            });
+          });
+
+          // Auto look & reset buttons
+          const toggleLookBtn = s3dModalContent.querySelector('#s3dToggleAutoLookBtn');
+          const resetLookBtn = s3dModalContent.querySelector('#s3dResetLookBtn');
+          const autoLookBadge = s3dModalContent.querySelector('#s3dAutoLookBadge');
+
+          toggleLookBtn?.addEventListener('click', () => {
+            if (activePano) {
+              const running = activePano.toggleAutoLook();
+              if (autoLookBadge) autoLookBadge.style.display = running ? 'block' : 'none';
+              toggleLookBtn.innerHTML = running ? '<i class="fas fa-pause"></i> Pause Look' : '<i class="fas fa-rotate"></i> Auto-Look 360°';
+            }
+          });
+
+          resetLookBtn?.addEventListener('click', () => {
+            if (activePano) activePano.resetView();
+          });
+        }
+      }, 100);
+
+      // Multi-Angle Perspective buttons
+      const angleBtns = s3dModalContent.querySelectorAll('.s3d-angle-btn');
+      const persImg = s3dModalContent.querySelector('#s3dPerspectiveImg');
+      const angleText = s3dModalContent.querySelector('#s3dActiveAngleText');
+
+      angleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          angleBtns.forEach(b => { b.classList.remove('active', 'btn-primary'); b.classList.add('btn-outline'); });
+          btn.classList.remove('btn-outline');
+          btn.classList.add('active', 'btn-primary');
+
+          const viewName = btn.getAttribute('data-view');
+          const src = btn.getAttribute('data-src');
+          if (persImg && src) {
+            persImg.style.opacity = '0';
+            setTimeout(() => {
+              persImg.src = src;
+              persImg.style.opacity = '1';
+            }, 150);
+          }
+          if (angleText) {
+            angleText.textContent = `${viewName.toUpperCase()} ELEVATION / CAMERA VIEW`;
+          }
+        });
+      });
+    }
+
+    // Initial attach
+    attachS3dCardEvents();
+  }
+
+  setupStructured3dFeature();
 }
 
 export function disposeFloorPlan3DViewer() {

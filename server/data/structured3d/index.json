@@ -1,0 +1,258 @@
+[
+  {
+    "designId": "S3D-DES-001",
+    "sceneId": "scene_00000",
+    "title": "Structured3D Modern Urban 3 BHK Residence",
+    "style": "Contemporary Minimalist",
+    "bhk": "3 BHK",
+    "floors": "Single Level (Ground)",
+    "totalAreaSqFt": 1380,
+    "totalAreaSqM": 128.2,
+    "roomCount": 5,
+    "roomTypes": ["living room", "kitchen", "bedroom", "bedroom", "bathroom"],
+    "dimensions": {
+      "widthFt": 34.5,
+      "depthFt": 40.0,
+      "ceilingHeightFt": 9.2
+    },
+    "vastuScore": 96,
+    "estimatedCost": "₹22,50,000 – ₹27,80,000",
+    "thumbnail": "/api/structured3d/asset/S3D-DES-001/thumbnail",
+    "floorplan": {
+      "path": "/api/structured3d/asset/S3D-DES-001/floorplan",
+      "format": "png"
+    },
+    "model3D": {
+      "format": "obj",
+      "path": "/api/structured3d/asset/S3D-DES-001/mesh"
+    },
+    "views": {
+      "front": "/api/structured3d/asset/S3D-DES-001/view/front",
+      "back": "/api/structured3d/asset/S3D-DES-001/view/back",
+      "left": "/api/structured3d/asset/S3D-DES-001/view/left",
+      "right": "/api/structured3d/asset/S3D-DES-001/view/right",
+      "top": "/api/structured3d/asset/S3D-DES-001/view/top"
+    },
+    "rooms": [
+      {
+        "roomId": "room_01",
+        "name": "Living & Dining Lounge",
+        "type": "living room",
+        "dimensions": "18.5' x 16.0'",
+        "areaSqFt": 296,
+        "panorama": "/api/structured3d/asset/S3D-DES-001/room/living_room/panorama",
+        "perspectives": {
+          "front": "/api/structured3d/asset/S3D-DES-001/view/front",
+          "side": "/api/structured3d/asset/S3D-DES-001/view/left"
+        },
+        "features": "Double-aspect windows, engineered vitrified flooring, structured 3D spatial layout"
+      },
+      {
+        "roomId": "room_02",
+        "name": "Modular Chef Kitchen",
+        "type": "kitchen",
+        "dimensions": "12.0' x 11.5'",
+        "areaSqFt": 138,
+        "panorama": "/api/structured3d/asset/S3D-DES-001/room/kitchen/panorama",
+        "perspectives": {
+          "front": "/api/structured3d/asset/S3D-DES-001/view/right"
+        },
+        "features": "Quartz countertop, integrated cabinetry, utility wash area"
+      },
+      {
+        "roomId": "room_03",
+        "name": "Master Bedroom Suite",
+        "type": "bedroom",
+        "dimensions": "15.0' x 14.5'",
+        "areaSqFt": 217,
+        "panorama": "/api/structured3d/asset/S3D-DES-001/room/bedroom/panorama",
+        "perspectives": {
+          "front": "/api/structured3d/asset/S3D-DES-001/view/front"
+        },
+        "features": "Laminate wood flooring, recessed warm lighting, floor-to-ceiling wardrobe cavity"
+      },
+      {
+        "roomId": "room_04",
+        "name": "Luxury En-Suite Bathroom",
+        "type": "bathroom",
+        "dimensions": "9.5' x 8.0'",
+        "areaSqFt": 76,
+        "panorama": "/api/structured3d/asset/S3D-DES-001/room/bathroom/panorama",
+        "perspectives": {
+          "front": "/api/structured3d/asset/S3D-DES-001/view/back"
+        },
+        "features": "Anti-skid marble finish tiles, glass shower partition, wall-hung fixtures"
+      }
+    ]
+  },
+  {
+    "designId": "S3D-DES-002",
+    "sceneId": "scene_00001",
+    "title": "Structured3D Compact Smart 2 BHK Duplex",
+    "style": "Scandinavian Warm Minimalist",
+    "bhk": "2 BHK",
+    "floors": "G + 1 Duplex (2 Floors)",
+    "totalAreaSqFt": 950,
+    "totalAreaSqM": 88.3,
+    "roomCount": 4,
+    "roomTypes": ["living room", "kitchen", "bedroom", "bathroom"],
+    "dimensions": {
+      "widthFt": 25.0,
+      "depthFt": 38.0,
+      "ceilingHeightFt": 9.5
+    },
+    "vastuScore": 94,
+    "estimatedCost": "₹16,80,000 – ₹21,20,000",
+    "thumbnail": "/api/structured3d/asset/S3D-DES-002/thumbnail",
+    "floorplan": {
+      "path": "/api/structured3d/asset/S3D-DES-002/floorplan",
+      "format": "png"
+    },
+    "model3D": {
+      "format": "obj",
+      "path": "/api/structured3d/asset/S3D-DES-002/mesh"
+    },
+    "views": {
+      "front": "/api/structured3d/asset/S3D-DES-002/view/front",
+      "back": "/api/structured3d/asset/S3D-DES-002/view/back",
+      "left": "/api/structured3d/asset/S3D-DES-002/view/left",
+      "right": "/api/structured3d/asset/S3D-DES-002/view/right",
+      "top": "/api/structured3d/asset/S3D-DES-002/view/top"
+    },
+    "rooms": [
+      {
+        "roomId": "room_01",
+        "name": "Open-Plan Living & Dining",
+        "type": "living room",
+        "dimensions": "15.0' x 14.0'",
+        "areaSqFt": 210,
+        "panorama": "/api/structured3d/asset/S3D-DES-002/room/living_room/panorama",
+        "perspectives": {
+          "front": "/api/structured3d/asset/S3D-DES-002/view/front"
+        },
+        "features": "Open plan living with direct access to kitchen and foyer"
+      },
+      {
+        "roomId": "room_02",
+        "name": "Compact Linear Kitchen",
+        "type": "kitchen",
+        "dimensions": "10.0' x 9.0'",
+        "areaSqFt": 90,
+        "panorama": "/api/structured3d/asset/S3D-DES-002/room/kitchen/panorama",
+        "perspectives": {
+          "front": "/api/structured3d/asset/S3D-DES-002/view/right"
+        },
+        "features": "Granite countertop, high-gloss acrylic cabinetry"
+      },
+      {
+        "roomId": "room_03",
+        "name": "Upper Floor Bedroom",
+        "type": "bedroom",
+        "dimensions": "13.0' x 12.0'",
+        "areaSqFt": 156,
+        "panorama": "/api/structured3d/asset/S3D-DES-002/room/bedroom/panorama",
+        "perspectives": {
+          "front": "/api/structured3d/asset/S3D-DES-002/view/left"
+        },
+        "features": "Attached balcony, cross-ventilation, timber louvers"
+      },
+      {
+        "roomId": "room_04",
+        "name": "Contemporary Bathroom",
+        "type": "bathroom",
+        "dimensions": "8.0' x 6.5'",
+        "areaSqFt": 52,
+        "panorama": "/api/structured3d/asset/S3D-DES-002/room/bathroom/panorama",
+        "perspectives": {
+          "front": "/api/structured3d/asset/S3D-DES-002/view/back"
+        },
+        "features": "Vitrified matte tiles, compact vanity, premium chrome fittings"
+      }
+    ]
+  },
+  {
+    "designId": "S3D-DES-003",
+    "sceneId": "scene_00002",
+    "title": "Structured3D Executive 4 BHK Luxury Villa",
+    "style": "Contemporary Cantilever Villa",
+    "bhk": "4 BHK",
+    "floors": "G + 1 Villa",
+    "totalAreaSqFt": 2250,
+    "totalAreaSqM": 209.0,
+    "roomCount": 7,
+    "roomTypes": ["living room", "kitchen", "bedroom", "bedroom", "bedroom", "bathroom", "balcony"],
+    "dimensions": {
+      "widthFt": 45.0,
+      "depthFt": 50.0,
+      "ceilingHeightFt": 10.5
+    },
+    "vastuScore": 98,
+    "estimatedCost": "₹38,50,000 – ₹46,00,000",
+    "thumbnail": "/api/structured3d/asset/S3D-DES-003/thumbnail",
+    "floorplan": {
+      "path": "/api/structured3d/asset/S3D-DES-003/floorplan",
+      "format": "png"
+    },
+    "model3D": {
+      "format": "obj",
+      "path": "/api/structured3d/asset/S3D-DES-003/mesh"
+    },
+    "views": {
+      "front": "/api/structured3d/asset/S3D-DES-003/view/front",
+      "back": "/api/structured3d/asset/S3D-DES-003/view/back",
+      "left": "/api/structured3d/asset/S3D-DES-003/view/left",
+      "right": "/api/structured3d/asset/S3D-DES-003/view/right",
+      "top": "/api/structured3d/asset/S3D-DES-003/view/top"
+    },
+    "rooms": [
+      {
+        "roomId": "room_01",
+        "name": "Grand Double-Height Living Hall",
+        "type": "living room",
+        "dimensions": "22.0' x 18.0'",
+        "areaSqFt": 396,
+        "panorama": "/api/structured3d/asset/S3D-DES-003/room/living_room/panorama",
+        "perspectives": {
+          "front": "/api/structured3d/asset/S3D-DES-003/view/front"
+        },
+        "features": "Double-height ceiling, Italian marble finish, automated cove lighting"
+      },
+      {
+        "roomId": "room_02",
+        "name": "Gourmet Island Kitchen & Pantry",
+        "type": "kitchen",
+        "dimensions": "16.0' x 14.0'",
+        "areaSqFt": 224,
+        "panorama": "/api/structured3d/asset/S3D-DES-003/room/kitchen/panorama",
+        "perspectives": {
+          "front": "/api/structured3d/asset/S3D-DES-003/view/right"
+        },
+        "features": "Central island breakfast counter, dual built-in convection ovens"
+      },
+      {
+        "roomId": "room_03",
+        "name": "Presidential Master Suite",
+        "type": "bedroom",
+        "dimensions": "18.0' x 16.5'",
+        "areaSqFt": 297,
+        "panorama": "/api/structured3d/asset/S3D-DES-003/room/bedroom/panorama",
+        "perspectives": {
+          "front": "/api/structured3d/asset/S3D-DES-003/view/left"
+        },
+        "features": "Private walk-in dressing wardrobe, panoramic terrace view"
+      },
+      {
+        "roomId": "room_04",
+        "name": "Spa En-Suite Bath",
+        "type": "bathroom",
+        "dimensions": "12.0' x 9.5'",
+        "areaSqFt": 114,
+        "panorama": "/api/structured3d/asset/S3D-DES-003/room/bathroom/panorama",
+        "perspectives": {
+          "front": "/api/structured3d/asset/S3D-DES-003/view/back"
+        },
+        "features": "Freestanding soaking tub, thermostatic rain shower, dual vanity"
+      }
+    ]
+  }
+]
