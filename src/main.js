@@ -9,6 +9,7 @@ import { visionPage, insightsPage, resourcesPage, reportPage, morePage } from '.
 import { landAnalyzerPage } from './pages/landAnalyzer.js';
 import { backendPage } from './pages/backend.js';
 import { floorPlansPage, setupFloorPlanPageHandlers, disposeFloorPlan3DViewer } from './pages/floorPlans.js';
+import { houseModelsPage, setupHouseModelsPageHandlers, disposeHouseViewer } from './pages/houseModelsPage.js';
 import { adminLoginPage, clientLoginPage, clientRegisterPage, adminDashPage, clientDashPage, workspacePage } from './pages/auth.js';
 import { 
   auth, 
@@ -43,6 +44,7 @@ registerRoute('/feedback', feedbackPage);
 registerRoute('/land-analyzer', landAnalyzerPage);
 registerRoute('/backend', backendPage);
 registerRoute('/floor-plans', floorPlansPage);
+registerRoute('/house-models', houseModelsPage);
 registerRoute('/vision', visionPage);
 registerRoute('/insights', insightsPage);
 registerRoute('/resources', resourcesPage);
@@ -147,6 +149,15 @@ function setupGlobalListeners() {
         setupWorkspaceAiVideoGenerator();
         initMaterialBrandStudio();
       }, 60);
+    }
+
+    // 3D House Models & Walkthrough Section Handler
+    if (path === '/house-models') {
+      setTimeout(() => {
+        setupHouseModelsPageHandlers();
+      }, 60);
+    } else {
+      disposeHouseViewer();
     }
 
     // Contact form

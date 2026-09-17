@@ -42,19 +42,24 @@ export function homePage() {
 
     <section class="section section-alt">
       <div class="container">
-        <h2 class="text-center" style="margin-bottom:40px">AI-Powered Features</h2>
-        <div class="grid grid-3">
-          <div class="card animate-in delay-1" style="cursor:pointer" data-route="/vision">
+        <h2 class="text-center" style="margin-bottom:40px">3D Architectural & AI Features</h2>
+        <div class="grid grid-4">
+          <div class="card animate-in delay-1" style="cursor:pointer" data-route="/house-models">
+            <div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-cubes"></i></div>
+            <h3>3D House Models</h3>
+            <p>Explore 20 residential house models in interactive 3D with 360° rotation and room-by-room architectural walkthroughs.</p>
+          </div>
+          <div class="card animate-in delay-2" style="cursor:pointer" data-route="/vision">
             <div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-camera"></i></div>
             <h3>AI Site Camera</h3>
             <p>Analyze construction sites with Google Vision AI for safety hazards, progress tracking, and object detection.</p>
           </div>
-          <div class="card animate-in delay-2" style="cursor:pointer" data-route="/insights">
+          <div class="card animate-in delay-3" style="cursor:pointer" data-route="/insights">
             <div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-calculator"></i></div>
             <h3>AI Estimation</h3>
             <p>Generate detailed cost estimates powered by OpenAI with itemized breakdowns and material calculations.</p>
           </div>
-          <div class="card animate-in delay-3" style="cursor:pointer" data-route="/resources">
+          <div class="card animate-in delay-4" style="cursor:pointer" data-route="/resources">
             <div style="font-size:2rem;color:var(--primary);margin-bottom:12px"><i class="fas fa-boxes-stacked"></i></div>
             <h3>Smart Recommendations</h3>
             <p>Get AI-powered product and material recommendations tailored to your project requirements.</p>

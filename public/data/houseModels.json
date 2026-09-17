@@ -1,0 +1,2082 @@
+[
+  {
+    "modelId": "house-01",
+    "modelName": "Modern Single-Floor Villa",
+    "style": "Modern Single-Level Minimalist",
+    "floors": 1,
+    "floorsText": "Single Floor (Ground Level)",
+    "plotSize": "40' x 60' (2,400 sq ft)",
+    "builtUpArea": 1450,
+    "builtUpAreaSqFt": 1450,
+    "builtUpAreaSqM": 134.7,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "estimatedCost": "₹28,50,000 – ₹34,20,000",
+    "costPerSqFt": "₹1,965 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹16,50,000",
+      "finishingCarpentry": "₹8,20,000",
+      "mepElectricalPlumbing": "₹4,80,000",
+      "landscapeExt": "₹2,70,000"
+    },
+    "description": "A sleek single-level villa designed with an open-concept flow, seamless indoor-outdoor transition, cantilevered front porch, and large panoramic glass sliders opening toward a private landscaped lawn.",
+    "modelFile": "/models/houses/house-01.glb",
+    "thumbnail": "/images/house3d/model-01.jpg",
+    "facing": "East",
+    "parking": "1 Covered Carport",
+    "dimensions": { "widthFt": 34, "depthFt": 44, "heightFt": 13 },
+    "vastuScore": 96,
+    "architecturalFeatures": [
+      "Floor-to-ceiling double-glazed sliding glass panels",
+      "Linear wood-clad cantilevered overhang with recessed warm spotlights",
+      "Expansive single-level accessibility with zero steps",
+      "South-East Vaastu compliant modern modular kitchen"
+    ],
+    "proceduralParams": {
+      "architecture": "modern_single_floor",
+      "levels": 1,
+      "roofType": "flat_cantilever",
+      "wallColor": "#ededed",
+      "accentColor": "#334155",
+      "woodColor": "#b45309",
+      "glassColor": "#38bdf8",
+      "width": 14,
+      "depth": 18,
+      "height": 4.5,
+      "hasOverhang": true,
+      "hasDeck": true,
+      "hasGarden": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Living Room",
+        "type": "living_room",
+        "areaSqFt": 320,
+        "cameraPos": [0, 1.8, 2.5],
+        "lookAt": [0, 1.5, -4],
+        "description": "Spacious living lounge with 11ft ceiling, Italian vitrified tiles, recessed LED cove lighting, and open connection to the dining area."
+      },
+      {
+        "id": "kitchen",
+        "name": "Modular Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 140,
+        "cameraPos": [4.2, 1.8, -2],
+        "lookAt": [4.2, 1.4, -6],
+        "description": "L-shaped acrylic modular kitchen featuring quartz countertops, chimney duct, and breakfast counter."
+      },
+      {
+        "id": "bedroom",
+        "name": "Master Bedroom",
+        "type": "bedroom",
+        "areaSqFt": 220,
+        "cameraPos": [-4.0, 1.8, -3],
+        "lookAt": [-4.0, 1.5, -7],
+        "description": "Peaceful master retreat with wooden laminate flooring, floor-to-ceiling wardrobe cavity, and attached bath."
+      },
+      {
+        "id": "bathroom",
+        "name": "En-Suite Bathroom",
+        "type": "bathroom",
+        "areaSqFt": 65,
+        "cameraPos": [-5.0, 1.8, -6.5],
+        "lookAt": [-5.0, 1.4, -7.8],
+        "description": "Contemporary anti-skid porcelain finish bathroom with wall-hung commode and glass shower cubicle."
+      },
+      {
+        "id": "balcony",
+        "name": "Front Porch & Veranda",
+        "type": "balcony",
+        "areaSqFt": 160,
+        "cameraPos": [0, 1.8, 7],
+        "lookAt": [0, 1.5, 3],
+        "description": "Covered architectural sit-out deck with teak wood louvers and outdoor porcelain pavers."
+      },
+      {
+        "id": "backyard",
+        "name": "Backyard Garden",
+        "type": "backyard",
+        "areaSqFt": 450,
+        "cameraPos": [0, 1.8, -10.5],
+        "lookAt": [0, 1.5, -6],
+        "description": "Private rear lawn with stone stepping pavers, perimeter planter boxes, and open patio seating."
+      }
+    ]
+  },
+  {
+    "modelId": "house-02",
+    "modelName": "Modern Two-Floor Villa",
+    "style": "Contemporary Dual-Level",
+    "floors": 2,
+    "floorsText": "G + 1 (2 Floors)",
+    "plotSize": "35' x 55' (1,925 sq ft)",
+    "builtUpArea": 2350,
+    "builtUpAreaSqFt": 2350,
+    "builtUpAreaSqM": 218.3,
+    "bedrooms": 4,
+    "bathrooms": 4,
+    "estimatedCost": "₹45,80,000 – ₹54,00,000",
+    "costPerSqFt": "₹2,050 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹26,50,000",
+      "finishingCarpentry": "₹13,80,000",
+      "mepElectricalPlumbing": "₹7,20,000",
+      "landscapeExt": "₹3,50,000"
+    },
+    "description": "An elegant 2-floor contemporary villa with bold geometric massing, upper cantilevered master balcony, double-height living foyer, and warm exterior wood composite louvers.",
+    "modelFile": "/models/houses/house-02.glb",
+    "thumbnail": "/images/house3d/model-02.jpg",
+    "facing": "North",
+    "parking": "2 Covered Parking Bays",
+    "dimensions": { "widthFt": 30, "depthFt": 42, "heightFt": 24 },
+    "vastuScore": 95,
+    "architecturalFeatures": [
+      "Cantilevered 1st floor master bedroom balcony with toughened glass balustrade",
+      "Double-height 20ft central atrium foyer with skylight",
+      "Exterior charcoal slate stone textured accent facade",
+      "Independent family lounge on the first floor"
+    ],
+    "proceduralParams": {
+      "architecture": "modern_two_floor",
+      "levels": 2,
+      "roofType": "flat_terrace",
+      "wallColor": "#f1f5f9",
+      "accentColor": "#1e293b",
+      "woodColor": "#9a3412",
+      "glassColor": "#38bdf8",
+      "width": 13,
+      "depth": 17,
+      "height": 8.4,
+      "hasBalcony": true,
+      "hasUpperTerrace": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Double-Height Living Hall",
+        "type": "living_room",
+        "areaSqFt": 380,
+        "cameraPos": [0, 2.0, 2],
+        "lookAt": [0, 3.5, -4],
+        "description": "Dramatic 20ft double-height ceiling living space featuring motorized clerestory windows and an architectural staircase."
+      },
+      {
+        "id": "kitchen",
+        "name": "Island Gourmet Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 180,
+        "cameraPos": [4.0, 1.8, -2],
+        "lookAt": [4.0, 1.5, -5.5],
+        "description": "Spacious kitchen with a central quartz prep island, built-in dual ovens, and separate pantry utility."
+      },
+      {
+        "id": "bedroom",
+        "name": "Upper Master Suite",
+        "type": "bedroom",
+        "areaSqFt": 260,
+        "cameraPos": [-3.5, 5.8, -2],
+        "lookAt": [-3.5, 5.5, -5.5],
+        "description": "Private upper level master suite with attached walk-in dressing wardrobe, parquet floors, and balcony access."
+      },
+      {
+        "id": "bathroom",
+        "name": "Master En-Suite",
+        "type": "bathroom",
+        "areaSqFt": 85,
+        "cameraPos": [-4.5, 5.8, -6],
+        "lookAt": [-4.5, 5.4, -7.5],
+        "description": "Marble-tiled bathroom with rain shower, floating vanity, and designer fittings."
+      },
+      {
+        "id": "balcony",
+        "name": "Cantilever Glass Balcony",
+        "type": "balcony",
+        "areaSqFt": 140,
+        "cameraPos": [-3.0, 5.8, 6.0],
+        "lookAt": [-3.0, 5.4, 2.0],
+        "description": "Expansive upper front balcony offering unobstructed panoramic views with seamless glass railings."
+      },
+      {
+        "id": "backyard",
+        "name": "Rear Patio & Garden",
+        "type": "backyard",
+        "areaSqFt": 350,
+        "cameraPos": [0, 1.8, -10],
+        "lookAt": [0, 1.5, -6],
+        "description": "Outdoor dining patio with wooden pergola overhead and lush green turf lawn."
+      }
+    ]
+  },
+  {
+    "modelId": "house-03",
+    "modelName": "Luxury Contemporary Villa",
+    "style": "Ultra-Luxury Architectural",
+    "floors": 2,
+    "floorsText": "G + 1 Luxury Villa",
+    "plotSize": "50' x 80' (4,000 sq ft)",
+    "builtUpArea": 3950,
+    "builtUpAreaSqFt": 3950,
+    "builtUpAreaSqM": 366.9,
+    "bedrooms": 5,
+    "bathrooms": 5,
+    "estimatedCost": "₹86,00,000 – ₹1,05,00,000",
+    "costPerSqFt": "₹2,380 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹48,00,000",
+      "finishingCarpentry": "₹28,50,000",
+      "mepElectricalPlumbing": "₹14,50,000",
+      "landscapeExt": "₹9,00,000"
+    },
+    "description": "Grand luxury villa featuring cantilevered stone cubes, continuous floor-to-ceiling glass curtain walls, reflection water features, infinity-edge terrace, and integrated smart home automation.",
+    "modelFile": "/models/houses/house-03.glb",
+    "thumbnail": "/images/house3d/model-03.jpg",
+    "facing": "North-East",
+    "parking": "3 Car Automated Garage",
+    "dimensions": { "widthFt": 44, "depthFt": 56, "heightFt": 26 },
+    "vastuScore": 98,
+    "architecturalFeatures": [
+      "Cantilevered stone portico and floating architectural staircase",
+      "Floor-to-ceiling acoustic triple-glazed curtain walls",
+      "Water cascade feature at the grand entrance foyer",
+      "Private home theatre and gym room on upper level"
+    ],
+    "proceduralParams": {
+      "architecture": "luxury_contemporary",
+      "levels": 2,
+      "roofType": "flat_terrace",
+      "wallColor": "#ffffff",
+      "accentColor": "#0f172a",
+      "woodColor": "#d97706",
+      "glassColor": "#38bdf8",
+      "width": 18,
+      "depth": 22,
+      "height": 9.2,
+      "hasWaterFeature": true,
+      "hasDoubleCantilever": true,
+      "hasPergola": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Grand Formal Living Hall",
+        "type": "living_room",
+        "areaSqFt": 520,
+        "cameraPos": [0, 2.0, 2],
+        "lookAt": [0, 2.2, -5],
+        "description": "Italian Statuario marble flooring, ambient cove lighting, and motorized acoustic glass partitions."
+      },
+      {
+        "id": "kitchen",
+        "name": "Chef Island Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 240,
+        "cameraPos": [5.5, 1.8, -2],
+        "lookAt": [5.5, 1.5, -6],
+        "description": "State-of-the-art German modular kitchen with hidden pantry, sub-zero refrigeration, and wine cellar."
+      },
+      {
+        "id": "bedroom",
+        "name": "Presidential Master Suite",
+        "type": "bedroom",
+        "areaSqFt": 380,
+        "cameraPos": [-5.0, 6.2, -2],
+        "lookAt": [-5.0, 5.8, -6.5],
+        "description": "Master sanctuary with private fireplace alcove, solid walnut flooring, and panoramic corner glazing."
+      },
+      {
+        "id": "bathroom",
+        "name": "Spa Master Bathroom",
+        "type": "bathroom",
+        "areaSqFt": 130,
+        "cameraPos": [-6.5, 6.2, -6.5],
+        "lookAt": [-6.5, 5.8, -8.2],
+        "description": "Freestanding soaking stone tub, thermostatic multi-jet rain shower, and dual his-and-her vanities."
+      },
+      {
+        "id": "balcony",
+        "name": "Upper Sunset Terrace",
+        "type": "balcony",
+        "areaSqFt": 260,
+        "cameraPos": [0, 6.2, 7.5],
+        "lookAt": [0, 5.8, 2],
+        "description": "Expansive outdoor deck with sunken lounge firepit, glass railings, and timber pergolas."
+      },
+      {
+        "id": "backyard",
+        "name": "Resort Lawn & Water Feature",
+        "type": "backyard",
+        "areaSqFt": 750,
+        "cameraPos": [0, 1.8, -12],
+        "lookAt": [0, 1.5, -6],
+        "description": "Serene outdoor oasis featuring manicured Japanese lawn, cascading water fountain, and barbecue gazebo."
+      }
+    ]
+  },
+  {
+    "modelId": "house-04",
+    "modelName": "Minimalist House",
+    "style": "Pure Geometric Minimalist",
+    "floors": 2,
+    "floorsText": "G + 1 Minimalist",
+    "plotSize": "30' x 45' (1,350 sq ft)",
+    "builtUpArea": 1650,
+    "builtUpAreaSqFt": 1650,
+    "builtUpAreaSqM": 153.3,
+    "bedrooms": 3,
+    "bathrooms": 3,
+    "estimatedCost": "₹31,50,000 – ₹37,20,000",
+    "costPerSqFt": "₹2,020 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹18,50,000",
+      "finishingCarpentry": "₹9,20,000",
+      "mepElectricalPlumbing": "₹5,10,000",
+      "landscapeExt": "₹2,40,000"
+    },
+    "description": "Inspired by Japanese and Scandinavian minimalism: monochromatic white and charcoal cubic volumes, concealed gutters, flush doors, hidden joints, and an inner lightwell bringing abundant natural daylight.",
+    "modelFile": "/models/houses/house-04.glb",
+    "thumbnail": "/images/house3d/model-04.jpg",
+    "facing": "East",
+    "parking": "1 Car Staging Space",
+    "dimensions": { "widthFt": 26, "depthFt": 38, "heightFt": 22 },
+    "vastuScore": 94,
+    "architecturalFeatures": [
+      "Pure minimalist cubic massing with zero superfluous ornament",
+      "Central skylight lightwell illuminating both levels simultaneously",
+      "Frameless glass window apertures aligned to sun trajectory",
+      "Hidden baseboards and flush architectural door systems"
+    ],
+    "proceduralParams": {
+      "architecture": "minimalist_cube",
+      "levels": 2,
+      "roofType": "flat_minimalist",
+      "wallColor": "#f8fafc",
+      "accentColor": "#475569",
+      "woodColor": "#78716c",
+      "glassColor": "#67e8f9",
+      "width": 11,
+      "depth": 15,
+      "height": 7.8,
+      "hasLightwell": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Zen Living Foyer",
+        "type": "living_room",
+        "areaSqFt": 290,
+        "cameraPos": [0, 1.8, 1.5],
+        "lookAt": [0, 1.8, -3.5],
+        "description": "Monochromatic micro-cement flooring, hidden LED recessed channels, and seamless floor-to-ceiling glass."
+      },
+      {
+        "id": "kitchen",
+        "name": "Concealed Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 120,
+        "cameraPos": [3.2, 1.8, -2],
+        "lookAt": [3.2, 1.5, -5],
+        "description": "Handle-less matte white cabinetry with integrated appliances and seamless Corian countertop."
+      },
+      {
+        "id": "bedroom",
+        "name": "Minimal Master Suite",
+        "type": "bedroom",
+        "areaSqFt": 190,
+        "cameraPos": [-2.8, 5.4, -2],
+        "lookAt": [-2.8, 5.2, -5],
+        "description": "Low-profile platform bed, concealed walk-through closet, and serene white oak accents."
+      },
+      {
+        "id": "bathroom",
+        "name": "Monolithic Bathroom",
+        "type": "bathroom",
+        "areaSqFt": 55,
+        "cameraPos": [-3.5, 5.4, -5.5],
+        "lookAt": [-3.5, 5.0, -6.8],
+        "description": "Seamless micro-topping surface with matte black minimalist tapware and linear floor drain."
+      },
+      {
+        "id": "balcony",
+        "name": "Recessed Sky Balcony",
+        "type": "balcony",
+        "areaSqFt": 90,
+        "cameraPos": [0, 5.4, 5],
+        "lookAt": [0, 5.0, 1],
+        "description": "Minimalist recessed balcony with frameless glass guard and teak deck tiles."
+      },
+      {
+        "id": "backyard",
+        "name": "Zen Courtyard",
+        "type": "backyard",
+        "areaSqFt": 220,
+        "cameraPos": [0, 1.8, -8],
+        "lookAt": [0, 1.5, -4],
+        "description": "Minimalist Japanese rock garden with raked white gravel, single sculptural bonsai tree, and basalt pavers."
+      }
+    ]
+  },
+  {
+    "modelId": "house-05",
+    "modelName": "Traditional Indian House",
+    "style": "Heritage Indian Architecture",
+    "floors": 1,
+    "floorsText": "Single Floor with Attic (Chettinad Style)",
+    "plotSize": "45' x 70' (3,150 sq ft)",
+    "builtUpArea": 2100,
+    "builtUpAreaSqFt": 2100,
+    "builtUpAreaSqM": 195.1,
+    "bedrooms": 3,
+    "bathrooms": 3,
+    "estimatedCost": "₹42,00,000 – ₹49,50,000",
+    "costPerSqFt": "₹2,100 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹23,50,000",
+      "finishingCarpentry": "₹12,80,000",
+      "mepElectricalPlumbing": "₹6,40,000",
+      "landscapeExt": "₹3,80,000"
+    },
+    "description": "Classic Indian heritage home featuring carved teak wood pillars, extensive front Thinnai sit-out veranda, authentic sloping Mangalore terracotta clay tile roofs, Athangudi handmade floor tiles, and 100% Vastu compliance.",
+    "modelFile": "/models/houses/house-05.glb",
+    "thumbnail": "/images/house3d/model-05.jpg",
+    "facing": "East",
+    "parking": "Paved Heritage Portico",
+    "dimensions": { "widthFt": 38, "depthFt": 52, "heightFt": 17 },
+    "vastuScore": 99,
+    "architecturalFeatures": [
+      "Sloping terracotta Mangalore clay tile hipped roofs with ornamental brass finials",
+      "Chettinad style carved Burmese teak wood pillars supporting the front Thinnai",
+      "Handcrafted Athangudi floral geometric floor tiles throughout the living corridor",
+      "Central Brahmasthan clearance ensuring natural ventilation and Vastu harmony"
+    ],
+    "proceduralParams": {
+      "architecture": "traditional_indian",
+      "levels": 1,
+      "roofType": "slope_terracotta_hip",
+      "wallColor": "#fffbeb",
+      "accentColor": "#991b1b",
+      "woodColor": "#78350f",
+      "glassColor": "#7dd3fc",
+      "width": 16,
+      "depth": 20,
+      "height": 5.8,
+      "hasVeranda": true,
+      "hasWoodenPillars": true,
+      "clayTileRoof": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Central Heritage Hall",
+        "type": "living_room",
+        "areaSqFt": 360,
+        "cameraPos": [0, 1.8, 2],
+        "lookAt": [0, 1.8, -4],
+        "description": "Chettinad-inspired central hall with polished rosewood beams, Athangudi handmade tiles, and brass chandeliers."
+      },
+      {
+        "id": "kitchen",
+        "name": "South-East Agni Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 160,
+        "cameraPos": [4.8, 1.8, -2],
+        "lookAt": [4.8, 1.5, -5.5],
+        "description": "Traditional yet modern kitchen placed in the auspicious SE corner with granite slabs and wood cabinetry."
+      },
+      {
+        "id": "bedroom",
+        "name": "SW Master Bedroom",
+        "type": "bedroom",
+        "areaSqFt": 240,
+        "cameraPos": [-4.5, 1.8, -2.5],
+        "lookAt": [-4.5, 1.6, -6],
+        "description": "South-West master chamber with carved four-poster wooden bed, terracotta ceiling tiles, and attached bath."
+      },
+      {
+        "id": "bathroom",
+        "name": "Traditional Bath Suite",
+        "type": "bathroom",
+        "areaSqFt": 70,
+        "cameraPos": [-5.5, 1.8, -6.5],
+        "lookAt": [-5.5, 1.4, -7.8],
+        "description": "Earthy stone finish bathroom with brass hardware and modern sanitaryware."
+      },
+      {
+        "id": "balcony",
+        "name": "Front Thinnai Veranda",
+        "type": "balcony",
+        "areaSqFt": 200,
+        "cameraPos": [0, 1.8, 7.5],
+        "lookAt": [0, 1.5, 3],
+        "description": "Traditional raised entrance veranda with built-in stone sitting ledges and polished wooden columns."
+      },
+      {
+        "id": "backyard",
+        "name": "Rear Tulsi Courtyard",
+        "type": "backyard",
+        "areaSqFt": 380,
+        "cameraPos": [0, 1.8, -11],
+        "lookAt": [0, 1.5, -6],
+        "description": "Brick-paved rear courtyard centered around an ornate stone Tulsi madam and banana tree plantation."
+      }
+    ]
+  },
+  {
+    "modelId": "house-06",
+    "modelName": "Modern Indian Villa",
+    "style": "Indo-Modern Fusion",
+    "floors": 2,
+    "floorsText": "G + 1 Indo-Modern",
+    "plotSize": "40' x 60' (2,400 sq ft)",
+    "builtUpArea": 2800,
+    "builtUpAreaSqFt": 2800,
+    "builtUpAreaSqM": 260.1,
+    "bedrooms": 4,
+    "bathrooms": 4,
+    "estimatedCost": "₹58,00,000 – ₹68,50,000",
+    "costPerSqFt": "₹2,220 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹33,50,000",
+      "finishingCarpentry": "₹19,20,000",
+      "mepElectricalPlumbing": "₹9,80,000",
+      "landscapeExt": "₹4,50,000"
+    },
+    "description": "A striking blend of Indian architectural heritage with contemporary concrete lines. Highlights include intricate geometric CNC-cut Jali screens casting dynamic shadow play, warm Jaisalmer yellow sandstone accents, and shaded open sit-outs.",
+    "modelFile": "/models/houses/house-06.glb",
+    "thumbnail": "/images/house3d/model-06.jpg",
+    "facing": "North",
+    "parking": "2 Covered Parking Bays",
+    "dimensions": { "widthFt": 34, "depthFt": 46, "heightFt": 25 },
+    "vastuScore": 97,
+    "architecturalFeatures": [
+      "Perforated terracotta and concrete Jali screens providing thermal cooling and privacy",
+      "Jaisalmer yellow sandstone cladding paired with exposed fair-face concrete",
+      "Double-height entrance sit-out with brass temple bell niche",
+      "Open-to-sky internal light shaft with water trough"
+    ],
+    "proceduralParams": {
+      "architecture": "modern_indian",
+      "levels": 2,
+      "roofType": "flat_terrace_pergola",
+      "wallColor": "#fef3c7",
+      "accentColor": "#b45309",
+      "woodColor": "#713f12",
+      "glassColor": "#38bdf8",
+      "width": 14,
+      "depth": 18,
+      "height": 8.6,
+      "hasJaliScreen": true,
+      "hasSandstoneAccent": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Jali-Screened Living Hall",
+        "type": "living_room",
+        "areaSqFt": 420,
+        "cameraPos": [0, 2.0, 2],
+        "lookAt": [0, 2.0, -4.5],
+        "description": "Airy living hall where dappled sunlight filters through geometric jali screens onto beige marble floors."
+      },
+      {
+        "id": "kitchen",
+        "name": "Contemporary Indian Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 190,
+        "cameraPos": [4.2, 1.8, -2],
+        "lookAt": [4.2, 1.5, -5.5],
+        "description": "High-efficiency modular kitchen equipped for heavy Indian cooking with high-suction chimney and wet utility."
+      },
+      {
+        "id": "bedroom",
+        "name": "Upper Master Suite",
+        "type": "bedroom",
+        "areaSqFt": 280,
+        "cameraPos": [-3.8, 5.8, -2],
+        "lookAt": [-3.8, 5.5, -6],
+        "description": "Luxurious master bedroom with teak wall paneling, private sit-out terrace, and brass accents."
+      },
+      {
+        "id": "bathroom",
+        "name": "En-Suite Bath",
+        "type": "bathroom",
+        "areaSqFt": 90,
+        "cameraPos": [-5.0, 5.8, -6.5],
+        "lookAt": [-5.0, 5.4, -8],
+        "description": "Travertine marble tiles with bronze fittings, rain shower, and frosted glass ventilation."
+      },
+      {
+        "id": "balcony",
+        "name": "Upper Jali Sit-Out",
+        "type": "balcony",
+        "areaSqFt": 150,
+        "cameraPos": [0, 5.8, 6.2],
+        "lookAt": [0, 5.4, 1.5],
+        "description": "Breezy upper floor veranda shaded by intricate terracotta jaali screens."
+      },
+      {
+        "id": "backyard",
+        "name": "Pergola Garden Deck",
+        "type": "backyard",
+        "areaSqFt": 400,
+        "cameraPos": [0, 1.8, -10.5],
+        "lookAt": [0, 1.5, -6],
+        "description": "Timber pergola shaded courtyard with tropical Indian foliage and outdoor brass swing (jhula)."
+      }
+    ]
+  },
+  {
+    "modelId": "house-07",
+    "modelName": "Courtyard House",
+    "style": "Central Courtyard (Brahmasthan)",
+    "floors": 2,
+    "floorsText": "G + 1 Quadrangle",
+    "plotSize": "45' x 65' (2,925 sq ft)",
+    "builtUpArea": 3100,
+    "builtUpAreaSqFt": 3100,
+    "builtUpAreaSqM": 288.0,
+    "bedrooms": 4,
+    "bathrooms": 4,
+    "estimatedCost": "₹64,50,000 – ₹76,00,000",
+    "costPerSqFt": "₹2,250 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹37,00,000",
+      "finishingCarpentry": "₹21,50,000",
+      "mepElectricalPlumbing": "₹11,00,000",
+      "landscapeExt": "₹5,00,000"
+    },
+    "description": "An architectural marvel planned around a central open-to-sky quadrangle courtyard (Nadumuttam). All major living spaces wrap around this verdant central core, promoting constant stack-effect air circulation, natural light, and rain enjoyment.",
+    "modelFile": "/models/houses/house-07.glb",
+    "thumbnail": "/images/house3d/model-07.jpg",
+    "facing": "East",
+    "parking": "2 Car Covered Porch",
+    "dimensions": { "widthFt": 38, "depthFt": 48, "heightFt": 23 },
+    "vastuScore": 99,
+    "architecturalFeatures": [
+      "Open-to-sky central courtyard with motorized glass rain louvers",
+      "Surrounding internal circumambulatory veranda (Pradakshina corridor)",
+      "Stack-effect thermal cooling reducing indoor temperatures by up to 4°C naturally",
+      "Indoor central reflection water pond with live water lilies"
+    ],
+    "proceduralParams": {
+      "architecture": "courtyard_house",
+      "levels": 2,
+      "roofType": "inward_slope_courtyard",
+      "wallColor": "#fffbeb",
+      "accentColor": "#78350f",
+      "woodColor": "#b45309",
+      "glassColor": "#38bdf8",
+      "width": 16,
+      "depth": 19,
+      "height": 8.2,
+      "hasCentralCourtyard": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Courtyard-Facing Living Hall",
+        "type": "living_room",
+        "areaSqFt": 440,
+        "cameraPos": [0, 2.0, 3.5],
+        "lookAt": [0, 1.8, 0],
+        "description": "Expansive living room opening directly toward the illuminated central green courtyard through sliding glass."
+      },
+      {
+        "id": "kitchen",
+        "name": "East Modular Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 170,
+        "cameraPos": [5.0, 1.8, -1],
+        "lookAt": [5.0, 1.5, -4.5],
+        "description": "Modern kitchen with views of both the courtyard lightwell and outer morning sun."
+      },
+      {
+        "id": "bedroom",
+        "name": "Master Suite with Court View",
+        "type": "bedroom",
+        "areaSqFt": 270,
+        "cameraPos": [-4.5, 5.6, -1],
+        "lookAt": [0, 5.2, 0],
+        "description": "Upper floor master bedroom featuring a private indoor balcony overlooking the central courtyard below."
+      },
+      {
+        "id": "bathroom",
+        "name": "Courtyard En-Suite",
+        "type": "bathroom",
+        "areaSqFt": 85,
+        "cameraPos": [-5.8, 5.6, -5.5],
+        "lookAt": [-5.8, 5.2, -7],
+        "description": "Luxury bathroom with skylight aperture providing natural daylighting directly into shower."
+      },
+      {
+        "id": "balcony",
+        "name": "Internal Upper Gallery",
+        "type": "balcony",
+        "areaSqFt": 180,
+        "cameraPos": [0, 5.6, 2],
+        "lookAt": [0, 3.0, 0],
+        "description": "Circumambulatory upper corridor with carved timber balustrade looking down onto the central courtyard."
+      },
+      {
+        "id": "backyard",
+        "name": "Central Open Nadumuttam",
+        "type": "backyard",
+        "areaSqFt": 320,
+        "cameraPos": [0, 1.8, 0.5],
+        "lookAt": [0, 1.2, -1],
+        "description": "Sunlit central atrium featuring stone water trough, lush potted ferns, and rain drip chain."
+      }
+    ]
+  },
+  {
+    "modelId": "house-08",
+    "modelName": "Duplex House",
+    "style": "Contemporary Mezzanine Duplex",
+    "floors": 2,
+    "floorsText": "G + 1 Open Duplex",
+    "plotSize": "30' x 50' (1,500 sq ft)",
+    "builtUpArea": 2150,
+    "builtUpAreaSqFt": 2150,
+    "builtUpAreaSqM": 199.7,
+    "bedrooms": 3,
+    "bathrooms": 3,
+    "estimatedCost": "₹42,50,000 – ₹51,00,000",
+    "costPerSqFt": "₹2,150 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹24,80,000",
+      "finishingCarpentry": "₹13,20,000",
+      "mepElectricalPlumbing": "₹6,80,000",
+      "landscapeExt": "₹3,10,000"
+    },
+    "description": "A compact footprint duplex maximizing vertical volume. Features a dramatic double-height 21ft living wall, floating cantilevered steel-and-wood staircase, mezzanine family bridge, and large front curtain glass.",
+    "modelFile": "/models/houses/house-08.glb",
+    "thumbnail": "/images/house3d/model-08.jpg",
+    "facing": "North",
+    "parking": "1 Covered Car Bay",
+    "dimensions": { "widthFt": 26, "depthFt": 40, "heightFt": 24 },
+    "vastuScore": 94,
+    "architecturalFeatures": [
+      "Open-volume mezzanine bridge connecting upper master bedrooms",
+      "Floating cantilevered teakwood tread staircase with frameless glass railing",
+      "Double-height north-facing curtain wall maximizing glare-free daylight",
+      "Smart vertical storage integrated beneath structural staircase"
+    ],
+    "proceduralParams": {
+      "architecture": "duplex_mezzanine",
+      "levels": 2,
+      "roofType": "flat_terrace",
+      "wallColor": "#f8fafc",
+      "accentColor": "#1e293b",
+      "woodColor": "#9a3412",
+      "glassColor": "#38bdf8",
+      "width": 12,
+      "depth": 16,
+      "height": 8.5,
+      "hasMezzanine": true,
+      "hasDoubleHeightLiving": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Double-Height Duplex Living",
+        "type": "living_room",
+        "areaSqFt": 360,
+        "cameraPos": [0, 2.0, 2],
+        "lookAt": [0, 3.8, -4],
+        "description": "Volumetric 21ft soaring living room with an open mezzanine bridge overhead and custom acoustic panelling."
+      },
+      {
+        "id": "kitchen",
+        "name": "Open Concept Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 150,
+        "cameraPos": [3.5, 1.8, -2],
+        "lookAt": [3.5, 1.5, -5.5],
+        "description": "Modern open-plan kitchen directly overlooking the dining and double-height living room."
+      },
+      {
+        "id": "bedroom",
+        "name": "Mezzanine Master Bedroom",
+        "type": "bedroom",
+        "areaSqFt": 230,
+        "cameraPos": [-3.2, 5.8, -2],
+        "lookAt": [-3.2, 5.4, -5.5],
+        "description": "Upper floor bedroom accessed via the floating glass bridge with corner window glazing."
+      },
+      {
+        "id": "bathroom",
+        "name": "Duplex Bath Suite",
+        "type": "bathroom",
+        "areaSqFt": 75,
+        "cameraPos": [-4.2, 5.8, -6],
+        "lookAt": [-4.2, 5.2, -7.5],
+        "description": "Sleek porcelain tiles, glass enclosed shower, and wall-mounted vanity."
+      },
+      {
+        "id": "balcony",
+        "name": "First Floor Balcony",
+        "type": "balcony",
+        "areaSqFt": 110,
+        "cameraPos": [0, 5.8, 5.5],
+        "lookAt": [0, 5.2, 1],
+        "description": "Glass-railed terrace extending from the upper mezzanine lounge."
+      },
+      {
+        "id": "backyard",
+        "name": "Compact Green Court",
+        "type": "backyard",
+        "areaSqFt": 250,
+        "cameraPos": [0, 1.8, -9],
+        "lookAt": [0, 1.5, -5],
+        "description": "Cozy private yard with vertical green wall and wooden deck tiles."
+      }
+    ]
+  },
+  {
+    "modelId": "house-09",
+    "modelName": "Compact Urban House",
+    "style": "High-Density Urban Narrow-Lot",
+    "floors": 3,
+    "floorsText": "G + 2 (3 Floors)",
+    "plotSize": "20' x 45' (900 sq ft)",
+    "builtUpArea": 1850,
+    "builtUpAreaSqFt": 1850,
+    "builtUpAreaSqM": 171.9,
+    "bedrooms": 3,
+    "bathrooms": 3,
+    "estimatedCost": "₹37,50,000 – ₹44,50,000",
+    "costPerSqFt": "₹2,180 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹22,00,000",
+      "finishingCarpentry": "₹11,50,000",
+      "mepElectricalPlumbing": "₹5,80,000",
+      "landscapeExt": "₹2,20,000"
+    },
+    "description": "Intelligent space optimization designed for tight urban city plots. Multi-level zoning over 3 floors with ground floor car park & foyer, middle floor public living & kitchen, and top floor private bedrooms plus rooftop garden deck.",
+    "modelFile": "/models/houses/house-09.glb",
+    "thumbnail": "/images/house3d/model-09.jpg",
+    "facing": "East",
+    "parking": "1 Ground Stilt Garage",
+    "dimensions": { "widthFt": 18, "depthFt": 36, "heightFt": 32 },
+    "vastuScore": 93,
+    "architecturalFeatures": [
+      "Narrow-lot 3-story vertical footprint optimization",
+      "Adjustable vertical timber privacy louvers on front facade",
+      "Rooftop open entertainment deck with city skyline view",
+      "Ground floor dedicated stilt car garage and foyer"
+    ],
+    "proceduralParams": {
+      "architecture": "compact_urban",
+      "levels": 3,
+      "roofType": "flat_roof_garden",
+      "wallColor": "#e2e8f0",
+      "accentColor": "#0f172a",
+      "woodColor": "#d97706",
+      "glassColor": "#38bdf8",
+      "width": 9,
+      "depth": 14,
+      "height": 11.5,
+      "hasVerticalLouvers": true,
+      "hasStiltFloor": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Level 1 Urban Living Room",
+        "type": "living_room",
+        "areaSqFt": 280,
+        "cameraPos": [0, 4.8, 1],
+        "lookAt": [0, 4.8, -4],
+        "description": "First floor elevated living room safe from street noise with warm timber acoustic slats and recessed lights."
+      },
+      {
+        "id": "kitchen",
+        "name": "Linear Compact Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 110,
+        "cameraPos": [2.5, 4.8, -2],
+        "lookAt": [2.5, 4.5, -5],
+        "description": "Ultra-efficient linear kitchen layout with pull-out pantry tall units and induction cooktop."
+      },
+      {
+        "id": "bedroom",
+        "name": "Level 2 Master Chamber",
+        "type": "bedroom",
+        "areaSqFt": 210,
+        "cameraPos": [-2.2, 8.5, -2],
+        "lookAt": [-2.2, 8.2, -5],
+        "description": "Top floor peaceful bedroom with vertical window louvers and attached bathroom."
+      },
+      {
+        "id": "bathroom",
+        "name": "Modern Compact Bath",
+        "type": "bathroom",
+        "areaSqFt": 60,
+        "cameraPos": [-2.8, 8.5, -5.5],
+        "lookAt": [-2.8, 8.0, -6.8],
+        "description": "Space-saving compact vanity, concealed cistern, and glass partition."
+      },
+      {
+        "id": "balcony",
+        "name": "Louvered Street Balcony",
+        "type": "balcony",
+        "areaSqFt": 80,
+        "cameraPos": [0, 4.8, 4.5],
+        "lookAt": [0, 4.5, 1],
+        "description": "Covered mid-level balcony protected by vertical cedar wood privacy louvers."
+      },
+      {
+        "id": "backyard",
+        "name": "Rooftop Terrace Garden",
+        "type": "backyard",
+        "areaSqFt": 260,
+        "cameraPos": [0, 11.8, -1],
+        "lookAt": [0, 11.5, -5],
+        "description": "Top floor open party deck with synthetic grass, planter boxes, and panoramic city views."
+      }
+    ]
+  },
+  {
+    "modelId": "house-10",
+    "modelName": "Premium Luxury Villa",
+    "style": "Modernist High-End Estate",
+    "floors": 2,
+    "floorsText": "G + 1 Estate Villa",
+    "plotSize": "60' x 90' (5,400 sq ft)",
+    "builtUpArea": 4800,
+    "builtUpAreaSqFt": 4800,
+    "builtUpAreaSqM": 445.9,
+    "bedrooms": 5,
+    "bathrooms": 6,
+    "estimatedCost": "₹1,15,00,000 – ₹1,42,00,000",
+    "costPerSqFt": "₹2,580 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹62,00,000",
+      "finishingCarpentry": "₹42,00,000",
+      "mepElectricalPlumbing": "₹22,00,000",
+      "landscapeExt": "₹12,00,000"
+    },
+    "description": "Sprawling estate villa with dual cantilever wings, grand covered porte-cochère, expansive travertine stone facade, home cinema wing, and perimeter infinity reflection ponds.",
+    "modelFile": "/models/houses/house-10.glb",
+    "thumbnail": "/images/house3d/model-10.jpg",
+    "facing": "East",
+    "parking": "3 Car Porte-Cochère",
+    "dimensions": { "widthFt": 52, "depthFt": 62, "heightFt": 27 },
+    "vastuScore": 98,
+    "architecturalFeatures": [
+      "Grand covered porte-cochère driveway with circular vehicle drop-off",
+      "Imported Italian Travertine stone exterior ventilated facade",
+      "Dual private master suites on ground and upper floors",
+      "Integrated home theatre and basement wine cellar"
+    ],
+    "proceduralParams": {
+      "architecture": "premium_luxury_villa",
+      "levels": 2,
+      "roofType": "flat_terrace_cantilever",
+      "wallColor": "#ffffff",
+      "accentColor": "#1e293b",
+      "woodColor": "#92400e",
+      "glassColor": "#38bdf8",
+      "width": 20,
+      "depth": 24,
+      "height": 9.6,
+      "hasPorteCochere": true,
+      "hasDualWings": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Grand Reception Salon",
+        "type": "living_room",
+        "areaSqFt": 620,
+        "cameraPos": [0, 2.2, 3],
+        "lookAt": [0, 2.5, -5],
+        "description": "Monumental formal salon featuring 14ft ceiling, book-matched marble wall, and crystal chandelier."
+      },
+      {
+        "id": "kitchen",
+        "name": "Dual Show & Prep Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 300,
+        "cameraPos": [6.5, 1.8, -2],
+        "lookAt": [6.5, 1.5, -6.5],
+        "description": "Show kitchen with stone waterfall island plus separate heavy prep pantry behind concealed doors."
+      },
+      {
+        "id": "bedroom",
+        "name": "Imperial Master Suite",
+        "type": "bedroom",
+        "areaSqFt": 450,
+        "cameraPos": [-6.0, 6.4, -2.5],
+        "lookAt": [-6.0, 6.0, -7],
+        "description": "Grand master suite with private vestibule, oversized walk-in dressing salon, and corner terrace."
+      },
+      {
+        "id": "bathroom",
+        "name": "Palatial En-Suite Bath",
+        "type": "bathroom",
+        "areaSqFt": 160,
+        "cameraPos": [-7.5, 6.4, -7.5],
+        "lookAt": [-7.5, 6.0, -9.5],
+        "description": "Custom marble tub carved from single block, double walk-in rain showers, and sauna room."
+      },
+      {
+        "id": "balcony",
+        "name": "Master Wrap-Around Terrace",
+        "type": "balcony",
+        "areaSqFt": 320,
+        "cameraPos": [0, 6.4, 8.5],
+        "lookAt": [0, 6.0, 3],
+        "description": "Wrap-around outdoor lounge terrace with glass perimeter balustrades and teak decking."
+      },
+      {
+        "id": "backyard",
+        "name": "Formal Landscape Estate Lawn",
+        "type": "backyard",
+        "areaSqFt": 950,
+        "cameraPos": [0, 1.8, -14],
+        "lookAt": [0, 1.5, -7],
+        "description": "Extensive landscaped grounds with stone fountain, formal topiaries, and outdoor pergola lounge."
+      }
+    ]
+  },
+  {
+    "modelId": "house-11",
+    "modelName": "Large Family House",
+    "style": "Contemporary Multi-Generational",
+    "floors": 2,
+    "floorsText": "G + 1 (5 BHK Family Home)",
+    "plotSize": "45' x 75' (3,375 sq ft)",
+    "builtUpArea": 3400,
+    "builtUpAreaSqFt": 3400,
+    "builtUpAreaSqM": 315.9,
+    "bedrooms": 5,
+    "bathrooms": 5,
+    "estimatedCost": "₹68,00,000 – ₹79,50,000",
+    "costPerSqFt": "₹2,120 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹39,50,000",
+      "finishingCarpentry": "₹22,80,000",
+      "mepElectricalPlumbing": "₹11,40,000",
+      "landscapeExt": "₹4,80,000"
+    },
+    "description": "Tailored for multi-generational Indian families. Provides 2 ground-floor accessible elder suites, 3 upper bedrooms, double living lounges, independent puja mandir, and broad front sit-out.",
+    "modelFile": "/models/houses/house-11.glb",
+    "thumbnail": "/images/house3d/model-11.jpg",
+    "facing": "North-East",
+    "parking": "2 Covered SUV Bays",
+    "dimensions": { "widthFt": 38, "depthFt": 54, "heightFt": 24 },
+    "vastuScore": 97,
+    "architecturalFeatures": [
+      "Two accessible ground floor master suites for senior family members",
+      "Separate formal living room and informal family dining lounge",
+      "Dedicated high-ceiling Pooja Mandir room in auspicious NE corner",
+      "Dual balconies allowing private outdoor spaces for every bedroom"
+    ],
+    "proceduralParams": {
+      "architecture": "large_family",
+      "levels": 2,
+      "roofType": "flat_terrace_balcony",
+      "wallColor": "#f1f5f9",
+      "accentColor": "#334155",
+      "woodColor": "#854d0e",
+      "glassColor": "#38bdf8",
+      "width": 16,
+      "depth": 21,
+      "height": 8.6,
+      "hasDualBalconies": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Family Gathering Lounge",
+        "type": "living_room",
+        "areaSqFt": 480,
+        "cameraPos": [0, 2.0, 2.5],
+        "lookAt": [0, 2.0, -4.5],
+        "description": "Expansive living room designed for large family gatherings with wide seating areas and garden view."
+      },
+      {
+        "id": "kitchen",
+        "name": "Large Family Modular Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 220,
+        "cameraPos": [4.8, 1.8, -2],
+        "lookAt": [4.8, 1.5, -6],
+        "description": "Spacious parallel kitchen with 6-burner hob, dual refrigerators, and adjoining breakfast nook."
+      },
+      {
+        "id": "bedroom",
+        "name": "Ground Elder Master Bedroom",
+        "type": "bedroom",
+        "areaSqFt": 260,
+        "cameraPos": [-4.5, 1.8, -2.5],
+        "lookAt": [-4.5, 1.5, -6],
+        "description": "Step-free accessible ground floor suite with wide doors, warm wooden tiles, and en-suite bath."
+      },
+      {
+        "id": "bathroom",
+        "name": "Accessible Master Bath",
+        "type": "bathroom",
+        "areaSqFt": 85,
+        "cameraPos": [-5.8, 1.8, -6.5],
+        "lookAt": [-5.8, 1.4, -8],
+        "description": "Grab-bar equipped barrier-free bathroom with zero-threshold walk-in shower and anti-slip flooring."
+      },
+      {
+        "id": "balcony",
+        "name": "First Floor Front Balcony",
+        "type": "balcony",
+        "areaSqFt": 180,
+        "cameraPos": [0, 5.8, 6.8],
+        "lookAt": [0, 5.4, 2],
+        "description": "Wide upper family balcony with planter parapet overlooking the front garden."
+      },
+      {
+        "id": "backyard",
+        "name": "Family Backyard Lawn",
+        "type": "backyard",
+        "areaSqFt": 480,
+        "cameraPos": [0, 1.8, -11.5],
+        "lookAt": [0, 1.5, -6],
+        "description": "Safe enclosed green lawn for children playing and family outdoor dining."
+      }
+    ]
+  },
+  {
+    "modelId": "house-12",
+    "modelName": "Sloped-Roof Modern House",
+    "style": "Nordic / Alpine Modern Pitched",
+    "floors": 2,
+    "floorsText": "G + 1 Dramatic Pitched Roof",
+    "plotSize": "35' x 55' (1,925 sq ft)",
+    "builtUpArea": 2200,
+    "builtUpAreaSqFt": 2200,
+    "builtUpAreaSqM": 204.4,
+    "bedrooms": 3,
+    "bathrooms": 3,
+    "estimatedCost": "₹46,20,000 – ₹54,50,000",
+    "costPerSqFt": "₹2,220 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹26,80,000",
+      "finishingCarpentry": "₹14,20,000",
+      "mepElectricalPlumbing": "₹7,20,000",
+      "landscapeExt": "₹3,50,000"
+    },
+    "description": "Dynamic asymmetrical steep-pitched standing seam roofline. High vaulted interior wood-paneled ceilings, floor-to-ceiling triangular gable glazing, and integrated rainwater harvesting channels.",
+    "modelFile": "/models/houses/house-12.glb",
+    "thumbnail": "/images/house3d/model-12.jpg",
+    "facing": "North",
+    "parking": "1 Covered Bay",
+    "dimensions": { "widthFt": 30, "depthFt": 44, "heightFt": 26 },
+    "vastuScore": 95,
+    "architecturalFeatures": [
+      "Dramatic asymmetrical standing seam metal pitched roofline",
+      "High vaulted 18ft interior ceiling with exposed Douglas fir timber rafters",
+      "Triangular gable glass wall filling the upper level with natural northern light",
+      "Deep rainwater harvesting system integrated into perimeter drainage"
+    ],
+    "proceduralParams": {
+      "architecture": "sloped_roof_modern",
+      "levels": 2,
+      "roofType": "steep_asymmetrical_slope",
+      "wallColor": "#ffffff",
+      "accentColor": "#1e293b",
+      "woodColor": "#78350f",
+      "glassColor": "#38bdf8",
+      "width": 13,
+      "depth": 17,
+      "height": 9.2,
+      "hasGableGlazing": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Vaulted Ceiling Living Hall",
+        "type": "living_room",
+        "areaSqFt": 370,
+        "cameraPos": [0, 2.0, 2],
+        "lookAt": [0, 3.8, -4],
+        "description": "Soaring vaulted ceiling lined with natural Scandinavian spruce planks and a modern fireplace."
+      },
+      {
+        "id": "kitchen",
+        "name": "Minimalist Oak Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 150,
+        "cameraPos": [3.8, 1.8, -2],
+        "lookAt": [3.8, 1.5, -5.5],
+        "description": "Scandinavian light oak kitchen with matte black fixtures and composite stone surfaces."
+      },
+      {
+        "id": "bedroom",
+        "name": "Attic Loft Master Bedroom",
+        "type": "bedroom",
+        "areaSqFt": 250,
+        "cameraPos": [-3.2, 5.8, -2],
+        "lookAt": [-3.2, 5.5, -5.5],
+        "description": "Cozy pitched roof master suite with sloping ceilings, skylight window, and reading nook."
+      },
+      {
+        "id": "bathroom",
+        "name": "Vaulted Bath Suite",
+        "type": "bathroom",
+        "areaSqFt": 75,
+        "cameraPos": [-4.2, 5.8, -6],
+        "lookAt": [-4.2, 5.2, -7.5],
+        "description": "Stone tile bath with roof skylight angled directly above the soaking tub."
+      },
+      {
+        "id": "balcony",
+        "name": "Gable View Balcony",
+        "type": "balcony",
+        "areaSqFt": 120,
+        "cameraPos": [0, 5.8, 5.8],
+        "lookAt": [0, 5.2, 1],
+        "description": "Covered triangular balcony set beneath the protective overhang of the sloped roof."
+      },
+      {
+        "id": "backyard",
+        "name": "Pine & Stone Courtyard",
+        "type": "backyard",
+        "areaSqFt": 340,
+        "cameraPos": [0, 1.8, -9.5],
+        "lookAt": [0, 1.5, -5.5],
+        "description": "Stone patio surrounded by evergreen shrubs and outdoor fire pit."
+      }
+    ]
+  },
+  {
+    "modelId": "house-13",
+    "modelName": "Flat-Roof Contemporary House",
+    "style": "International Style Modernist",
+    "floors": 2,
+    "floorsText": "G + 1 with Party Roof Terrace",
+    "plotSize": "35' x 60' (2,100 sq ft)",
+    "builtUpArea": 2500,
+    "builtUpAreaSqFt": 2500,
+    "builtUpAreaSqM": 232.3,
+    "bedrooms": 4,
+    "bathrooms": 4,
+    "estimatedCost": "₹52,00,000 – ₹61,50,000",
+    "costPerSqFt": "₹2,160 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹30,50,000",
+      "finishingCarpentry": "₹16,50,000",
+      "mepElectricalPlumbing": "₹8,50,000",
+      "landscapeExt": "₹3,90,000"
+    },
+    "description": "Pristine white geometric cubes with sleek flat rooflines, recessed glass openings, perimeter glass balustrades on the accessible rooftop party deck, and built-in architectural planters.",
+    "modelFile": "/models/houses/house-13.glb",
+    "thumbnail": "/images/house3d/model-13.jpg",
+    "facing": "East",
+    "parking": "2 Car Bay",
+    "dimensions": { "widthFt": 32, "depthFt": 46, "heightFt": 24 },
+    "vastuScore": 96,
+    "architecturalFeatures": [
+      "100% accessible rooftop entertainment party terrace with glass parapet",
+      "Crisp geometric cantilevered cubes with zero visible roof slope",
+      "Recessed ribbon windows providing passive solar shading",
+      "Integrated architectural planter boxes on both ground and upper levels"
+    ],
+    "proceduralParams": {
+      "architecture": "flat_roof_contemporary",
+      "levels": 2,
+      "roofType": "flat_rooftop_deck",
+      "wallColor": "#ffffff",
+      "accentColor": "#334155",
+      "woodColor": "#b45309",
+      "glassColor": "#38bdf8",
+      "width": 14,
+      "depth": 18,
+      "height": 8.5,
+      "hasRooftopDeck": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Contemporary Open Lounge",
+        "type": "living_room",
+        "areaSqFt": 410,
+        "cameraPos": [0, 2.0, 2],
+        "lookAt": [0, 2.0, -4.5],
+        "description": "Minimalist open-plan living room with seamless micro-cement flooring and sliding glass facade."
+      },
+      {
+        "id": "kitchen",
+        "name": "Monochrome Modular Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 170,
+        "cameraPos": [4.2, 1.8, -2],
+        "lookAt": [4.2, 1.5, -5.5],
+        "description": "Charcoal matte cabinetry, quartz countertop, and integrated breakfast counter."
+      },
+      {
+        "id": "bedroom",
+        "name": "First Floor Master Bedroom",
+        "type": "bedroom",
+        "areaSqFt": 270,
+        "cameraPos": [-3.8, 5.8, -2],
+        "lookAt": [-3.8, 5.5, -6],
+        "description": "Spacious bedroom with full-width ribbon windows and recessed LED lighting."
+      },
+      {
+        "id": "bathroom",
+        "name": "Designer Bath Suite",
+        "type": "bathroom",
+        "areaSqFt": 80,
+        "cameraPos": [-5.0, 5.8, -6.5],
+        "lookAt": [-5.0, 5.2, -8],
+        "description": "Vitrified matte tiles, frameless shower glass, and modern wall-hung sanitary fixtures."
+      },
+      {
+        "id": "balcony",
+        "name": "Upper Cantilever Balcony",
+        "type": "balcony",
+        "areaSqFt": 140,
+        "cameraPos": [0, 5.8, 6.2],
+        "lookAt": [0, 5.2, 1.5],
+        "description": "Glass-railed balcony jutting out over the front landscaped lawn."
+      },
+      {
+        "id": "backyard",
+        "name": "Rooftop Party Deck",
+        "type": "backyard",
+        "areaSqFt": 550,
+        "cameraPos": [0, 9.2, -1],
+        "lookAt": [0, 9.0, -6],
+        "description": "Expansive open roof terrace with outdoor kitchen bar, lounge chairs, and 360° views."
+      }
+    ]
+  },
+  {
+    "modelId": "house-14",
+    "modelName": "Glass-Facade Villa",
+    "style": "Modern Structural Glazing",
+    "floors": 2,
+    "floorsText": "G + 1 Full Glass Elevation",
+    "plotSize": "40' x 65' (2,600 sq ft)",
+    "builtUpArea": 3200,
+    "builtUpAreaSqFt": 3200,
+    "builtUpAreaSqM": 297.3,
+    "bedrooms": 4,
+    "bathrooms": 4,
+    "estimatedCost": "₹72,00,000 – ₹85,00,000",
+    "costPerSqFt": "₹2,420 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹38,00,000",
+      "finishingCarpentry": "₹24,50,000",
+      "mepElectricalPlumbing": "₹12,00,000",
+      "landscapeExt": "₹5,50,000"
+    },
+    "description": "Showcase villa with two-story structural curtain wall glass front elevation, slender dark steel columns, automated exterior sun louvers, and warm internal mood illumination.",
+    "modelFile": "/models/houses/house-14.glb",
+    "thumbnail": "/images/house3d/model-14.jpg",
+    "facing": "North",
+    "parking": "2 Car Bay",
+    "dimensions": { "widthFt": 36, "depthFt": 48, "heightFt": 25 },
+    "vastuScore": 95,
+    "architecturalFeatures": [
+      "Floor-to-ceiling double-glazed Low-E structural curtain wall elevation",
+      "Slim black anodized aluminum structural mullions and I-beam detailing",
+      "Automated interior drop-down blackout screens for climate & privacy control",
+      "Visible floating timber staircase behind front glass wall"
+    ],
+    "proceduralParams": {
+      "architecture": "glass_facade",
+      "levels": 2,
+      "roofType": "flat_terrace",
+      "wallColor": "#ffffff",
+      "accentColor": "#09090b",
+      "woodColor": "#d97706",
+      "glassColor": "#0284c7",
+      "width": 15,
+      "depth": 19,
+      "height": 8.8,
+      "hasFullGlassFacade": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Curtain-Glass Living Hall",
+        "type": "living_room",
+        "areaSqFt": 460,
+        "cameraPos": [0, 2.0, 2],
+        "lookAt": [0, 2.0, -4.5],
+        "description": "Luminous living room with 2-story glass facade illuminating imported marble floors."
+      },
+      {
+        "id": "kitchen",
+        "name": "Designer Glass-View Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 190,
+        "cameraPos": [4.6, 1.8, -2],
+        "lookAt": [4.6, 1.5, -5.5],
+        "description": "High-gloss kitchen facing the garden glass facade with waterfall marble island."
+      },
+      {
+        "id": "bedroom",
+        "name": "Panoramic Master Suite",
+        "type": "bedroom",
+        "areaSqFt": 300,
+        "cameraPos": [-4.0, 5.8, -2],
+        "lookAt": [-4.0, 5.5, -6],
+        "description": "Second-floor master suite overlooking the front landscape through wall-to-wall glass."
+      },
+      {
+        "id": "bathroom",
+        "name": "Glass-Partitioned Bath",
+        "type": "bathroom",
+        "areaSqFt": 95,
+        "cameraPos": [-5.2, 5.8, -6.5],
+        "lookAt": [-5.2, 5.2, -8],
+        "description": "Luxury bathroom with electrochromic smart glass that tints at the touch of a button."
+      },
+      {
+        "id": "balcony",
+        "name": "Floating Glass Balcony",
+        "type": "balcony",
+        "areaSqFt": 160,
+        "cameraPos": [0, 5.8, 6.5],
+        "lookAt": [0, 5.2, 1.5],
+        "description": "Cantilevered balcony with structural glass flooring and frameless balustrade."
+      },
+      {
+        "id": "backyard",
+        "name": "Water Reflection Garden",
+        "type": "backyard",
+        "areaSqFt": 420,
+        "cameraPos": [0, 1.8, -10.5],
+        "lookAt": [0, 1.5, -6],
+        "description": "Rear yard featuring reflection pond reflecting the transparent glass architecture."
+      }
+    ]
+  },
+  {
+    "modelId": "house-15",
+    "modelName": "Garden Villa",
+    "style": "Biophilic Landscape Architecture",
+    "floors": 2,
+    "floorsText": "G + 1 Biophilic Home",
+    "plotSize": "45' x 65' (2,925 sq ft)",
+    "builtUpArea": 2900,
+    "builtUpAreaSqFt": 2900,
+    "builtUpAreaSqM": 269.4,
+    "bedrooms": 4,
+    "bathrooms": 4,
+    "estimatedCost": "₹62,50,000 – ₹73,00,000",
+    "costPerSqFt": "₹2,280 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹34,50,000",
+      "finishingCarpentry": "₹20,50,000",
+      "mepElectricalPlumbing": "₹10,50,000",
+      "landscapeExt": "₹6,50,000"
+    },
+    "description": "Biophilic residence seamlessly wrapped in nature: cascading vertical plant trellises, cantilevered planter boxes on every terrace, green living walls, and an organic teak-decked garden veranda.",
+    "modelFile": "/models/houses/house-15.glb",
+    "thumbnail": "/images/house3d/model-15.jpg",
+    "facing": "East",
+    "parking": "2 Car Bay with Ivy Trellis",
+    "dimensions": { "widthFt": 36, "depthFt": 48, "heightFt": 24 },
+    "vastuScore": 97,
+    "architecturalFeatures": [
+      "Integrated drip-irrigated perimeter planter boxes on all facades",
+      "Vertical living green wall providing bio-filtration and sound dampening",
+      "Organic teak-decked veranda connecting living lounge directly into the garden",
+      "Internal indoor bamboo court with natural skylight"
+    ],
+    "proceduralParams": {
+      "architecture": "garden_villa",
+      "levels": 2,
+      "roofType": "flat_terrace_planters",
+      "wallColor": "#fffbeb",
+      "accentColor": "#15803d",
+      "woodColor": "#78350f",
+      "glassColor": "#38bdf8",
+      "width": 15,
+      "depth": 19,
+      "height": 8.5,
+      "hasPlanters": true,
+      "hasTrellis": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Garden-Facing Living Room",
+        "type": "living_room",
+        "areaSqFt": 430,
+        "cameraPos": [0, 2.0, 2],
+        "lookAt": [0, 2.0, -4.5],
+        "description": "Living lounge opening onto lush greenery through triple track sliding glass doors."
+      },
+      {
+        "id": "kitchen",
+        "name": "Herb Garden Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 180,
+        "cameraPos": [4.5, 1.8, -2],
+        "lookAt": [4.5, 1.5, -5.5],
+        "description": "Kitchen with direct window access to external organic herb planter box."
+      },
+      {
+        "id": "bedroom",
+        "name": "Upper Green Master Suite",
+        "type": "bedroom",
+        "areaSqFt": 280,
+        "cameraPos": [-3.8, 5.8, -2],
+        "lookAt": [-3.8, 5.5, -6],
+        "description": "Second-floor master suite surrounded by lush perimeter planter foliage."
+      },
+      {
+        "id": "bathroom",
+        "name": "Tropical Outdoor-Feel Bath",
+        "type": "bathroom",
+        "areaSqFt": 90,
+        "cameraPos": [-5.0, 5.8, -6.5],
+        "lookAt": [-5.0, 5.2, -8],
+        "description": "Natural pebble finish bathroom with indoor tropical plants and skylight."
+      },
+      {
+        "id": "balcony",
+        "name": "Planter Box Balcony",
+        "type": "balcony",
+        "areaSqFt": 150,
+        "cameraPos": [0, 5.8, 6.2],
+        "lookAt": [0, 5.2, 1.5],
+        "description": "Upper balcony framed by blooming bougainvillea planter boxes."
+      },
+      {
+        "id": "backyard",
+        "name": "Botanical Rear Garden",
+        "type": "backyard",
+        "areaSqFt": 460,
+        "cameraPos": [0, 1.8, -10.5],
+        "lookAt": [0, 1.5, -6],
+        "description": "Lush tropical lawn with stone walking path, fruit trees, and wooden garden bench."
+      }
+    ]
+  },
+  {
+    "modelId": "house-16",
+    "modelName": "Pool Villa",
+    "style": "Resort-Style Luxury",
+    "floors": 2,
+    "floorsText": "G + 1 Resort Villa",
+    "plotSize": "50' x 80' (4,000 sq ft)",
+    "builtUpArea": 3600,
+    "builtUpAreaSqFt": 3600,
+    "builtUpAreaSqM": 334.5,
+    "bedrooms": 4,
+    "bathrooms": 5,
+    "estimatedCost": "₹88,00,000 – ₹1,08,00,000",
+    "costPerSqFt": "₹2,650 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹47,00,000",
+      "finishingCarpentry": "₹28,00,000",
+      "mepElectricalPlumbing": "₹15,00,000",
+      "landscapeExt": "₹12,00,000"
+    },
+    "description": "Resort-style luxury villa designed around a central swimming pool. Features sun loungers deck, outdoor rain shower, poolside barbecue cabana, and direct walk-out pool access from the living room and master bedroom.",
+    "modelFile": "/models/houses/house-16.glb",
+    "thumbnail": "/images/house3d/model-16.jpg",
+    "facing": "North-East",
+    "parking": "2 Car Bay",
+    "dimensions": { "widthFt": 42, "depthFt": 54, "heightFt": 25 },
+    "vastuScore": 96,
+    "architecturalFeatures": [
+      "Custom 28ft x 14ft illuminated swimming pool with submerged bench seating",
+      "Non-skid teak composite outdoor sun deck with dual loungers",
+      "Poolside covered barbecue cabana with integrated outdoor kitchenette",
+      "Direct slide-away glass wall merging indoor living hall with pool deck"
+    ],
+    "proceduralParams": {
+      "architecture": "pool_villa",
+      "levels": 2,
+      "roofType": "flat_terrace_pergola",
+      "wallColor": "#ffffff",
+      "accentColor": "#0284c7",
+      "woodColor": "#b45309",
+      "glassColor": "#38bdf8",
+      "width": 17,
+      "depth": 22,
+      "height": 8.8,
+      "hasSwimmingPool": true,
+      "hasPoolDeck": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Poolside Living Salon",
+        "type": "living_room",
+        "areaSqFt": 510,
+        "cameraPos": [0, 2.0, 2.5],
+        "lookAt": [0, 2.0, -4],
+        "description": "Open-concept living room with full-width sliding glass overlooking turquoise pool waters."
+      },
+      {
+        "id": "kitchen",
+        "name": "Cabana Open Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 210,
+        "cameraPos": [5.2, 1.8, -2],
+        "lookAt": [5.2, 1.5, -5.5],
+        "description": "Designer kitchen serving both indoor dining and poolside alfresco meals."
+      },
+      {
+        "id": "bedroom",
+        "name": "Master Suite with Pool Deck",
+        "type": "bedroom",
+        "areaSqFt": 340,
+        "cameraPos": [-4.5, 6.0, -2],
+        "lookAt": [-4.5, 5.6, -6],
+        "description": "Master bedroom with private balcony looking directly down into the illuminated swimming pool."
+      },
+      {
+        "id": "bathroom",
+        "name": "Resort Spa Bathroom",
+        "type": "bathroom",
+        "areaSqFt": 110,
+        "cameraPos": [-5.8, 6.0, -6.5],
+        "lookAt": [-5.8, 5.4, -8],
+        "description": "Spa bathroom with freestanding tub, glass partition, and poolside outdoor shower access."
+      },
+      {
+        "id": "balcony",
+        "name": "Pool View Upper Deck",
+        "type": "balcony",
+        "areaSqFt": 200,
+        "cameraPos": [0, 6.0, 6.5],
+        "lookAt": [0, 5.4, 1.5],
+        "description": "Elevated wooden deck offering panoramic view of the swimming pool and gardens."
+      },
+      {
+        "id": "backyard",
+        "name": "Swimming Pool & Sun Deck",
+        "type": "backyard",
+        "areaSqFt": 650,
+        "cameraPos": [0, 1.8, -11.5],
+        "lookAt": [0, 1.2, -6],
+        "description": "Resort swimming pool with blue tiles, sun loungers, outdoor shower, and lawn."
+      }
+    ]
+  },
+  {
+    "modelId": "house-17",
+    "modelName": "Coastal Modern House",
+    "style": "Elevated Coastal Architecture",
+    "floors": 2,
+    "floorsText": "G + 1 on Resilient Piers",
+    "plotSize": "40' x 60' (2,400 sq ft)",
+    "builtUpArea": 2650,
+    "builtUpAreaSqFt": 2650,
+    "builtUpAreaSqM": 246.2,
+    "bedrooms": 3,
+    "bathrooms": 3,
+    "estimatedCost": "₹56,00,000 – ₹67,00,000",
+    "costPerSqFt": "₹2,320 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹32,50,000",
+      "finishingCarpentry": "₹17,80,000",
+      "mepElectricalPlumbing": "₹9,20,000",
+      "landscapeExt": "₹4,20,000"
+    },
+    "description": "Engineered for coastal sea-breeze resilience. Raised on reinforced concrete piers, horizontal weathered cedar timber siding, corrosion-proof 316 marine-grade stainless hardware, and wrap-around viewing decks.",
+    "modelFile": "/models/houses/house-17.glb",
+    "thumbnail": "/images/house3d/model-17.jpg",
+    "facing": "East",
+    "parking": "2 Covered Bay under Stilts",
+    "dimensions": { "widthFt": 34, "depthFt": 44, "heightFt": 26 },
+    "vastuScore": 94,
+    "architecturalFeatures": [
+      "Elevated ground structure on reinforced concrete piers providing flood protection",
+      "Horizontal weather-resistant cedar timber cladding with marine protective seal",
+      "Marine-grade 316 stainless steel cable balustrades and corrosion-resistant fasteners",
+      "Deep cross-ventilation floor plan capturing prevailing coastal sea breezes"
+    ],
+    "proceduralParams": {
+      "architecture": "coastal_modern",
+      "levels": 2,
+      "roofType": "flat_deck_overhang",
+      "wallColor": "#ffffff",
+      "accentColor": "#0284c7",
+      "woodColor": "#d97706",
+      "glassColor": "#38bdf8",
+      "width": 14,
+      "depth": 18,
+      "height": 9.2,
+      "hasStilts": true,
+      "hasWrapBalcony": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Elevated Coastal Living Hall",
+        "type": "living_room",
+        "areaSqFt": 420,
+        "cameraPos": [0, 3.8, 2],
+        "lookAt": [0, 3.8, -4],
+        "description": "Elevated living room capturing sea breezes through floor-to-ceiling louvered glass doors."
+      },
+      {
+        "id": "kitchen",
+        "name": "Open Galley Coastal Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 170,
+        "cameraPos": [4.2, 3.8, -2],
+        "lookAt": [4.2, 3.5, -5.5],
+        "description": "Marine timber and stainless steel kitchen built for durability and panoramic ocean views."
+      },
+      {
+        "id": "bedroom",
+        "name": "Upper Ocean Master Suite",
+        "type": "bedroom",
+        "areaSqFt": 290,
+        "cameraPos": [-3.8, 7.5, -2],
+        "lookAt": [-3.8, 7.2, -6],
+        "description": "Top-floor master bedroom opening directly onto an expansive timber sunset deck."
+      },
+      {
+        "id": "bathroom",
+        "name": "Coastal Bath Suite",
+        "type": "bathroom",
+        "areaSqFt": 85,
+        "cameraPos": [-5.0, 7.5, -6.5],
+        "lookAt": [-5.0, 7.0, -8],
+        "description": "Sandstone and teak bath with rain shower and cross-ventilation louvered window."
+      },
+      {
+        "id": "balcony",
+        "name": "Wrap-Around Sea Viewing Deck",
+        "type": "balcony",
+        "areaSqFt": 220,
+        "cameraPos": [0, 7.5, 6.5],
+        "lookAt": [0, 7.0, 2],
+        "description": "Wide timber deck with marine stainless steel wire railings for clear horizon views."
+      },
+      {
+        "id": "backyard",
+        "name": "Coastal Dune Sand Garden",
+        "type": "backyard",
+        "areaSqFt": 380,
+        "cameraPos": [0, 1.8, -10.5],
+        "lookAt": [0, 1.5, -6],
+        "description": "Coastal garden with native dune grasses, white sand stepping stones, and outdoor foot shower."
+      }
+    ]
+  },
+  {
+    "modelId": "house-18",
+    "modelName": "Traditional Kerala-Style House",
+    "style": "Kerala Nalukettu Vernacular",
+    "floors": 1,
+    "floorsText": "Single Floor with Attic (Nalukettu)",
+    "plotSize": "50' x 70' (3,500 sq ft)",
+    "builtUpArea": 2450,
+    "builtUpAreaSqFt": 2450,
+    "builtUpAreaSqM": 227.6,
+    "bedrooms": 3,
+    "bathrooms": 3,
+    "estimatedCost": "₹49,00,000 – ₹58,00,000",
+    "costPerSqFt": "₹2,180 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹27,50,000",
+      "finishingCarpentry": "₹15,20,000",
+      "mepElectricalPlumbing": "₹7,50,000",
+      "landscapeExt": "₹4,20,000"
+    },
+    "description": "Authentic Kerala Nalukettu architectural masterwork: steep terracotta clay tile sloping gables, ornamental brass Gopuram crests, Charupadi carved wooden bench seating on the Poomukham veranda, and central open Nadumuttam.",
+    "modelFile": "/models/houses/house-18.glb",
+    "thumbnail": "/images/house3d/model-18.jpg",
+    "facing": "East",
+    "parking": "Traditional Padippura Car Porch",
+    "dimensions": { "widthFt": 40, "depthFt": 50, "heightFt": 18 },
+    "vastuScore": 99,
+    "architecturalFeatures": [
+      "Traditional Kerala sloping clay tile roof with distinctive carved gables (Mukhappu)",
+      "Poomukham entrance veranda with Charupadi (curved built-in wooden seating)",
+      "Central Nadumuttam (four-sided inner quadrangle with open-to-sky courtyard)",
+      "Anjili and Teak wood structural roof trusses and polished brass ornamentation"
+    ],
+    "proceduralParams": {
+      "architecture": "traditional_kerala",
+      "levels": 1,
+      "roofType": "kerala_gables_clay_tiles",
+      "wallColor": "#fffbeb",
+      "accentColor": "#78350f",
+      "woodColor": "#92400e",
+      "glassColor": "#7dd3fc",
+      "width": 16,
+      "depth": 20,
+      "height": 6.2,
+      "hasKeralaGables": true,
+      "hasCharupadi": true,
+      "hasPoomukham": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Poomukham & Central Hall",
+        "type": "living_room",
+        "areaSqFt": 420,
+        "cameraPos": [0, 1.8, 2.5],
+        "lookAt": [0, 1.8, -4],
+        "description": "Grand Kerala living space with polished timber beams, terracotta floor tiles, and brass bell lamp."
+      },
+      {
+        "id": "kitchen",
+        "name": "Traditional Adukkala (Kitchen)",
+        "type": "kitchen",
+        "areaSqFt": 170,
+        "cameraPos": [4.8, 1.8, -2],
+        "lookAt": [4.8, 1.5, -5.5],
+        "description": "Modern modular kitchen built inside traditional woodwork framework with granite counter."
+      },
+      {
+        "id": "bedroom",
+        "name": "Kizhakkini Master Bedroom",
+        "type": "bedroom",
+        "areaSqFt": 260,
+        "cameraPos": [-4.5, 1.8, -2.5],
+        "lookAt": [-4.5, 1.5, -6],
+        "description": "Tranquil master room with wooden ceiling panels, large brass-hinged windows, and attached bath."
+      },
+      {
+        "id": "bathroom",
+        "name": "Heritage Kerala Bath",
+        "type": "bathroom",
+        "areaSqFt": 75,
+        "cameraPos": [-5.8, 1.8, -6.5],
+        "lookAt": [-5.8, 1.4, -8],
+        "description": "Earthy laterite stone finish bathroom with modern Kohler fittings and open ventilation."
+      },
+      {
+        "id": "balcony",
+        "name": "Charupadi Entrance Veranda",
+        "type": "balcony",
+        "areaSqFt": 180,
+        "cameraPos": [0, 1.8, 7.8],
+        "lookAt": [0, 1.5, 3],
+        "description": "Classic Poomukham featuring curved Charupadi wooden benches and carved solid teak pillars."
+      },
+      {
+        "id": "backyard",
+        "name": "Nadumuttam Central Court",
+        "type": "backyard",
+        "areaSqFt": 340,
+        "cameraPos": [0, 1.8, -0.5],
+        "lookAt": [0, 1.2, -2],
+        "description": "Central open quadrangle court with rain drip ledge, brass oil lamp, and lush green plants."
+      }
+    ]
+  },
+  {
+    "modelId": "house-19",
+    "modelName": "High-End Mansion",
+    "style": "Neoclassical Grand Contemporary",
+    "floors": 3,
+    "floorsText": "G + 2 (6 BHK Grand Palace)",
+    "plotSize": "70' x 100' (7,000 sq ft)",
+    "builtUpArea": 6200,
+    "builtUpAreaSqFt": 6200,
+    "builtUpAreaSqM": 576.0,
+    "bedrooms": 6,
+    "bathrooms": 7,
+    "estimatedCost": "₹1,65,00,000 – ₹1,98,00,000",
+    "costPerSqFt": "₹2,850 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹92,00,000",
+      "finishingCarpentry": "₹61,00,000",
+      "mepElectricalPlumbing": "₹32,00,000",
+      "landscapeExt": "₹18,00,000"
+    },
+    "description": "A neoclassical contemporary mansion of palatial scale. Features towering fluted classical entrance columns, majestic two-story arched entryway, symmetrical dual wings, rooftop classical balustrade, and imperial curved dual staircase.",
+    "modelFile": "/models/houses/house-19.glb",
+    "thumbnail": "/images/house3d/model-19.jpg",
+    "facing": "East",
+    "parking": "4 Car Classical Portico",
+    "dimensions": { "widthFt": 58, "depthFt": 68, "heightFt": 34 },
+    "vastuScore": 98,
+    "architecturalFeatures": [
+      "Two-story soaring monumental portico with fluted neoclassical columns",
+      "Symmetrical dual-wing estate architecture with classical cornices & balustrade",
+      "Grand imperial dual sweeping staircase in 24ft high entrance atrium",
+      "Separate staff quarters, private elevator, and commercial-grade utility"
+    ],
+    "proceduralParams": {
+      "architecture": "high_end_mansion",
+      "levels": 3,
+      "roofType": "mansard_crest_balustrade",
+      "wallColor": "#fffdf5",
+      "accentColor": "#1e293b",
+      "woodColor": "#78350f",
+      "glassColor": "#38bdf8",
+      "width": 22,
+      "depth": 26,
+      "height": 12.5,
+      "hasClassicalColumns": true,
+      "hasArchedPortico": true,
+      "hasDualWings": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Palatial Grand Foyer & Salon",
+        "type": "living_room",
+        "areaSqFt": 820,
+        "cameraPos": [0, 2.5, 4],
+        "lookAt": [0, 3.5, -5],
+        "description": "Imperial 24ft double-height foyer with dual curved marble stairs and monumental chandelier."
+      },
+      {
+        "id": "kitchen",
+        "name": "Commercial-Grade Mansion Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 380,
+        "cameraPos": [7.5, 2.0, -2],
+        "lookAt": [7.5, 1.8, -7],
+        "description": "State-of-the-art chef kitchen with dual prep islands, walk-in cold room, and butler pantry."
+      },
+      {
+        "id": "bedroom",
+        "name": "Royal Master Penthouse Suite",
+        "type": "bedroom",
+        "areaSqFt": 580,
+        "cameraPos": [-7.0, 7.2, -3],
+        "lookAt": [-7.0, 6.8, -8],
+        "description": "Penthouse master suite with private vestibule, dual dressing salons, and marble fireplace."
+      },
+      {
+        "id": "bathroom",
+        "name": "Onyx Marble Master Bath",
+        "type": "bathroom",
+        "areaSqFt": 210,
+        "cameraPos": [-8.5, 7.2, -8.5],
+        "lookAt": [-8.5, 6.8, -10.5],
+        "description": "Backlit onyx marble bathroom with steam shower, Jacuzzi, and his-and-her vanities."
+      },
+      {
+        "id": "balcony",
+        "name": "Grand Classical Balcony",
+        "type": "balcony",
+        "areaSqFt": 360,
+        "cameraPos": [0, 7.2, 9.5],
+        "lookAt": [0, 6.8, 3],
+        "description": "Monumental portico balcony resting atop the classical columns with ornamental balusters."
+      },
+      {
+        "id": "backyard",
+        "name": "Versailles-Inspired Formal Grounds",
+        "type": "backyard",
+        "areaSqFt": 1250,
+        "cameraPos": [0, 1.8, -16],
+        "lookAt": [0, 1.5, -8],
+        "description": "Grand estate grounds featuring classical marble fountain, boxwood parterres, and gazebo."
+      }
+    ]
+  },
+  {
+    "modelId": "house-20",
+    "modelName": "Eco-Friendly Modern House",
+    "style": "Net-Zero Sustainable Architecture",
+    "floors": 2,
+    "floorsText": "G + 1 Solar & Green Roof",
+    "plotSize": "40' x 60' (2,400 sq ft)",
+    "builtUpArea": 2550,
+    "builtUpAreaSqFt": 2550,
+    "builtUpAreaSqM": 236.9,
+    "bedrooms": 4,
+    "bathrooms": 4,
+    "estimatedCost": "₹54,00,000 – ₹64,50,000",
+    "costPerSqFt": "₹2,280 / sq ft",
+    "costBreakdown": {
+      "civilStructure": "₹31,00,000",
+      "finishingCarpentry": "₹17,00,000",
+      "mepElectricalPlumbing": "₹12,50,000",
+      "landscapeExt": "₹4,80,000"
+    },
+    "description": "A certified green, net-zero energy home. Equipped with 10kW rooftop photovoltaic solar panel array, sedum green living roof insulation, fly-ash lightweight thermal bricks, rainwater harvesting cisterns, and natural cross-ventilation.",
+    "modelFile": "/models/houses/house-20.glb",
+    "thumbnail": "/images/house3d/model-20.jpg",
+    "facing": "South-East (Optimized Solar)",
+    "parking": "2 EV Charging Bays",
+    "dimensions": { "widthFt": 34, "depthFt": 46, "heightFt": 24 },
+    "vastuScore": 97,
+    "architecturalFeatures": [
+      "10kW high-efficiency monocrystalline solar photovoltaic panel array on roof",
+      "Insulating green sedum rooftop garden reducing AC energy load by 35%",
+      "Dual underground 15,000L rainwater harvesting & greywater bio-filtration tanks",
+      "Low-carbon fly-ash masonry and recycled timber louvers with zero-VOC paints"
+    ],
+    "proceduralParams": {
+      "architecture": "eco_friendly",
+      "levels": 2,
+      "roofType": "solar_panel_green_roof",
+      "wallColor": "#f1f5f9",
+      "accentColor": "#15803d",
+      "woodColor": "#d97706",
+      "glassColor": "#38bdf8",
+      "width": 14,
+      "depth": 18,
+      "height": 8.5,
+      "hasSolarPanels": true,
+      "hasGreenRoof": true,
+      "hasEVCharger": true
+    },
+    "rooms": [
+      {
+        "id": "living",
+        "name": "Daylit Sustainable Living Room",
+        "type": "living_room",
+        "areaSqFt": 410,
+        "cameraPos": [0, 2.0, 2],
+        "lookAt": [0, 2.0, -4.5],
+        "description": "Naturally cooled living room with high-efficiency glazing, bamboo flooring, and zero-VOC finishes."
+      },
+      {
+        "id": "kitchen",
+        "name": "Energy-Star Eco Kitchen",
+        "type": "kitchen",
+        "areaSqFt": 170,
+        "cameraPos": [4.2, 1.8, -2],
+        "lookAt": [4.2, 1.5, -5.5],
+        "description": "Energy-star induction kitchen equipped with organic waste composter and water-saving aerators."
+      },
+      {
+        "id": "bedroom",
+        "name": "Solar Master Bedroom",
+        "type": "bedroom",
+        "areaSqFt": 270,
+        "cameraPos": [-3.8, 5.8, -2],
+        "lookAt": [-3.8, 5.5, -6],
+        "description": "Naturally ventilated bedroom oriented to catch passive breezes with thermal bamboo louvers."
+      },
+      {
+        "id": "bathroom",
+        "name": "Water-Saving Eco Bath",
+        "type": "bathroom",
+        "areaSqFt": 80,
+        "cameraPos": [-5.0, 5.8, -6.5],
+        "lookAt": [-5.0, 5.2, -8],
+        "description": "Low-flow dual-flush fixtures, greywater diversion system, and solar-heated water supply."
+      },
+      {
+        "id": "balcony",
+        "name": "Shaded Solar Balcony",
+        "type": "balcony",
+        "areaSqFt": 140,
+        "cameraPos": [0, 5.8, 6.2],
+        "lookAt": [0, 5.2, 1.5],
+        "description": "Breezy upper balcony shaded by cantilevered solar pergola arrays."
+      },
+      {
+        "id": "backyard",
+        "name": "Permaculture Native Lawn",
+        "type": "backyard",
+        "areaSqFt": 420,
+        "cameraPos": [0, 1.8, -10.5],
+        "lookAt": [0, 1.5, -6],
+        "description": "Drought-tolerant native xeriscaping garden with rainwater collection channel and compost bin."
+      }
+    ]
+  }
+]

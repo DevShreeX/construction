@@ -63,6 +63,7 @@ let cachedPmAnalytics = null;
 let cachedPmTasks = [];
 let cachedPmForms = [];
 let cachedStructured3dDesigns = [];
+let cachedHouseModels = [];
 
 try {
   const dataDir = path.join(ROOT_DIR, 'public', 'data');
@@ -77,6 +78,13 @@ try {
       cachedPmForms = JSON.parse(fs.readFileSync(path.join(dataDir, 'pm_forms_all.json'), 'utf8'));
     }
     console.log(`📊 Datasets loaded into memory: ${cachedMaterials.length} materials, ${cachedPmTasks.length} PM tasks, ${cachedPmForms.length} PM forms`);
+  }
+
+  // Preload 20 3D House Models Dataset
+  const houseModelsPath = path.join(dataDir, 'houseModels.json');
+  if (fs.existsSync(houseModelsPath)) {
+    cachedHouseModels = JSON.parse(fs.readFileSync(houseModelsPath, 'utf8'));
+    console.log(`🏠 3D House Models Dataset loaded: ${cachedHouseModels.length} distinct residential models with room walkthroughs`);
   }
 
   // Preload Structured3D Architectural Dataset
@@ -339,6 +347,42 @@ const server = http.createServer((req, res) => {
       }
       res.writeHead(200);
       return res.end(JSON.stringify({ success: true, data: design }));
+    }
+
+    // ==================== 3D HOUSE MODELS ARCHITECTURAL REST API ====================
+    // 1. Get all 20 House Models with optional filters
+    if (pathname === '/api/house-models' && req.method === 'GET') {
+      const q = (parsedUrl.searchParams.get('q') || '').toLowerCase().trim();
+      const style = parsedUrl.searchParams.get('style');
+      const floors = parsedUrl.searchParams.get('floors');
+      const bhk = parsedUrl.searchParams.get('bhk');
+
+      let list = cachedHouseModels.filter(m => {
+        if (q && !m.modelName.toLowerCase().includes(q) && !m.style.toLowerCase().includes(q) && !m.description.toLowerCase().includes(q)) return false;
+        if (style && style !== 'all' && !m.style.toLowerCase().includes(style.toLowerCase())) return false;
+        if (floors && floors !== 'all' && String(m.floors) !== String(floors)) return false;
+        if (bhk && bhk !== 'all' && !String(m.bedrooms).includes(String(bhk).replace(/[^0-9]/g, ''))) return false;
+        return true;
+      });
+
+      res.writeHead(200);
+      return res.end(JSON.stringify({
+        success: true,
+        total: list.length,
+        data: list
+      }));
+    }
+
+    // 2. Get single House Model by ID
+    if (pathname.startsWith('/api/house-models/') && req.method === 'GET') {
+      const modelId = pathname.replace('/api/house-models/', '').trim().toLowerCase();
+      const house = cachedHouseModels.find(m => m.modelId.toLowerCase() === modelId || m.modelName.toLowerCase().replace(/\s+/g, '-').includes(modelId));
+      if (!house) {
+        res.writeHead(404);
+        return res.end(JSON.stringify({ success: false, error: `House model '${modelId}' not found` }));
+      }
+      res.writeHead(200);
+      return res.end(JSON.stringify({ success: true, data: house }));
     }
 
     // ==================== GOOGLE SATELLITE & GIS API CONFIG ====================

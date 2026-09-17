@@ -1646,3 +1646,848 @@ select option:hover,
 .s3d-mesh-viewport:active {
   cursor: grabbing;
 }
+
+/* ==================== 3D House Models & Architectural Studio ==================== */
+.house-models-page {
+  padding-bottom: 60px;
+}
+
+.house-hero-section {
+  padding: 48px 0 28px;
+  background: radial-gradient(circle at 50% 10%, rgba(56, 189, 248, 0.12) 0%, transparent 60%);
+}
+
+.house-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 16px;
+}
+
+.house-page-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.house-page-subtitle {
+  max-width: 780px;
+  margin: 0 auto 28px;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.house-kpi-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid var(--border);
+  padding: 12px 28px;
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(12px);
+}
+
+.house-kpi-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.house-kpi-val {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.house-kpi-lbl {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.house-kpi-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--border);
+}
+
+/* Filter & Search Toolbar */
+.house-filter-section {
+  padding: 16px 0 24px;
+}
+
+.house-filter-wrapper {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.house-search-box {
+  position: relative;
+  width: 100%;
+}
+
+.house-search-box i {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+
+.house-search-box input {
+  width: 100%;
+  padding: 12px 16px 12px 44px;
+  background: rgba(5, 11, 24, 0.6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.house-search-box input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+.house-category-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cat-pill {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.cat-pill:hover {
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--text-primary);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.cat-pill.active {
+  background: var(--primary);
+  color: #050b18;
+  font-weight: 700;
+  border-color: var(--primary);
+}
+
+.house-secondary-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.select-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.select-group select {
+  padding: 6px 12px;
+  background: rgba(5, 11, 24, 0.8);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+}
+
+.select-group select:focus {
+  border-color: var(--primary);
+}
+
+/* 20 House Models Grid */
+.house-grid-section {
+  padding-top: 12px;
+}
+
+.house-grid-header {
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.house-results-count {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.house-hint-text {
+  font-size: 0.85rem;
+  color: var(--primary-soft);
+}
+
+.house-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+/* Individual House Card */
+.house-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  backdrop-filter: blur(12px);
+}
+
+.house-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--border-glow);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 24px rgba(56, 189, 248, 0.12);
+}
+
+.house-card-preview-wrap {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #071021;
+  cursor: pointer;
+}
+
+.house-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.house-card:hover .house-card-img {
+  transform: scale(1.05);
+}
+
+.house-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 11, 24, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.house-card-preview-wrap:hover .house-card-overlay {
+  opacity: 1;
+}
+
+.house-card-badge-top {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.house-card-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.house-card-style-tag {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.house-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  line-height: 1.35;
+}
+
+.house-card-specs-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.spec-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.spec-item i {
+  color: var(--primary);
+}
+
+.house-card-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 18px;
+  flex-grow: 1;
+}
+
+.house-card-footer {
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.cost-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.cost-lbl {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.cost-val {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+/* ==================== 3D Viewer Studio Modal ==================== */
+.house-viewer-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.house-viewer-modal.hidden {
+  display: none !important;
+}
+
+.house-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 7, 18, 0.88);
+  backdrop-filter: blur(8px);
+}
+
+.house-modal-content {
+  position: relative;
+  z-index: 2;
+  width: 96vw;
+  max-width: 1540px;
+  height: 92vh;
+  background: #0a1329;
+  border: 1px solid var(--border-glow);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(56, 189, 248, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.house-studio-header {
+  padding: 16px 24px;
+  background: rgba(15, 23, 42, 0.9);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.house-studio-title-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.house-studio-badges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.house-studio-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.house-studio-quick-metrics {
+  display: flex;
+  gap: 16px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.house-studio-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.house-modal-close-btn {
+  font-size: 0.9rem;
+  padding: 8px 14px;
+}
+
+/* Studio Main Body (Two Columns) */
+.house-studio-body {
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  overflow: hidden;
+}
+
+/* 3D Viewport Column */
+.house-viewport-container {
+  position: relative;
+  background: #071122;
+  overflow: hidden;
+}
+
+.house-canvas-mount {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.house-canvas-mount:active {
+  cursor: grabbing;
+}
+
+.house-loader-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 17, 34, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  z-index: 20;
+  backdrop-filter: blur(4px);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Floating Architectural Angle Bar (Top Left) */
+.house-angle-controls {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+  display: flex;
+  background: rgba(10, 19, 41, 0.85);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 4px;
+  backdrop-filter: blur(8px);
+  gap: 4px;
+}
+
+.angle-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.angle-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+}
+
+.angle-btn.active {
+  background: var(--primary);
+  color: #050b18;
+  font-weight: 700;
+}
+
+/* Floating CAD Toolbar (Top Right) */
+.house-cad-toolbar {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  background: rgba(10, 19, 41, 0.85);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 4px;
+  backdrop-filter: blur(8px);
+  gap: 4px;
+}
+
+.cad-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition);
+}
+
+.cad-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+}
+
+.cad-btn.active {
+  background: rgba(56, 189, 248, 0.2);
+  color: var(--primary);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+/* Active Room Telemetry HUD */
+.house-room-hud {
+  position: absolute;
+  top: 76px;
+  left: 16px;
+  z-index: 10;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid var(--border-glow);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  backdrop-filter: blur(12px);
+  max-width: 320px;
+  box-shadow: var(--shadow-md);
+}
+
+.hud-badge {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-area {
+  font-size: 0.8rem;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.hud-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Bottom Room Walkthrough Dock */
+.house-walkthrough-dock {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(10, 19, 41, 0.9);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 6px 16px;
+  backdrop-filter: blur(12px);
+  max-width: 90%;
+  overflow-x: auto;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+}
+
+.dock-label {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.dock-room-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.room-dock-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.room-dock-btn:hover {
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--text-primary);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.room-dock-btn.active {
+  background: var(--primary);
+  color: #050b18;
+  font-weight: 700;
+  border-color: var(--primary);
+}
+
+.dock-exit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  border-radius: var(--radius-full);
+  color: #fb7185;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.dock-exit-btn:hover {
+  background: rgba(244, 63, 94, 0.3);
+}
+
+/* Side Architectural & Construction Specs Drawer */
+.house-specs-drawer {
+  background: var(--bg-surface);
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.specs-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.specs-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.specs-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.cost-highlight-box {
+  background: rgba(251, 191, 36, 0.08);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  text-align: center;
+}
+
+.cost-main {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.cost-sqft {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.cost-breakdown-table {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.cost-row {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+}
+
+.specs-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.spec-cell {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.spec-cell .label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.spec-cell strong {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  margin-top: 2px;
+}
+
+.specs-feature-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.specs-feature-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+.specs-feature-list li i {
+  margin-top: 3px;
+}
+
+.specs-cta-box {
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1100px) {
+  .house-studio-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: 60% 40%;
+    overflow-y: auto;
+  }
+
+  .house-specs-drawer {
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+
+  .house-modal-content {
+    height: 96vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .house-page-title {
+    font-size: 2.1rem;
+  }
+
+  .house-kpi-bar {
+    gap: 12px;
+    padding: 8px 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .house-kpi-divider {
+    display: none;
+  }
+
+  .house-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .house-cad-toolbar span {
+    display: none;
+  }
+
+  .house-angle-controls {
+    display: none;
+  }
+}
+

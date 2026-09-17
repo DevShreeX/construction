@@ -10,6 +10,7 @@ export function renderNavbar() {
       </div>
       <div class="nav-links" id="navLinks">
         <a data-route="/">Home</a>
+        <a data-route="/house-models"><i class="fas fa-cubes icon-primary"></i> 3D House Models</a>
         <a data-route="/skills"><i class="fas fa-cube icon-primary"></i> 3D Smart House</a>
         <a data-route="/workspace">Workspace</a>
         <a data-route="/floor-plans"><i class="fas fa-drafting-compass icon-primary"></i> House Plans</a>
@@ -67,6 +68,7 @@ export function renderFooter() {
         <div>
           <div class="footer-links">
             <a data-route="/">Home</a>
+            <a data-route="/house-models">3D House Models</a>
             <a data-route="/skills">3D Smart House</a>
             <a data-route="/projects">Projects</a>
             <a data-route="/about">About</a>
