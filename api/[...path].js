@@ -206,6 +206,32 @@ export default function handler(req, res) {
     });
   }
 
+  // 3D House Models Architectural Suite on Vercel
+  if (pathname.includes('/house-models')) {
+    let houseModels = [];
+    try {
+      const dataPath = path.join(process.cwd(), 'public', 'data', 'houseModels.json');
+      if (fs.existsSync(dataPath)) {
+        houseModels = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+      }
+    } catch (e) {
+      console.warn('Vercel: Could not read houseModels.json:', e.message);
+    }
+
+    const specificId = pathname.split('/house-models/')[1];
+    if (specificId) {
+      const match = houseModels.find(m => m.modelId.toLowerCase() === specificId.toLowerCase());
+      if (match) return res.status(200).json({ success: true, data: match });
+      return res.status(404).json({ success: false, error: 'House model not found' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      total: houseModels.length,
+      data: houseModels
+    });
+  }
+
   // Stream Structured3D Assets on Vercel
   if (pathname.includes('/structured3d/asset/')) {
     const subPath = pathname.split('/structured3d/asset/')[1];
